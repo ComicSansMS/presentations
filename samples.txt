@@ -1,0 +1,4 @@
+hooking functions
+string:find (__index metamethod)
+encapsulation with closures
+reflection?

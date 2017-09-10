@@ -7,9 +7,22 @@
 \usepackage{tikz}
 \usepackage{hyperref}
 
-
 \usetheme{Rochester}
 \usecolortheme{beaver}
+
+\lstloadlanguages{[5.2]Lua,C++}
+    \lstset{% 
+        language={[5.2]Lua},
+        basicstyle=\ttfamily,
+        keywordstyle=\color{blue},
+        showstringspaces=false,
+        escapechar={§},
+        escapeinside=||
+    }
+
+\newif\iftransitions
+% \transitionstrue
+
 
 \title{Howling at the Moon:}
 \subtitle{Lua for C++ Programmers}
@@ -18,34 +31,6 @@
 \date{cppcon, September 29, 2017}
 \titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
 
-
-\usetikzlibrary{fit,calc,decorations.pathreplacing}
-    \newcommand{\tikzref}[1]{% to define an anchor
-        \tikz[remember picture]{%
-            \coordinate (#1) at (0,0.5ex);%
-        }%
-    }
-    \tikzset{
-       transp/.style={
-          fill opacity=0.75,fill=white, inner sep=1.5mm,
-       },
-       reverseclip/.style={
-          insert path={(current page.north east) --
-            (current page.south east) --
-            (current page.south west) --
-            (current page.north west) --
-            (current page.north east)},
-       },
-    }
-
-\lstloadlanguages{[5.2]Lua,C++}
-    \lstset{% 
-        language={[5.2]Lua},
-        basicstyle=\ttfamily,
-        keywordstyle=\color{blue},
-        showstringspaces=false,
-        escapechar={§} % needed to set tikz anchors in listings
-    }
 
 \begin{document}
 
@@ -56,7 +41,7 @@
 
   \begin{itemize}
     \setlength\itemsep{1.5em}
-    
+
     \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} Known as ComicSansMS on most sites
     
     \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus on Twitter}
@@ -64,7 +49,7 @@
     \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
     
     \item Currently working as a Software Architect for BMW \includegraphics[height=.1\textheight]{resources/bmw_group.jpg}
-    
+
   \end{itemize}
 \end{frame}
 
@@ -84,7 +69,7 @@
   \pause
   
   \begin{itemize}
-    \item Powerful -
+    \item Powerful
     \item Efficient
     \item Lightweight
     \item Embeddable
@@ -95,33 +80,14 @@
 
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Encapsulation}
-  
-\begin{lstlisting}[language={[5.2]Lua},basicstyle=\ttfamily,keywordstyle=\color{blue},showstringspaces=false,escapeinside=||]
-function newDate(y, m, d)
-  assert(validDate(y, m, d))
-  local self = { y=y, m=m, d=d }
 
-  local getDay = function() return self.d end
-  local setDay = function(nd)
-      assert(validDate(self.y, self.m, nd))
-      self.d = nd
-    end
-
-  return {
-    setDay = setDay,
-    getDay = getDay
-  }
-\end{lstlisting}
-\end{frame}
-
+\iftransitions
 
 \begin{frame}[fragile]
   \frametitle{Encapsulation}
   \setbeamercolor{alerted text}{fg=red}
   \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
-  \begin{semiverbatim} \small
+  \begin{semiverbatim}
 \uncover<1->{\alert<0>{{\color{blue}function} newDate(y, m, d)}}
 \uncover<3->{\alert<3>{  assert(validDate(y, m, d))}}
 \uncover<3->{\alert<3>{  {\color{blue}local} self = \{ y=y, m=m, d=d \}}}
@@ -140,6 +106,31 @@ function newDate(y, m, d)
   \end{semiverbatim}
 \uncover<6->{}
 \end{frame}
+
+\else
+
+\begin{frame}[fragile]
+  \frametitle{Encapsulation}
+
+  \begin{lstlisting}
+function newDate(y, m, d)
+  assert(validDate(y, m, d))
+  local self = { y=y, m=m, d=d }
+
+  local getDay = function() return self.d end
+  local setDay = function(nd)
+      assert(validDate(self.y, self.m, nd))
+      self.d = nd
+    end
+
+  return {
+    setDay = setDay,
+    getDay = getDay
+  }
+  \end{lstlisting}
+\end{frame}
+
+\fi
 
 \frame{%
 \setbeamercolor{normal text}{fg=gray,bg=}

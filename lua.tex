@@ -18,6 +18,35 @@
 \date{cppcon, September 29, 2017}
 \titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
 
+
+\usetikzlibrary{fit,calc,decorations.pathreplacing}
+    \newcommand{\tikzref}[1]{% to define an anchor
+        \tikz[remember picture]{%
+            \coordinate (#1) at (0,0.5ex);%
+        }%
+    }
+    \tikzset{
+       transp/.style={
+          fill opacity=0.75,fill=white, inner sep=1.5mm,
+       },
+       reverseclip/.style={
+          insert path={(current page.north east) --
+            (current page.south east) --
+            (current page.south west) --
+            (current page.north west) --
+            (current page.north east)},
+       },
+    }
+
+\lstloadlanguages{[5.2]Lua,C++}
+    \lstset{% 
+        language={[5.2]Lua},
+        basicstyle=\ttfamily,
+        keywordstyle=\color{blue},
+        showstringspaces=false,
+        escapechar={§} % needed to set tikz anchors in listings
+    }
+
 \begin{document}
 
 \frame{\titlepage}
@@ -46,6 +75,82 @@
   \end{center}
 
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Lua}
+  
+  \begin{quote}Lua is a powerful, efficient, lightweight, embeddable scripting language.\end{quote}
+  
+  \pause
+  
+  \begin{itemize}
+    \item Powerful -
+    \item Efficient
+    \item Lightweight
+    \item Embeddable
+  \end{itemize}
+  
+  Lorem Ipsum \\
+  Bla blub bal
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Encapsulation}
+  
+\begin{lstlisting}[language={[5.2]Lua},basicstyle=\ttfamily,keywordstyle=\color{blue},showstringspaces=false,escapeinside=||]
+function newDate(y, m, d)
+  assert(validDate(y, m, d))
+  local self = { y=y, m=m, d=d }
+
+  local getDay = function() return self.d end
+  local setDay = function(nd)
+      assert(validDate(self.y, self.m, nd))
+      self.d = nd
+    end
+
+  return {
+    setDay = setDay,
+    getDay = getDay
+  }
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Encapsulation}
+  \setbeamercolor{alerted text}{fg=red}
+  \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
+  \begin{semiverbatim} \small
+\uncover<1->{\alert<0>{{\color{blue}function} newDate(y, m, d)}}
+\uncover<3->{\alert<3>{  assert(validDate(y, m, d))}}
+\uncover<3->{\alert<3>{  {\color{blue}local} self = \{ y=y, m=m, d=d \}}}
+\uncover<3->{\alert<3>{}}
+\uncover<4->{\alert<4>{  {\color{blue}local} getDay = {\color{blue}function}() {\color{blue}return} self.d {\color{blue}end}}}
+\uncover<5->{\alert<5>{  {\color{blue}local} setDay = {\color{blue}function}(nd)}}
+\uncover<5->{\alert<5>{      assert(validDate(self.y, self.m, nd))}}
+\uncover<5->{\alert<5>{      self.d = nd}}
+\uncover<5->{\alert<5>{    {\color{blue}end}}}
+\uncover<5->{\alert<5>{}}
+\uncover<2->{\alert<2>{  {\color{blue}return} \{}}
+\uncover<2->{\alert<2>{    setDay = setDay,}}
+\uncover<2->{\alert<2>{    getDay = getDay}}
+\uncover<2->{\alert<2>{  \}}}
+\uncover<1->{\alert<0>{\color{blue}end}}
+  \end{semiverbatim}
+\uncover<6->{}
+\end{frame}
+
+\frame{%
+\setbeamercolor{normal text}{fg=gray,bg=}
+\setbeamercolor{alerted text}{fg=black,bg=}
+\usebeamercolor{normal text}
+\begin{itemize}
+\item \alert<+>{Hallo}
+\item \alert<+>{Welt}
+\item \alert<+>{Foobar}
+\end{itemize}
+}
 
 
 \iffalse

@@ -1,0 +1,147 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{color}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usetheme{Rochester}
+\usecolortheme{beaver}
+
+\usetikzlibrary{decorations.text,calc}
+
+\newcommand{\tikzmark}[2]{%
+     \tikz[overlay,remember picture] \node[text=black,
+           inner sep=2pt] (#1) {#2};}
+\newcommand{\VerticalShiftForArrows}{0.0em,+2.75ex}%
+\newcommand{\HorizontalShiftForBar}{2.0em,+0.0ex}%
+\newcommand{\Stub}{0.0em,-0.6ex}%
+\newcommand{\DrawSideBar}[3][]{%
+        \coordinate (top left)  at ($(#2)       +(\HorizontalShiftForBar)$);
+        \coordinate (start)     at ($(top left) +(\Stub)$);
+        \coordinate (top right) at ($(#3)       +(\HorizontalShiftForBar)$);
+        \coordinate (end)       at ($(top right)+(\Stub)$);
+        \draw [#1] (start) -- (top left) -- (top right) -- (end);
+}%
+\newcommand{\DrawArrows}[3][]{%
+    \coordinate (Start Mid) at ($(#2Left)!0.5!(#2Right) + (\VerticalShiftForArrows)$);
+    \coordinate (End Mid)   at ($(#3Left)!0.5!(#3Right) + (\VerticalShiftForArrows)$);
+
+    \draw[-stealth, thick, #1] (Start Mid) to (End Mid);
+}
+
+
+\newif\iftransitions
+ \transitionstrue
+
+
+\title{A Quick Tour of Thread Progress Guarantees}
+\author{Andreas Weis}
+\institute{BMW AG}
+\date{cppcon 2017}
+\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+  \frametitle{Let's talk about concurrency}
+
+  \begin{itemize}
+\iftransitions \pause \fi
+    \item Concurrent access to shared data needs to be synchronized.
+\iftransitions \pause \fi
+    \item We typically use \texttt{std::mutex} for that.
+\iftransitions \pause \fi
+    \item A thread attempting to lock an unavailable mutex will \emph{block}.
+\iftransitions \pause \fi
+    \item Hopefully not forever.
+    \begin{center}
+        \includegraphics[height=0.4\textheight]{resources/skeleton.jpg}
+    \end{center}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Deadlock-Freedom \& Starvation-Freedom}
+
+  \begin{itemize}
+
+    \item An algorithm is \emph{deadlock-free}, if of all concurrent requests at least one succeeds.
+
+    \iftransitions \pause \fi
+
+    \item An algorithm is \emph{starvation-free}, if all concurrent requests succeed eventually.
+
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{So we're good now, right?}
+
+  Both categories depend on...
+
+  \iftransitions \pause \fi
+
+  \begin{center}
+  \includegraphics[height=0.7\textheight]{resources/robot-devil-scheduler.jpg}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+\frametitle{Beware the evil scheduler!}
+
+\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{blue},commentstyle=\color{teal}\itshape,showstringspaces=false,escapeinside={(*@}{@*)}]
+std::mutex mtx;
+
+// [...]
+{
+    std::lock_guard lk(mtx);
+(*@\tikzmark{aLeft}{}@*)
+    // do critical stuff
+    // [...]
+(*@\tikzmark{aRight}{}@*)
+}(*@
+\iftransitions \pause \fi
+\begin{tikzpicture}[overlay,remember picture]
+    \DrawSideBar[-, red, thick]{aLeft.south}{aRight.south}
+\end{tikzpicture}
+@*)\end{lstlisting}
+
+\begin{itemize}
+    \item By trapping one thread inside the critical section, the scheduler can keep \emph{all threads} from making progress.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\frametitle{So, don't use mutexes and you're good!}
+
+Right?
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\frametitle{Nah, not really...}
+
+\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{blue},commentstyle=\color{teal}\itshape,showstringspaces=false,escapeinside={(*@}{@*)}]
+
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Thanks for your attention.}
+\end{frame}
+
+
+\end{document}

@@ -40,8 +40,8 @@
 \title{A Quick Tour of Thread Progress Guarantees}
 \author{Andreas Weis}
 \institute{BMW AG}
-\date{cppcon 2017}
-\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
+%\date{cppcon 2017}
+%\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
 
 
 \begin{document}
@@ -55,21 +55,22 @@
 \iftransitions \pause \fi
     \item Concurrent access to shared data needs to be synchronized.
 \iftransitions \pause \fi
-    \item We typically use \texttt{std::mutex} for that.
+    \item We typically use \texttt{std::mutex} for synchronization.
 \iftransitions \pause \fi
     \item A thread attempting to lock an unavailable mutex will \emph{block}.
 \iftransitions \pause \fi
     \item Hopefully not forever.
     \begin{center}
-        \includegraphics[height=0.4\textheight]{resources/skeleton.jpg}
+        \includegraphics[height=0.4\textheight]{resources/waiting.jpg}
     \end{center}
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Deadlock-Freedom \& Starvation-Freedom}
+  \frametitle{Blocking Progress Guarantees}
 
   \begin{itemize}
+    \setlength\itemsep{1.5em}
 
     \item An algorithm is \emph{deadlock-free}, if of all concurrent requests at least one succeeds.
 
@@ -83,7 +84,7 @@
 \begin{frame}[fragile]
   \frametitle{So we're good now, right?}
 
-  Both categories depend on...
+  Both categories depend on the underlying platform.
 
   \iftransitions \pause \fi
 
@@ -122,19 +123,73 @@ std::mutex mtx;
 
 \begin{frame}[fragile]
 
-\frametitle{So, don't use mutexes and you're good!}
+\frametitle{Non-blocking algorithms}
 
-Right?
+\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{blue},commentstyle=\color{teal}\itshape,showstringspaces=false,escapeinside={(*@}{@*)}]
+std::atomic<int> a;
+// [...]
+{
+    auto const old_v = a.load();
+(*@\tikzmark{aLeft}{}@*)
+    do {
+      // do critical stuff to compute new_v
+      // [...]
+    while(a.compare_exchange_weak(old_v,
+                                  new_v));
+(*@\tikzmark{aRight}{}@*)
+}(*@
+\iftransitions \pause \fi
+\begin{tikzpicture}[overlay,remember picture]
+    \DrawSideBar[-, red, thick]{aLeft.south}{aRight.south}
+\end{tikzpicture}
+@*)\end{lstlisting}
 
 \end{frame}
 
+
 \begin{frame}[fragile]
 
-\frametitle{Nah, not really...}
+\frametitle{Non-Blocking Progress Guarantees}
 
-\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{blue},commentstyle=\color{teal}\itshape,showstringspaces=false,escapeinside={(*@}{@*)}]
+\begin{itemize}
+    \setlength\itemsep{1.5em}
+    \item An algorithm is called \emph{lock-free} if, in an infinite stream of concurrent requests, infinetly often a request succeeds.
 
-\end{lstlisting}
+    \iftransitions \pause \fi
+
+    \item An algorithm is called \emph{wait-free} if each requests finishes in a finite number of steps.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{So, wait-free all the way?}
+  
+  \iftransitions \pause \fi
+  
+  \begin{itemize}
+    \setlength\itemsep{1.5em}
+    \item Lock-freedom and wait-freedom do not come for free.
+    
+    \iftransitions \pause \fi
+    
+    \item Minimize concurrency.
+    
+    \iftransitions \pause \fi
+    
+    \item Use mutexes as the default synchronization primitive.
+    
+    \iftransitions \pause \fi
+    
+    \item Switch to non-blocking data structures only when concurrent access becomes a bottleneck.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+
+\begin{center}
+  \includegraphics[height=0.7\textheight]{resources/fry-scheduler.jpg}
+\end{center}
 
 \end{frame}
 

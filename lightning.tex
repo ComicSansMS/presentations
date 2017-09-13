@@ -58,12 +58,12 @@
     \item We typically use \texttt{std::mutex} for synchronization.
 \iftransitions \pause \fi
     \item A thread attempting to lock an unavailable mutex will \emph{block}.
-\iftransitions \pause \fi
-    \item Hopefully not forever.
-    \begin{center}
-        \includegraphics[height=0.4\textheight]{resources/waiting.jpg}
-    \end{center}
   \end{itemize}
+
+  \iftransitions \pause \fi
+  \begin{center}
+    \includegraphics[height=0.5\textheight]{resources/waiting.jpg}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -120,6 +120,32 @@ std::mutex mtx;
 \end{itemize}
 
 \end{frame}
+
+\iftransitions
+
+\begin{frame}[fragile]
+
+\frametitle{Non-blocking algorithms}
+
+\begin{lstlisting}[language=C++,basicstyle=\ttfamily,keywordstyle=\color{blue},commentstyle=\color{teal}\itshape,showstringspaces=false,escapeinside={(*@}{@*)}]
+std::atomic<int> a;
+// [...](*@\iftransitions \pause \fi@*)
+{
+    auto const old_v = a.load();(*@\iftransitions \pause \fi@*)
+
+
+      // do critical stuff to compute new_v
+      // [...](*@\iftransitions \pause \fi@*)
+          a.compare_exchange_weak(old_v,
+                                  new_v) ;
+
+}
+\end{lstlisting}
+
+\end{frame}
+
+\fi
+
 
 \begin{frame}[fragile]
 

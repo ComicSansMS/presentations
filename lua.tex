@@ -431,10 +431,49 @@ fobar = do_stuff();
   \texttt{\_G} is just a table.
 
   \begin{lstlisting}
-setmetatable(_G, {__newindex = function() print("No!"); end});
+setmetatable(_G,
+  { __newindex = function(_, name)
+      print(name .. " was not declared!");
+    end
+  });
   \end{lstlisting}
   
 \end{frame}
+
+
+\begin{frame}
+
+  \frametitle{Integration with C++}
+
+  It's embedded!
+
+\end{frame}
+
+
+\begin{frame}
+
+  \frametitle{The stack}
+
+  Fitting through the needle's eye
+
+\end{frame}
+
+
+\begin{frame}
+
+  \frametitle{Representing values}
+
+  Variant and Poly.
+
+\end{frame}
+
+
+\begin{frame}
+
+  \frametitle{Generic function call implementation}
+
+\end{frame}
+
 
 
 \frame{%

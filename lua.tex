@@ -11,7 +11,7 @@
 \usecolortheme{beaver}
 
 \lstloadlanguages{[5.2]Lua,C++}
-    \lstset{% 
+    \lstset{%
         language={[5.2]Lua},
         basicstyle=\ttfamily,
         keywordstyle=\color{blue},
@@ -43,11 +43,11 @@
     \setlength\itemsep{1.5em}
 
     \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} Known as ComicSansMS on most sites
-    
+
     \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus on Twitter}
-    
+
     \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
-    
+
     \item Currently working as a Software Architect for BMW \includegraphics[height=.1\textheight]{resources/bmw_group.jpg}
 
   \end{itemize}
@@ -63,11 +63,11 @@
 
 \begin{frame}[fragile]
   \frametitle{Lua}
-  
+
   \begin{quote}Lua is a powerful, efficient, lightweight, embeddable scripting language.\end{quote}
-  
+
   \pause
-  
+
   \begin{itemize}
     \item Powerful
     \item Efficient
@@ -113,7 +113,7 @@
 
 \begin{frame}[fragile]
   \frametitle{Hello World!}
-  
+
   \begin{lstlisting}
 print("Hello World!");
   \end{lstlisting}
@@ -130,12 +130,12 @@ function f(a1, a2, a3)
   return r1, r2, r3;
 end
 
- 
+
 y1, y2, y3 = f(x1, x2, x3);
 y1 = f(x1, x2, x3);
 f();
   \end{lstlisting}
-  
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -168,11 +168,135 @@ print("My print");
 
   \frametitle{Counting \texttt{print} calls}
 
+  Instead of explicit Lambda captures, Lua has full lexical scoping.
+
   \begin{lstlisting}
-    
+count = 0;
+old_print = print;
+print = function(...)
+    count = count + 1;
+    old_print(...);
+  end;
   \end{lstlisting}
-  
+
 \end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Capturing state with function closures}
+
+  Instead of explicit Lambda captures, Lua has full lexical scoping.
+
+  \begin{lstlisting}
+function enable_counting()
+  local count = 0;
+  local old_print = print;
+  print = function(...)
+      count = count + 1;
+      old_print(...);
+    end;
+
+  return function() return count; end;
+end
+  \end{lstlisting}
+
+  Read \texttt{function} as closure construction.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Tables}
+
+  The only complex data structure in the language.
+
+  \begin{lstlisting}
+local t = {};
+
+local array = { 5, 4, 3, 2, 1 };
+assert(array[2] == 3);   -- indices are 1-based
+
+local dict = { the_answer = 42 };
+assert(dict["the_answer"] == 42);
+  \end{lstlisting}
+
+  Tables can use any type of values as keys or values.
+
+  \begin{lstlisting}
+dict[print] = "function as key";
+  \end{lstlisting}
+
+  Read \texttt{\{\}} as table construction.
+\end{frame}
+
+\begin{frame}[fragile]
+
+  \frametitle{Records}
+
+  \begin{lstlisting}
+local complex = { real = 42.0, imag = 0.0 };
+
+function conjugate(c)
+  c.imag = 0.0 - c.imag;
+end
+  \end{lstlisting}
+
+  Tables have reference semantics.
+
+  Table equality is pointer identity.
+
+  \begin{lstlisting}
+complex.conjugate = conjugate;
+complex.conjugate(complex)
+complex:conjugate();
+  \end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Object Construction}
+
+  \begin{lstlisting}
+function build_complex(r, i)
+  return { real = r, imag = i };
+end
+
+local c1 = build_complex(1, 0);
+local c2 = build_complex(0, 1);
+  \end{lstlisting}
+
+  \begin{lstlisting}
+local sum = c1 + c2; -- ???
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Metatables - Tables describing object properties}
+
+  \begin{lstlisting}
+function build_complex(r,i)
+  local mt = {};
+  mt.__add = function(c1, c2)
+    return build_complex(c1.real + c2.real,
+    c1.imag + c2.imag);
+    end;
+    local ret = {}
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Metatables on non-table values}
+
+  \begin{lstlisting}
+local str = "The quick brown fox";
+assert(str:find("quick") == 5)
+  \end{lstlisting}
+
+  Metatables are extensible: Functions can add their own semantics for non-standard fields.
+\end{frame}
+
 
 \iftransitions
 
@@ -225,6 +349,7 @@ function newDate(y, m, d)
 
 \fi
 
+
 \frame{%
 \setbeamercolor{normal text}{fg=gray,bg=}
 \setbeamercolor{alerted text}{fg=black,bg=}
@@ -262,7 +387,7 @@ function newDate(y, m, d)
     \item Uniform Call Syntax
     \item Contracts
     \item Vocabulary Types (optional, variant)
-    
+
     \item SIMD and parallel algorithms
     \item \texttt{stack\_array}
   \end{itemize}

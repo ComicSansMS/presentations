@@ -350,6 +350,62 @@ function newDate(y, m, d)
 \fi
 
 
+\begin{frame}[fragile]
+  \frametitle{Reflection}
+
+  All data structures are tables. Inspecting the fields of the table reveals everything we need to know.
+
+  \begin{lstlisting}
+function is_complex(c)
+  return c.real and c.imag;    
+end
+  \end{lstlisting}
+
+  \begin{lstlisting}
+local tuple = {};
+for k,v in pairs(t) do
+  tuple[#tuple + 1] = v;
+end
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{The environment}
+
+  But what about global variables?
+
+  \begin{lstlisting}
+for k in pairs(_G) do
+  print(k);
+end
+  \end{lstlisting}
+
+  What about local variables?
+  Sorry, no.
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Constraining the environment}
+
+  \begin{lstlisting}
+local foobar;
+-- [...]
+fobar = do_stuff();
+  \end{lstlisting}
+
+  \texttt{\_G} is just a table.
+
+  \begin{lstlisting}
+setmetatable(_G, {__newindex = function() print("No!"); end});
+  \end{lstlisting}
+  
+\end{frame}
+
+
 \frame{%
 \setbeamercolor{normal text}{fg=gray,bg=}
 \setbeamercolor{alerted text}{fg=black,bg=}

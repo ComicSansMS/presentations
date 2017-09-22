@@ -142,10 +142,16 @@ f();
   \frametitle{All functions are lambdas}
 
   \begin{lstlisting}
-f = function(a1, a2, a3)
-  -- implementation
+function f(a1, a2, a3)
   -- [...]
-  return r1, r2, r3;
+end
+  \end{lstlisting}
+
+  is just syntax sugar for
+
+  \begin{lstlisting}
+f = function(a1, a2, a3)
+  -- [...]
 end
   \end{lstlisting}
 
@@ -275,13 +281,17 @@ local sum = c1 + c2; -- ???
   \frametitle{Metatables - Tables describing object properties}
 
   \begin{lstlisting}
-function build_complex(r,i)
-  local mt = {};
-  mt.__add = function(c1, c2)
+local mt = {};
+mt.__add = function(c1, c2)
     return build_complex(c1.real + c2.real,
-    c1.imag + c2.imag);
-    end;
-    local ret = {}
+                         c1.imag + c2.imag);
+  end;
+
+function build_complex(r,i)
+  local ret = {real = r, imag = i};
+  setmetatable(ret, mt);
+  return ret;
+end
   \end{lstlisting}
 \end{frame}
 
@@ -384,6 +394,27 @@ end
 
   What about local variables?
   Sorry, no.
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Back to function hooking}
+
+  \begin{lstlisting}
+function enable_counting(fname)
+  local count = 0;
+  local old_func = _G[fname];
+  _G[fname] = function(...)
+      count = count + 1;
+      return old_func(...);
+    end;
+  return function() return count; end;
+end
+
+enable_counting("print");
+  \end{lstlisting}
+
 \end{frame}
 
 

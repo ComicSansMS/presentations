@@ -2,3 +2,38 @@ hooking functions
 string:find (__index metamethod)
 encapsulation with closures
 reflection?
+
+
+template<typename... Ts, std::size_t... Is>
+
+void push_manual(lua_State* l, std::tuple<Ts...> const& t, std::index_sequence<Is...>)
+
+{
+
+    ( (push(l, std::get<Is>(t))), ... );
+
+}
+
+ 
+
+template<typename... Ts>
+
+void call(lua_State* l, char const* func, Ts... args)
+
+{
+
+    lua_getglobal(l, func);
+
+    //auto t = boost::hana::make_tuple(args...);
+
+    //boost::hana::for_each(t, [l](auto&& v) { push(l, v); });
+
+    //push_manual(l, std::make_tuple(args...), std::make_index_sequence<sizeof...(Ts)>());
+
+    ( push(l, args), ... );
+
+    lua_pcall(l, sizeof...(Ts), LUA_MULTRET, 0);
+
+}
+
+ 

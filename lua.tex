@@ -74,12 +74,105 @@
     \item Lightweight
     \item Embeddable
   \end{itemize}
-  
-  Lorem Ipsum \\
-  Bla blub bal
+
+  \begin{itemize}
+  \item Powerful - First-class functions w/ full lexical scoping; Support for OOP paradigms; Metaprogramming; Reflection
+  \item Efficient - Performance better or on par with other scripting languages; Even better with LuaJIT
+  \item Lightweight - Small binaries; Only one type of complex data structure; Great expressiveness through few, orthogonal constructs
+  \item Embeddable - Simple and lean API; \texttt{main()} belongs to the enclosing program
+  \end{itemize}
 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Use cases}
+
+  @todo Images
+
+  \begin{itemize}
+  \item Games (Lua Bar, World of Warcraft)
+  \item Adobe Lightroom
+  \item Embedded (NodeMCU)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Why bother with Lua?}
+
+  Lua is \emph{small}.
+
+  (In a good way)
+
+  The interpreter fits into L2 cache of a modern desktop x86.
+
+  \begin{itemize}
+  \item The whole language fits in your head.
+  \item No swapping required.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Hello World!}
+  
+  \begin{lstlisting}
+print("Hello World!");
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+
+  \frametitle{Functions}
+
+  \begin{lstlisting}
+function f(a1, a2, a3)
+  -- implementation
+  -- [...]
+  return r1, r2, r3;
+end
+
+ 
+y1, y2, y3 = f(x1, x2, x3);
+y1 = f(x1, x2, x3);
+f();
+  \end{lstlisting}
+  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{All functions are lambdas}
+
+  \begin{lstlisting}
+f = function(a1, a2, a3)
+  -- implementation
+  -- [...]
+  return r1, r2, r3;
+end
+  \end{lstlisting}
+
+  Functions are true first-class values in Lua.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Replacing functions is trivial}
+
+  \begin{lstlisting}
+print("Vanilla print");
+print = function(...)
+    -- my_print implementation
+  end;
+print("My print");
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+
+  \frametitle{Counting \texttt{print} calls}
+
+  \begin{lstlisting}
+    
+  \end{lstlisting}
+  
+\end{frame}
 
 \iftransitions
 

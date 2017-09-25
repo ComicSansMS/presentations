@@ -165,6 +165,7 @@ end
 print("Vanilla print");
 print = function(...)
     -- my_print implementation
+    -- [...]
   end;
 print("My print");
   \end{lstlisting}
@@ -173,8 +174,6 @@ print("My print");
 \begin{frame}[fragile]
 
   \frametitle{Counting \texttt{print} calls}
-
-  Instead of explicit Lambda captures, Lua has full lexical scoping.
 
   \begin{lstlisting}
 count = 0;
@@ -241,6 +240,8 @@ dict[print] = "function as key";
 
   \begin{lstlisting}
 local complex = { real = 42.0, imag = 0.0 };
+complex["real"] = 42.0;
+complex.real = 42.0;
 
 function conjugate(c)
   c.imag = 0.0 - c.imag;
@@ -315,19 +316,19 @@ assert(str:find("quick") == 5)
   \setbeamercolor{alerted text}{fg=red}
   \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
   \begin{semiverbatim}
-\uncover<1->{\alert<0>{{\color{blue}function} newDate(y, m, d)}}
+\uncover<1->{\alert<0>{{\color{blue}function} build_date(y, m, d)}}
 \uncover<3->{\alert<3>{  assert(validDate(y, m, d))}}
-\uncover<3->{\alert<3>{  {\color{blue}local} self = \{ y=y, m=m, d=d \}}}
+\uncover<3->{\alert<3>{  {\color{blue}local} lself = \{ y=y, m=m, d=d \}}}
 \uncover<3->{\alert<3>{}}
-\uncover<4->{\alert<4>{  {\color{blue}local} getDay = {\color{blue}function}() {\color{blue}return} self.d {\color{blue}end}}}
-\uncover<5->{\alert<5>{  {\color{blue}local} setDay = {\color{blue}function}(nd)}}
-\uncover<5->{\alert<5>{      assert(validDate(self.y, self.m, nd))}}
-\uncover<5->{\alert<5>{      self.d = nd}}
+\uncover<4->{\alert<4>{  {\color{blue}local} lget_day = {\color{blue}function}() {\color{blue}return} lself.d {\color{blue}end}}}
+\uncover<5->{\alert<5>{  {\color{blue}local} lset_day = {\color{blue}function}(nd)}}
+\uncover<5->{\alert<5>{      assert(validDate(lself.y, lself.m, nd))}}
+\uncover<5->{\alert<5>{      lself.d = nd}}
 \uncover<5->{\alert<5>{    {\color{blue}end}}}
 \uncover<5->{\alert<5>{}}
 \uncover<2->{\alert<2>{  {\color{blue}return} \{}}
-\uncover<2->{\alert<2>{    setDay = setDay,}}
-\uncover<2->{\alert<2>{    getDay = getDay}}
+\uncover<2->{\alert<2>{    set_day = lset_day,}}
+\uncover<2->{\alert<2>{    get_day = lget_day}}
 \uncover<2->{\alert<2>{  \}}}
 \uncover<1->{\alert<0>{\color{blue}end}}
   \end{semiverbatim}
@@ -340,19 +341,19 @@ assert(str:find("quick") == 5)
   \frametitle{Encapsulation}
 
   \begin{lstlisting}
-function newDate(y, m, d)
+function build_date(y, m, d)
   assert(validDate(y, m, d))
-  local self = { y=y, m=m, d=d }
+  local lself = { y=y, m=m, d=d }
 
-  local getDay = function() return self.d end
-  local setDay = function(nd)
-      assert(validDate(self.y, self.m, nd))
-      self.d = nd
+  local lget_day = function() return lself.d end
+  local lset_day = function(nd)
+      assert(validDate(lself.y, lself.m, nd))
+      lself.d = nd
     end
 
   return {
-    setDay = setDay,
-    getDay = getDay
+    set_day = lset_day,
+    get_day = lget_day
   }
   \end{lstlisting}
 \end{frame}
@@ -367,7 +368,8 @@ function newDate(y, m, d)
 
   \begin{lstlisting}
 function is_complex(c)
-  return c.real and c.imag;    
+  return type(c) == "table" and
+         c.real and c.imag;    
 end
   \end{lstlisting}
 
@@ -441,14 +443,40 @@ setmetatable(_G,
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}[fragile]
 
   \frametitle{Integration with C++}
 
-  It's embedded!
+  It's embedded - \texttt{main()} belongs to the enclosing program.
 
+  \begin{lstlisting}[language={C++}]
+int main() {
+
+  lua_State* l = luaL_newstate();
+
+  luaL_dostring(l, R"(
+    print("Hello World!");
+  )" );
+  
+}
+  \end{lstlisting}
+
+  Lua API is prefixed \texttt{lua\_}.
+  Auxiliary library is prefixed \texttt{luaL\_}.
+  
 \end{frame}
 
+
+\begin{frame}[fragile]
+  \frametitle{Exposing C functions to Lua}
+
+  \begin{lstlisting}[language={C++}]
+int my_function(lua_State* l) {
+      // [...]
+}
+  \end{lstlisting}
+  
+\end{frame}
 
 \begin{frame}
 

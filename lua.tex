@@ -61,6 +61,7 @@
 
 \end{frame}
 
+\iffalse
 \begin{frame}[fragile]
   \frametitle{Lua}
 
@@ -83,19 +84,25 @@
   \end{itemize}
 
 \end{frame}
+\fi
 
 \begin{frame}
-  \frametitle{Use cases}
+  \frametitle{Lua in the wild}
 
   @todo Images
 
   \begin{itemize}
-  \item Games (Lua Bar, World of Warcraft)
+  \item Games
+    \iffalse
+    \includegraphics[height=.4\textheight]{resources/mi_lua_bar.jpg}
+    \includegraphics[height=.4\textheight]{resources/wow_raidui.png}
+    \fi
   \item Adobe Lightroom
   \item Embedded (NodeMCU)
   \end{itemize}
 \end{frame}
 
+\iffalse
 \begin{frame}
   \frametitle{Why bother with Lua?}
 
@@ -109,6 +116,29 @@
   \item The whole language fits in your head.
   \item No swapping required.
   \end{itemize}
+\end{frame}
+\fi
+
+\begin{frame}
+  \frametitle{Lua is small}
+  \begin{columns}
+    \column{0.4\linewidth}
+    \includegraphics[height=.9\textheight]{resources/syntax.pdf}
+    \column{0.6\linewidth}
+    \begin{itemize}
+    \item Reference Manual 82 A4 pages
+    \item 120 C API functions
+    \item 8 basic data types
+    \item Batteries not included!
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The whole language fits into your head}
+  \begin{center}
+    \includegraphics[height=.9\textheight]{resources/talosians_cpp.jpg}
+  \end{center}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -481,9 +511,17 @@ int my_function(lua_State* l) {
 
 \begin{frame}
 
-  \frametitle{The stack}
+  \frametitle{The Stack - The needle's eye}
 
-  
+  \begin{itemize}
+  \item A stack of Lua values.
+  \item The only way of getting values in or out of the VM.
+  \item API functions consume Lua value arguments from the stack.
+  \item Function calls exchange arguments and return values over the stack.
+  \item The stack has shared ownership of its values.
+
+  \item This is \emph{not} the call stack!
+  \end{itemize}
 
 \end{frame}
 

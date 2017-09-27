@@ -513,6 +513,13 @@ int my_function(lua_State* l) {
 
   \frametitle{The Stack - The needle's eye}
 
+  \begin{center}
+    \includegraphics[height=.9\textheight]{resources/needle.png}
+  \end{center}
+
+\end{frame}
+
+\iffalse
   \begin{itemize}
   \item A stack of Lua values.
   \item The only way of getting values in or out of the VM.
@@ -522,16 +529,65 @@ int my_function(lua_State* l) {
 
   \item This is \emph{not} the call stack!
   \end{itemize}
+\fi
 
+\begin{frame}[fragile]
+  \frametitle{Representing values}
+
+  \begin{lstlisting}[language={C++}]
+enum class Type;
+    
+class Number { Type type() const; }
+class String { Type type() const; };
+// [...]
+
+using Value =
+  std::variant<Number, String /*, [...] */>;
+
+Type getType(Value const& v) {
+  return std::visit(
+    [](auto x) { return x.type(); },
+    v);  
+}
+  \end{lstlisting}
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}[fragile]
+  \frametitle{Representing values - Sean Parent style}
 
-  \frametitle{Representing values}
+  \begin{lstlisting}[language={C++}]
 
-  Variant and Poly.
+struct Concept { virtual Type type() const=0; };
+  
+template<typename T>
+struct Model : Concept {
+  Model(T x): v(x) {}  
+    
+  Type type() const override {
+      return v.type();
+  }
+  T v;
+};
+    ...
+  \end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]
+    \frametitle{Representing values - Sean Parent style (contd.)}
+    \begin{lstlisting}[language={C++}]
+    ...
+      
+class Value {
+  std::unique_ptr<Concept> c;
+public:
+  template<typename T>
+  Value(T v)
+  : c(std::make_unique<Model<T>>(v))
+  {}
 
+  Type type() const { return c->type(); }
+};
+  \end{lstlisting}
 \end{frame}
 
 

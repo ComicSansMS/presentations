@@ -591,6 +591,61 @@ public:
 \end{frame}
 
 
+\begin{frame}[fragile]
+  \frametitle{Pushing values on the stack}
+
+  \begin{lstlisting}[language={C++}]
+void push(lua_State* l, lua_Number n) {
+  lua_pushnumber(l, n);
+}
+
+void push(lua_State* l, char const* s) {
+  lua_pushstring(l, str);
+}
+
+template<typename... Ts>
+void pushargs(lua_State* l, Ts... args) {
+    ( push(l, args), ... );
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pushing values on the stack (2)}
+
+  \begin{lstlisting}[language={C++}]
+template<typename... Ts>
+void pushargs(lua_State* l, Ts... args) {
+    auto t = boost::hana::make_tuple(args...);
+    boost::hana::for_each(t,
+      [l](auto&& v) { push(l, v); });
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pushing values on the stack (3)}
+
+  \begin{lstlisting}[language={C++}]
+template<typename... Ts>
+void pushargs(lua_State* l, Ts... args) {
+  auto t = std::make_tuple(args...);
+  push_helper(l, t,
+    std::make_index_sequence<sizeof...(Ts)>());
+}
+
+template<typename... Ts, std::size_t... Is>
+void push_helper(lua_State* l,
+                 std::tuple<Ts...> const& t,
+                 std::index_sequence<Is...>) {
+    using expander = int [];
+    (void) expander { 0,
+      (push(l, std::get<Is>(t)), 0)... };
+}
+  \end{lstlisting}
+\end{frame}
+
+
 \begin{frame}
 
   \frametitle{Generic function call implementation}

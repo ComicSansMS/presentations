@@ -243,6 +243,23 @@ print = function(...)
   Instead of explicit Lambda captures, Lua has full lexical scoping.
   \iftransitions \pause \fi
 
+\iftransitions
+  \setbeamercolor{alerted text}{fg=red}
+  \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
+  \begin{semiverbatim}
+\uncover<2->{\alert<0>{{\color{blue}function} enable_counting()}}
+\uncover<2->{\alert<0>{  {\color{blue}local} count = 0;}}
+\uncover<2->{\alert<0>{  {\color{blue}local} old_print = {\color{blue}print};}}
+\uncover<3->{\alert<3>{  {\color{blue}print} = {\color{blue}function}(...)}}
+\uncover<3->{\alert<3>{      count = count + 1;}}
+\uncover<3->{\alert<3>{      old_print(...);}}
+\uncover<3->{\alert<3>{    {\color{blue}end};}}
+
+\uncover<4->{\alert<4>{  {\color{blue}return function}() {\color{blue}return} count; {\color{blue}end};}}
+\uncover<2->{\alert<0>{{\color{blue}end}}}
+
+  \end{semiverbatim}
+\else
   \begin{lstlisting}
 function enable_counting()
   local count = 0;
@@ -255,8 +272,11 @@ function enable_counting()
   return function() return count; end;
 end
   \end{lstlisting}
+\fi
 
+  \iftransitions \uncover<5->{\fi
   Read \texttt{function} as closure construction.
+  \iftransitions }\fi
 \end{frame}
 
 
@@ -267,13 +287,18 @@ end
 
   \begin{lstlisting}
 local t = {};
-
+  \end{lstlisting}
+  \iftransitions \pause \fi
+  \begin{lstlisting}
 local array = { 5, 4, 3, 2, 1 };
-assert(array[2] == 3);   -- indices are 1-based
-
+assert(array[2] == 4);   -- indices are 1-based
+  \end{lstlisting}
+  \iftransitions \pause \fi
+  \begin{lstlisting}
 local dict = { the_answer = 42 };
 assert(dict["the_answer"] == 42);
   \end{lstlisting}
+  \iftransitions \pause \fi
 
   Tables can use any type of values as keys or values.
 
@@ -292,10 +317,16 @@ set["foo"] = true;
 set["bar"] = true;
   \end{lstlisting}
 
+  \iftransitions \pause \fi
+
+  Tables have reference semantics:
+
   \begin{lstlisting}
 local list = { value = "foo", next = nil };
 list.next = { value = "bar", next = nil  };
   \end{lstlisting}
+
+  \iftransitions \pause \fi
 
   Read \texttt{\{\}} as table construction.
 \end{frame}
@@ -315,10 +346,6 @@ function conjugate(c)
   c.imag = 0.0 - c.imag;
 end
   \end{lstlisting}
-
-  Tables have reference semantics.
-
-  Table equality is pointer identity.
 
   \begin{lstlisting}
 complex.conjugate = conjugate;

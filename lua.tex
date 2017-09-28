@@ -21,7 +21,7 @@
     }
 
 \newif\iftransitions
-% \transitionstrue
+\transitionstrue
 
 
 \title{Howling at the Moon:}
@@ -137,6 +137,8 @@
 
 \begin{frame}
   \frametitle{The whole language fits into your head}
+
+  \iftransitions \pause \fi
   \begin{center}
     \includegraphics[height=.9\textheight]{resources/talosians_cpp.jpg}
   \end{center}
@@ -168,14 +170,15 @@ function f(a1, a2, a3)
   -- implementation
   -- [...]
   return r1, r2, r3;
-end
-
-
-y1, y2, y3 = f(x1, x2, x3);
-y1 = f(x1, x2, x3);
-f();
+  end
   \end{lstlisting}
 
+  \iftransitions \pause \fi
+\begin{semiverbatim}
+y1, y2, y3 = f(x1, x2, x3);  \iftransitions \pause \fi
+y1 = f(x1, x2, x3);  \iftransitions \pause \fi
+f();
+\end{semiverbatim}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -187,6 +190,8 @@ function f(a1, a2, a3)
 end
   \end{lstlisting}
 
+   \iftransitions \pause \fi
+
   is just syntax sugar for
 
   \begin{lstlisting}
@@ -195,6 +200,7 @@ f = function(a1, a2, a3)
 end
   \end{lstlisting}
 
+  \iftransitions \pause \fi
   Functions are true first-class values in Lua.
 \end{frame}
 
@@ -203,12 +209,15 @@ end
 
   \begin{lstlisting}
 print("Vanilla print");
+  \end{lstlisting}
+      \iftransitions \pause \fi
+    \begin{lstlisting}
 print = function(...)
     -- my_print implementation
     -- [...]
   end;
 print("My print");
-  \end{lstlisting}
+\end{lstlisting}  
 \end{frame}
 
 \begin{frame}[fragile]
@@ -232,6 +241,7 @@ print = function(...)
   \frametitle{Capturing state with function closures}
 
   Instead of explicit Lambda captures, Lua has full lexical scoping.
+  \iftransitions \pause \fi
 
   \begin{lstlisting}
 function enable_counting()
@@ -742,7 +752,7 @@ std::tuple<Number, String> call(lua_State*,
 \end{frame}
 
 
-\iftransitions
+\iffalse
 
 \frame{%
 \setbeamercolor{normal text}{fg=gray,bg=}

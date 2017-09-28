@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5252"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   sodipodi:docname="lua_stack.svg">
+  <defs
+     id="defs5246" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.5"
+     inkscape:cx="-111.42857"
+     inkscape:cy="560"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1680"
+     inkscape:window-height="936"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5249">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000004;stroke-width:1.77979147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5802"
+       width="156.80235"
+       height="44.921402"
+       x="3.6196599"
+       y="247.70299" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="47.625"
+       y="278.1012"
+       id="text5806"><tspan
+         sodipodi:role="line"
+         id="tspan5804"
+         x="47.625"
+         y="278.1012"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue';stroke-width:0.26458332">Value</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000004;stroke-width:1.77979147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5802-1"
+       width="156.80235"
+       height="44.921402"
+       x="3.6196594"
+       y="202.78157" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="47.625"
+       y="233.17979"
+       id="text5806-4"><tspan
+         sodipodi:role="line"
+         id="tspan5804-9"
+         x="47.625"
+         y="233.17979"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue';stroke-width:0.26458332">Value</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000004;stroke-width:1.77979147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5802-7"
+       width="156.80235"
+       height="44.921402"
+       x="3.6196442"
+       y="157.86017" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="47.624985"
+       y="188.25838"
+       id="text5806-2"><tspan
+         sodipodi:role="line"
+         id="tspan5804-0"
+         x="47.624985"
+         y="188.25838"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue';stroke-width:0.26458332">Value</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000004;stroke-width:1.77979147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5802-4"
+       width="156.80235"
+       height="44.921402"
+       x="3.6196442"
+       y="112.93877" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="47.624985"
+       y="143.33698"
+       id="text5806-3"><tspan
+         sodipodi:role="line"
+         id="tspan5804-04"
+         x="47.624985"
+         y="143.33698"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue';stroke-width:0.26458332">Value</tspan></text>
+    <rect
+       style="fill:#000000;fill-opacity:0;stroke:#000004;stroke-width:1.77979147;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect5802-8"
+       width="156.80235"
+       height="44.921402"
+       x="3.6196594"
+       y="68.017365" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="47.625"
+       y="98.415573"
+       id="text5806-7"><tspan
+         sodipodi:role="line"
+         id="tspan5804-1"
+         x="47.625"
+         y="98.415573"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;font-family:'Helvetica Neue';-inkscape-font-specification:'Helvetica Neue';stroke-width:0.26458332">Value</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.77999997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 160.42201,36.06238 v 31.064983 h 0.59585"
+       id="path5863"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.77999997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 3.6196594,36.952381 v 31.064984 h 0.59585"
+       id="path5863-0"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="177.79996"
+       y="281.88095"
+       id="text5882"><tspan
+         sodipodi:role="line"
+         id="tspan5880"
+         x="177.79996"
+         y="281.88095"
+         style="font-size:25.39999962px;stroke-width:0.26458332">1</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="177.74445"
+       y="232.31647"
+       id="text5882-2"><tspan
+         sodipodi:role="line"
+         id="tspan5880-4"
+         x="177.74445"
+         y="232.31647"
+         style="font-size:25.39999962px;stroke-width:0.26458332">2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.93333333px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332;"
+       x="174.56949"
+       y="190.05872"
+       id="text5882-5"><tspan
+         sodipodi:role="line"
+         id="tspan5880-9"
+         x="174.56949"
+         y="190.05872"
+         style="font-size:16.93333333px;stroke-width:0.26458332;">...</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="170.18501"
+       y="144.02122"
+       id="text5882-3"><tspan
+         sodipodi:role="line"
+         id="tspan5880-5"
+         x="170.18501"
+         y="144.02122"
+         style="font-size:25.39999962px;stroke-width:0.26458332">-2</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Courier New';-inkscape-font-specification:'Courier New';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="169.65587"
+       y="99.57122"
+       id="text5882-8"><tspan
+         sodipodi:role="line"
+         id="tspan5880-8"
+         x="169.65587"
+         y="99.57122"
+         style="font-size:25.39999962px;stroke-width:0.26458332">-1</tspan></text>
+  </g>
+</svg>

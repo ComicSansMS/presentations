@@ -89,17 +89,17 @@
 \begin{frame}
   \frametitle{Lua in the wild}
 
-  @todo Images
+  \begin{columns}[t]
+    \column{.5\textwidth}
+    \centering
+    \includegraphics[height=3.5cm]{resources/mi_lua_bar.jpg}\\
+    \includegraphics[height=3.5cm]{resources/nodemcu.png}
+    \column{.5\textwidth}
+    \centering
+    \includegraphics[height=3.5cm]{resources/wow_raidui.png}\\
+    \includegraphics[height=3.5cm]{resources/lightroom.png}
+  \end{columns}
 
-  \begin{itemize}
-  \item Games
-    \iffalse
-    \includegraphics[height=.4\textheight]{resources/mi_lua_bar.jpg}
-    \includegraphics[height=.4\textheight]{resources/wow_raidui.png}
-    \fi
-  \item Adobe Lightroom
-  \item Embedded (NodeMCU)
-  \end{itemize}
 \end{frame}
 
 \iffalse
@@ -126,9 +126,9 @@
     \includegraphics[height=.9\textheight]{resources/syntax.pdf}
     \column{0.6\linewidth}
     \begin{itemize}
-    \item Compiled binary is <200KB
+    \item Compiled binary is $<200$KB
     \item Reference Manual 82 A4 pages
-    \item 120 C API functions
+%    \item 120 C API functions
     \item 8 basic data types
     \item Batteries not included!
     \end{itemize}
@@ -146,7 +146,9 @@
 
   \frametitle{Disclaimer}
 
-  This talk is trying too hard to be clever in some places.
+  This talk is trying too hard to be clever.
+
+  Keep simple things simple.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -211,7 +213,7 @@ print("My print");
 
 \begin{frame}[fragile]
 
-  \frametitle{Counting \texttt{print} calls}
+  \frametitle{Function Hooking -- Counting \texttt{print} calls}
 
   \begin{lstlisting}
 count = 0;
@@ -268,9 +270,27 @@ assert(dict["the_answer"] == 42);
   \begin{lstlisting}
 dict[print] = "function as key";
   \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Tables (contd.)}
+
+  \begin{lstlisting}
+local set = {};
+set["foo"] = true;
+set["bar"] = true;
+  \end{lstlisting}
+
+  \begin{lstlisting}
+local list = { value = "foo", next = nil };
+list.next = { value = "bar", next = nil  };
+  \end{lstlisting}
 
   Read \texttt{\{\}} as table construction.
 \end{frame}
+
+
 
 \begin{frame}[fragile]
 
@@ -402,7 +422,7 @@ function build_date(y, m, d)
 \begin{frame}[fragile]
   \frametitle{Reflection}
 
-  All data structures are tables. Inspecting the fields of the table reveals everything we need to know.
+  All data structures are tables. Inspecting the fields of the table reveals everything we need to know about the type.
 
   \begin{lstlisting}
 function is_complex(c)
@@ -452,7 +472,8 @@ function enable_counting(fname)
   return function() return count; end;
 end
 
-enable_counting("print");
+local c = enable_counting("print");
+c();  -- retrieve count
   \end{lstlisting}
 
 \end{frame}
@@ -468,7 +489,7 @@ local foobar;
 fobar = do_stuff();
   \end{lstlisting}
 
-  \texttt{\_G} is just a table.
+  Remember: \texttt{\_G} is just a table.
 
   \begin{lstlisting}
 setmetatable(_G,
@@ -485,7 +506,7 @@ setmetatable(_G,
 
   \frametitle{Integration with C++}
 
-  It's embedded - \texttt{main()} belongs to the enclosing program.
+  It's embedded --- \texttt{main()} belongs to the enclosing program.
 
   \begin{lstlisting}[language={C++}]
 int main() {
@@ -545,7 +566,7 @@ int my_function(lua_State* l) {
   \begin{lstlisting}[language={C++}]
 enum class Type;
     
-class Number { Type type() const; }
+class Number { Type type() const; };
 class String { Type type() const; };
 // [...]
 

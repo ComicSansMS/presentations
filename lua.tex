@@ -126,6 +126,7 @@
     \includegraphics[height=.9\textheight]{resources/syntax.pdf}
     \column{0.6\linewidth}
     \begin{itemize}
+    \item Compiled binary is <200KB
     \item Reference Manual 82 A4 pages
     \item 120 C API functions
     \item 8 basic data types
@@ -139,6 +140,13 @@
   \begin{center}
     \includegraphics[height=.9\textheight]{resources/talosians_cpp.jpg}
   \end{center}
+\end{frame}
+
+\begin{frame}
+
+  \frametitle{Disclaimer}
+
+  This talk is trying too hard to be clever in some places.
 \end{frame}
 
 \begin{frame}[fragile]
@@ -648,11 +656,70 @@ void push_helper(lua_State* l,
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}[fragile]
 
-  \frametitle{Generic function call implementation}
+  \frametitle{Getting values from the stack}
+
+  \begin{lstlisting}[language={C++}]
+Value getValueFromStack(lua_State* l, int idx)
+{
+  switch(lua_type(l, idx)) {
+    case LUA_TNUMBER:
+      return Number(lua_tonumber(l, idx));
+    case LUA_TSTRING:
+      return String(lua_tostring(l, idx));  
+    // [...]  
+  }
+}
+  \end{lstlisting}
 
 \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Calling functions}
+
+  \begin{lstlisting}[language={C++}]
+template<typename... Ts>
+std::vector<Value> call(
+    lua_State* l,
+    char const* func,
+    Ts... args)
+{
+  lua_getglobal(l, func);
+  pushargs(l, args...);
+  int nres = lua_call(l, sizeof...(Ts),
+                      LUA_MULTRET, 0);
+  return getValuesFromStack(l);  
+}
+
+call(l, "print", 42, "Hello World");
+  // -> 42.0   Hello World
+  \end{lstlisting}
+    
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Constraining functions}
+
+  \begin{lstlisting}[language={C++}]
+template<typename... Ts>
+std::vector<Value> call(lua_State*,
+  char const*,
+  Ts...);
+
+std::array<Value, 2> call(lua_State*,
+  char const*,
+  Value, Value);
+
+std::tuple<Number, String> call(lua_State*,
+  char const*,
+  Number, Number);
+  \end{lstlisting}
+    
+\end{frame}
+
 
 \iftransitions
 
@@ -668,6 +735,12 @@ void push_helper(lua_State* l,
 }
 
 \fi
+
+\begin{frame}
+  \frametitle{Wrapping up}
+
+  \begin{quote}Lua is a powerful, efficient, lightweight, embeddable scripting language.\end{quote}
+\end{frame}
 
 \begin{frame}
   \frametitle{Literature}

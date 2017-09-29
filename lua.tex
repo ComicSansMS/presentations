@@ -24,6 +24,9 @@
 \transitionstrue
 
 
+\newif\iffast
+% \fasttrue
+
 \title{Howling at the Moon:}
 \subtitle{Lua for C++ Programmers}
 \author{Andreas Weis}
@@ -161,6 +164,7 @@ print("Hello World!");
   \end{lstlisting}
 \end{frame}
 
+\iffast
 \begin{frame}[fragile]
 
   \frametitle{Functions}
@@ -174,12 +178,13 @@ end
   \end{lstlisting}
 
   \iftransitions \pause \fi
-\begin{semiverbatim}
+  \begin{semiverbatim}
 y1, y2, y3 = f(x1, x2, x3);  \iftransitions \pause \fi
 y1 = f(x1, x2, x3);  \iftransitions \pause \fi
 f();
-\end{semiverbatim}
+  \end{semiverbatim}
 \end{frame}
+\fi
 
 \begin{frame}[fragile]
   \frametitle{All functions are lambdas}
@@ -311,6 +316,7 @@ dict[print] = "function as key";
 \begin{frame}[fragile]
   \frametitle{Tables (contd.)}
 
+  \iffalse
   \begin{lstlisting}
 local set = {};
 set["foo"] = true;
@@ -318,7 +324,7 @@ set["bar"] = true;
   \end{lstlisting}
 
   \iftransitions \pause \fi
-
+  \fi
   Tables have reference semantics:
 
   \begin{lstlisting}
@@ -398,7 +404,7 @@ end
   \end{lstlisting}
 \end{frame}
 
-
+\iffast
 \begin{frame}[fragile]
   \frametitle{Metatables on non-table values}
 
@@ -409,7 +415,7 @@ assert(str:find("quick") == 5)
 
   Metatables are extensible: Functions can add their own semantics for non-standard fields.
 \end{frame}
-
+\fi
 
 \iftransitions
 
@@ -500,7 +506,7 @@ end
 %  Sorry, no.
 \end{frame}
 
-
+\iffast
 \begin{frame}[fragile]
 
   \frametitle{Back to function hooking}
@@ -541,6 +547,7 @@ c();  -- retrieve count
   \fi
 
 \end{frame}
+\fi
 
 
 \begin{frame}[fragile]
@@ -574,18 +581,36 @@ setmetatable(_G,
 
   It's embedded --- \texttt{main()} belongs to the enclosing program.
 
+  \iftransitions
+  \setbeamercolor{alerted text}{fg=red}
+  \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
+  \begin{semiverbatim}
+\uncover<2->{\alert<0>{{\color{blue}int} main() \{}}
+
+\uncover<3->{\alert<0>{  lua_State* l = luaL_newstate();}}
+
+\uncover<4->{\alert<0>{  luaL_dostring(l, R"(}}
+\uncover<4->{\alert<0>{      print("Hello World!");}}
+\uncover<4->{\alert<0>{    )" );}}
+      
+\uncover<3->{\alert<0>{  lua_close(l);}}
+\uncover<2->{\alert<0>{\}}}
+  \end{semiverbatim}
+  \else
   \begin{lstlisting}[language={C++}]
 int main() {
 
   lua_State* l = luaL_newstate();
 
   luaL_dostring(l, R"(
-    print("Hello World!");
-  )" );
-  
+      print("Hello World!");
+    )" );
+      
+  lua_close(l);
 }
   \end{lstlisting}
-
+  \fi
+  
   Lua API is prefixed \texttt{lua\_}
   
   Auxiliary library is prefixed \texttt{luaL\_}
@@ -651,7 +676,7 @@ Type getType(Value const& v) {
   \end{lstlisting}
 \end{frame}
 
-
+\iffast
 \begin{frame}[fragile]
   \frametitle{Representing values - Sean Parent style}
 
@@ -712,7 +737,7 @@ public:
   \end{lstlisting}
   \fi
 \end{frame}
-
+\fi
 
 \begin{frame}[fragile]
   \frametitle{Pushing values on the stack}

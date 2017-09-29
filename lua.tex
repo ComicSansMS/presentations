@@ -652,6 +652,83 @@ int my_function(lua_State* l) {
 \fi
 
 \begin{frame}[fragile]
+  \frametitle{Pushing values on the stack}
+
+  \begin{lstlisting}[language={C++}]
+void push(lua_State* l, lua_Number n) {
+  lua_pushnumber(l, n);
+}
+
+void push(lua_State* l, char const* s) {
+  lua_pushstring(l, str);
+}
+  \end{lstlisting}
+  \iftransitions \pause \fi
+  \begin{lstlisting}[language={C++}]
+template<typename... Ts>
+void pushargs(lua_State* l, Ts... args) {
+    ( push(l, args), ... );
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pushing values on the stack (2)}
+
+  \begin{lstlisting}[language={C++}]
+template<typename... Ts>
+void pushargs(lua_State* l, Ts... args) {
+    auto t = boost::hana::make_tuple(args...);
+    boost::hana::for_each(t,
+      [l](auto&& v) { push(l, v); });
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pushing values on the stack (3)}
+
+  \begin{lstlisting}[language={C++}]
+template<typename... Ts>
+void pushargs(lua_State* l, Ts... args) {
+  auto t = std::make_tuple(args...);
+  push_helper(l, t,
+    std::make_index_sequence<sizeof...(Ts)>());
+}
+
+template<typename... Ts, std::size_t... Is>
+void push_helper(lua_State* l,
+                 std::tuple<Ts...> const& t,
+                 std::index_sequence<Is...>) {
+    using expander = int [];
+    (void) expander { 0,
+      (push(l, std::get<Is>(t)), 0)... };
+}
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Getting values from the stack}
+
+  \begin{lstlisting}[language={C++}]
+??? getValueFromStack(lua_State* l, int idx)
+{
+  switch(lua_type(l, idx)) {
+    case LUA_TNUMBER:
+      return Number(lua_tonumber(l, idx));
+    case LUA_TSTRING:
+      return String(lua_tostring(l, idx));  
+    // [...]  
+  }
+}
+  \end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Representing values}
 
   \begin{lstlisting}[language={C++}]
@@ -738,82 +815,6 @@ public:
   \fi
 \end{frame}
 \fi
-
-\begin{frame}[fragile]
-  \frametitle{Pushing values on the stack}
-
-  \begin{lstlisting}[language={C++}]
-void push(lua_State* l, lua_Number n) {
-  lua_pushnumber(l, n);
-}
-
-void push(lua_State* l, char const* s) {
-  lua_pushstring(l, str);
-}
-  \end{lstlisting}
-  \iftransitions \pause \fi
-  \begin{lstlisting}[language={C++}]
-template<typename... Ts>
-void pushargs(lua_State* l, Ts... args) {
-    ( push(l, args), ... );
-}
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Pushing values on the stack (2)}
-
-  \begin{lstlisting}[language={C++}]
-template<typename... Ts>
-void pushargs(lua_State* l, Ts... args) {
-    auto t = boost::hana::make_tuple(args...);
-    boost::hana::for_each(t,
-      [l](auto&& v) { push(l, v); });
-}
-  \end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Pushing values on the stack (3)}
-
-  \begin{lstlisting}[language={C++}]
-template<typename... Ts>
-void pushargs(lua_State* l, Ts... args) {
-  auto t = std::make_tuple(args...);
-  push_helper(l, t,
-    std::make_index_sequence<sizeof...(Ts)>());
-}
-
-template<typename... Ts, std::size_t... Is>
-void push_helper(lua_State* l,
-                 std::tuple<Ts...> const& t,
-                 std::index_sequence<Is...>) {
-    using expander = int [];
-    (void) expander { 0,
-      (push(l, std::get<Is>(t)), 0)... };
-}
-  \end{lstlisting}
-\end{frame}
-
-
-\begin{frame}[fragile]
-
-  \frametitle{Getting values from the stack}
-
-  \begin{lstlisting}[language={C++}]
-Value getValueFromStack(lua_State* l, int idx)
-{
-  switch(lua_type(l, idx)) {
-    case LUA_TNUMBER:
-      return Number(lua_tonumber(l, idx));
-    case LUA_TSTRING:
-      return String(lua_tostring(l, idx));  
-    // [...]  
-  }
-}
-  \end{lstlisting}
-
-\end{frame}
 
 
 \begin{frame}[fragile]

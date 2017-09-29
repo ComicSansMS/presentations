@@ -230,7 +230,7 @@ old_print = print;
 print = function(...)
     count = count + 1;
     old_print(...);
-  end;
+end;
   \end{lstlisting}
 
 \end{frame}
@@ -344,13 +344,13 @@ complex.real = 42.0;
   \end{lstlisting}
     \iftransitions \pause \fi
   \begin{lstlisting}
-function conjugate(c)
+function fconjugate(c)
   c.imag = 0.0 - c.imag;
 end
   \end{lstlisting}
   \iftransitions \pause \fi
   \begin{lstlisting}
-complex.conjugate = conjugate;
+complex.conjugate = fconjugate;
 complex.conjugate(complex);
   \end{lstlisting}
   \iftransitions \pause \fi

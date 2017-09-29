@@ -126,7 +126,7 @@
     \includegraphics[height=.9\textheight]{resources/syntax.pdf}
     \column{0.6\linewidth}
     \begin{itemize}
-    \item Compiled binary is $<200$KB
+    \item Compiled binary is $<180$KB
     \item Reference Manual 82 A4 pages
 %    \item 120 C API functions
     \item 8 basic data types
@@ -170,7 +170,7 @@ function f(a1, a2, a3)
   -- implementation
   -- [...]
   return r1, r2, r3;
-  end
+end
   \end{lstlisting}
 
   \iftransitions \pause \fi
@@ -230,7 +230,7 @@ old_print = print;
 print = function(...)
     count = count + 1;
     old_print(...);
-end;
+  end;
   \end{lstlisting}
 
 \end{frame}

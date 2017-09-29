@@ -505,6 +505,25 @@ end
 
   \frametitle{Back to function hooking}
 
+  \iftransitions
+  \setbeamercolor{alerted text}{fg=red}
+  \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
+  \begin{semiverbatim}
+\uncover<1->{\alert<0>{{\color{blue}function} enable_counting(fname)}}
+\uncover<2->{\alert<2>{  {\color{blue}local} count = 0;}}
+\uncover<2->{\alert<2>{  {\color{blue}local} old_func = {\color{blue}_G}[fname];}}
+\uncover<3->{\alert<3>{  {\color{blue}_G}[fname] = {\color{blue}function}(...)}}
+\uncover<3->{\alert<3>{      count = count + 1;}}
+\uncover<3->{\alert<3>{      {\color{blue}return} old_func(...);}}
+\uncover<3->{\alert<3>{    {\color{blue}end};}}
+\uncover<3->{\alert<3>{  {\color{blue}return function}() {\color{blue}return} count; {\color{blue}end};}}
+\uncover<1->{\alert<0>{{\color{blue}end}}}
+
+\uncover<1->{\alert<0>{{\color{blue}local} c = enable_counting("print");}}
+\uncover<1->{\alert<0>{c();  -- retrieve count}}
+
+  \end{semiverbatim}
+  \else
   \begin{lstlisting}
 function enable_counting(fname)
   local count = 0;
@@ -519,6 +538,7 @@ end
 local c = enable_counting("print");
 c();  -- retrieve count
   \end{lstlisting}
+  \fi
 
 \end{frame}
 
@@ -549,6 +569,8 @@ setmetatable(_G,
 \begin{frame}[fragile]
 
   \frametitle{Integration with C++}
+
+  \iftransitions \pause \fi
 
   It's embedded --- \texttt{main()} belongs to the enclosing program.
 
@@ -613,10 +635,14 @@ enum class Type;
 class Number { Type type() const; };
 class String { Type type() const; };
 // [...]
-
+  \end{lstlisting}
+    \iftransitions \pause \fi
+  \begin{lstlisting}
 using Value =
   std::variant<Number, String /*, [...] */>;
-
+  \end{lstlisting}
+  \iftransitions \pause \fi
+  \begin{lstlisting}
 Type getType(Value const& v) {
   return std::visit(
     [](auto x) { return x.type(); },
@@ -650,8 +676,27 @@ struct Model : Concept {
   \end{lstlisting}
 \end{frame}
 \begin{frame}[fragile]
-    \frametitle{Representing values - Sean Parent style (contd.)}
-    \begin{lstlisting}[language={C++}]
+  \frametitle{Representing values - Sean Parent style (contd.)}
+  \iftransitions
+  \setbeamercolor{alerted text}{fg=red}
+  \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
+  \begin{semiverbatim}
+\uncover<1->{\alert<0>{    ...}}
+      
+\uncover<1->{\alert<0>{{\color{blue}class} Value \{}}
+\uncover<2->{\alert<2>{  std::unique_ptr<Concept> c;}}
+\uncover<2->{\alert<2>{{\color{blue}public}:}}
+\uncover<3->{\alert<3>{  {\color{blue}template}<{\color{blue}typename} T>}}
+\uncover<3->{\alert<3>{  Value(T v)}}
+\uncover<3->{\alert<3>{  : c(std::make_unique<Model<T>>(v))}}
+\uncover<3->{\alert<3>{  \{\}}}
+
+\uncover<4->{\alert<4>{  Type type() {\color{blue}const} \{ {\color{blue}return} c->type(); \}}}
+\uncover<1->{\alert<0>{\};}}
+    
+  \end{semiverbatim}
+  \else
+  \begin{lstlisting}[language={C++}]
     ...
       
 class Value {
@@ -665,6 +710,7 @@ public:
   Type type() const { return c->type(); }
 };
   \end{lstlisting}
+  \fi
 \end{frame}
 
 
@@ -681,7 +727,7 @@ void push(lua_State* l, char const* s) {
 }
   \end{lstlisting}
   \iftransitions \pause \fi
-  \begin{lstlisting}
+  \begin{lstlisting}[language={C++}]
 template<typename... Ts>
 void pushargs(lua_State* l, Ts... args) {
     ( push(l, args), ... );
@@ -748,6 +794,27 @@ Value getValueFromStack(lua_State* l, int idx)
 \begin{frame}[fragile]
   \frametitle{Calling functions}
 
+  \iftransitions
+  \setbeamercolor{alerted text}{fg=red}
+  \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
+  \begin{semiverbatim}
+\uncover<3->{\alert<3>{{\color{blue}template}<{\color{blue}typename}... Ts>}}
+\uncover<5->{\alert<5>{std::vector<Value>}}\uncover<1->{\alert<0>{ call(}}
+\uncover<1->{\alert<0>{    lua_State* l,}}
+\uncover<2->{\alert<2>{    {\color{blue}char const}* func,}}
+\uncover<3->{\alert<3>{    Ts... args}}\uncover<1->{\alert<0>{)}}
+\uncover<1->{\alert<0>{\{}}
+\uncover<2->{\alert<2>{  lua_getglobal(l, func);}}
+\uncover<3->{\alert<3>{  pushargs(l, args...);}}
+\uncover<4->{\alert<4>{  lua_call(l, {\color{blue}sizeof}...(Ts),}}
+\uncover<4->{\alert<4>{           LUA_MULTRET, 0);}}
+\uncover<5->{\alert<5>{  {\color{blue}return} getValuesFromStack(l);  }}
+\uncover<1->{\alert<0>{\}}}
+
+\uncover<6->{\alert<6>{call(l, "print", 42, "Hello World");}}
+\uncover<6->{\alert<6>{  // -> 42.0   Hello World}}
+  \end{semiverbatim}
+  \else
   \begin{lstlisting}[language={C++}]
 template<typename... Ts>
 std::vector<Value> call(
@@ -757,15 +824,15 @@ std::vector<Value> call(
 {
   lua_getglobal(l, func);
   pushargs(l, args...);
-  int nres = lua_call(l, sizeof...(Ts),
-                      LUA_MULTRET, 0);
+  lua_call(l, sizeof...(Ts),
+           LUA_MULTRET, 0);
   return getValuesFromStack(l);  
 }
 
 call(l, "print", 42, "Hello World");
   // -> 42.0   Hello World
   \end{lstlisting}
-    
+  \fi
 \end{frame}
 
 
@@ -779,13 +846,13 @@ std::vector<Value> call(lua_State*,
   Ts...);
   \end{lstlisting}
   \iftransitions \pause \fi
-  \begin{lstlisting}
+  \begin{lstlisting}[language={C++}]
 std::array<Value, 2> call(lua_State*,
   char const*,
   Value, Value);
   \end{lstlisting}
   \iftransitions \pause \fi
-  \begin{lstlisting}
+  \begin{lstlisting}[language={C++}]
 std::tuple<Number, String> call(lua_State*,
   char const*,
   Number, Number);

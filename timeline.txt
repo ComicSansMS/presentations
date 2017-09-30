@@ -1,0 +1,16 @@
+Intro          0:00
+Functions      5:00
+Closures       7:00
+-------------------
+Tables        10:00
+Records       11:00
+Obj. Constr.  12:00
+Encapsulation 15:00
+Reflection    17:00
+_G            18:00
+-------------------
+C++           20:00
+Stack         21:00
+Variant       24:00
+Wrapping Up   27:00
+

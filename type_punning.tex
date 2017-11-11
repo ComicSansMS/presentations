@@ -10,6 +10,13 @@
 \usetheme{Rochester}
 \usecolortheme{beaver}
 
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
 \lstloadlanguages{C++}
     \lstset{%
         language={C++},
@@ -21,7 +28,7 @@
     }
 
 \newif\iftransitions
-% \transitionstrue
+ \transitionstrue
 
 
 \newif\iffast
@@ -45,9 +52,9 @@
   \begin{itemize}
     \setlength\itemsep{1.5em}
 
-    \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} Known as ComicSansMS on most sites
+    \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} ComicSansMS
 
-    \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus on Twitter}
+    \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
 
     \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
 
@@ -60,10 +67,14 @@
 \begin{frame}[fragile]
   \frametitle{What is type punning?}
 
-  Accessing data through a pointer of unrelated type.
+  \iftransitions \pause \fi
 
+  Accessing data through a pointer of unrelated type. \\[2ex]
+
+  \iftransitions \pause \fi
+   
   The act of type punning itself does not change the underlying data.
-
+  
   It controls the \emph{operations} applied to that data.
 \end{frame}
 
@@ -80,7 +91,7 @@ void increment_impl(T& n) {
     ++n;
 }
     \end{lstlisting}
-    \pause
+    \iftransitions \pause \fi
     \begin{lstlisting}
 void increment(float& f) {
     increment_impl(f);
@@ -90,7 +101,7 @@ void increment(int& i) {
     increment_impl(i);
 }
     \end{lstlisting}
-    \pause
+    \iftransitions \pause \fi
     \column{0.5\linewidth}
     \includegraphics[height=.8\textheight]{resources/increment_float_int.png}
   \end{columns}
@@ -98,65 +109,122 @@ void increment(int& i) {
 
 
 \begin{frame}[fragile]
+
+  \frametitle{Sometimes we actually want a different operation}
+  
+  \begin{lstlisting}
+void next_ulp(float& f)
+{
+    (*(int*)(&f))++;
+}
+  \end{lstlisting}
+
+  But this is actually \emph{illegal} in both C and C++.
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Aliasing}
 
-  Aliasing is when the same thing is accessed through different names.
+  \iftransitions \pause \fi
+
+  % Aliasing is when the same thing is accessed through different names.
+
+  % \iftransitions \pause \fi
 
   \begin{lstlisting}
 void foo(int* a, int* b) {
   *a = 1;
   *b = 2;
 }
-
-int x = 42;
+  \end{lstlisting}
+  \iftransitions \pause \fi
+  \begin{lstlisting}
+int x;
 foo(&x, &x);
   \end{lstlisting}
 
-  Aliasing forces the compiler to respect a corner case that is unlikely to ever occur in practice.
+%  \iftransitions \pause \fi
 
-  Fortran does not allow aliasing in this case and might thus be able to generate faster code here.
+%  Aliasing forces the compiler to respect a corner case that is unlikely to ever occur in practice.
 
-  C99 introduced the \texttt{restrict} keyword to indicate alias-free pointers.
+%  Fortran does not allow aliasing in this case and might thus be able to generate faster code here.
+
+%  C99 introduced the \texttt{restrict} keyword to indicate alias-free pointers.
 \end{frame}
 
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Strict Aliasing in C and C++}
 
-  Type-based aliasing: If two pointers have different types, they must not alias.
+  % Type-based aliasing: If two pointers have different types, they must not alias.
 
-  Effectively makes na"ive type punning illegal.
+  % \iftransitions \pause \fi
+  
+  \begin{lstlisting}
+void bar(int* a, float* b)
+{
+  *a = 1;
+  *b = 2.f;
+}
+  \end{lstlisting}
+  \begin{lstlisting}
+int x;
+foo(&x, reinterpret_cast<float*>(&x));  // illegal!
+  \end{lstlisting}
+  
+%  Effectively makes na\"ive type punning illegal.
 \end{frame}
+
+
 
 \begin{frame}[fragile]
   \frametitle{Type punning done right}
 
+  \iftransitions
+  \setbeamercolor{alerted text}{fg=red}
+  \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
+  \begin{semiverbatim}
+\uncover<1->{\alert<0>{{\color{blue}void} next_ulp({\color{blue}float}& f)}}
+\uncover<1->{\alert<0>{\{}}
+\uncover<3->{\alert<0>{    {\color{blue}static_assert}({\color{blue}sizeof}({\color{blue}float}) == {\color{blue}sizeof}(uint32_t));}}
+\uncover<2->{\alert<0>{    uint32_t tmp;}}
+\uncover<4->{\alert<0>{    memcpy(&tmp, &f, {\color{blue}sizeof}({\color{blue}float}));}}
+\uncover<2->{\alert<0>{    ++tmp;}}
+\uncover<5->{\alert<0>{    memcpy(&f, &tmp, {\color{blue}sizeof}({\color{blue}float}));}}
+\uncover<1->{\alert<0>{\}}}
+  \end{semiverbatim}
+  \else
+  
   \begin{lstlisting}
-float next_ulp(float f)
+void next_ulp(float& f)
 {
     static_assert(sizeof(float) == sizeof(uint32_t));
     uint32_t tmp;
     memcpy(&tmp, &f, sizeof(float));
     ++tmp;
     memcpy(&f, &tmp, sizeof(float));
-    return f;
 }
   \end{lstlisting}
+  \fi
+  
+  \iftransitions \uncover<6->{\includegraphics[height=.2\textheight]{resources/ulp_memcpy.png}} \else \includegraphics[height=.2\textheight]{resources/ulp_memcpy.png} \fi
+
 \end{frame}
 
 
 \begin{frame}[fragile]
-  \frametitle{a}
-
-  \begin{lstlisting}
-float next_ulp(float f) {
-    (*(int*)(&f))++;
-    return f;
-}
-  \end{lstlisting}
+  \frametitle{Goal: Don't lie to the compiler!}
 \end{frame}
 
+\begin{frame}
+  \frametitle{If you want to know more...}
 
+  \begin{itemize}
+  \item CppCon 2017: \emph{Scott Schurr - Type Punning in C++17: Avoiding Pun-defined Behavior} \\ \href{https://www.youtube.com/watch?v=sCjZuvtJd-k}{https://www.youtube.com/watch?v=sCjZuvtJd-k}
+  \end{itemize}
+    
+\end{frame}
 
 \begin{frame}
   \frametitle{Thanks for your attention.}

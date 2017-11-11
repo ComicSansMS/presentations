@@ -108,16 +108,16 @@ void increment(int& i) {
   \begin{lstlisting}
 void add_ulp(float& f)
 {
-    (*(int*)(&f))++;
+  (*(int*)(&f))++;    // here be dragons!
 }
   \end{lstlisting}
 \end{frame}
 
 \begin{frame}
-  \frametitle{This is technically illegal in both C and C++.}
+  \frametitle{This is technically incorrect in both C and C++.}
 
   \begin{center}
-  \includegraphics[height=.9\textheight]{resources/technically_illegal.jpg}
+  \includegraphics[height=.9\textheight]{resources/technically_incorrect.jpg}
   \end{center}
 \end{frame}
 
@@ -169,7 +169,7 @@ void bar(int* a, float* b)
   \end{lstlisting}
   \begin{lstlisting}
 int x;
-foo(&x, reinterpret_cast<float*>(&x));  // illegal!
+foo(&x, reinterpret_cast<float*>(&x));  // undefined behavior
   \end{lstlisting}
   
 %  Effectively makes na\"ive type punning illegal.

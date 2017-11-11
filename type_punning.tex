@@ -86,19 +86,12 @@
     \column{0.4\linewidth}
  
     \begin{lstlisting}
-template<typename T>
-void increment_impl(T& n) {
-    ++n;
-}
-    \end{lstlisting}
-    \iftransitions \pause \fi
-    \begin{lstlisting}
 void increment(float& f) {
-    increment_impl(f);
+    ++f;
 }
 
 void increment(int& i) {
-    increment_impl(i);
+    ++i;
 }
     \end{lstlisting}
     \iftransitions \pause \fi
@@ -113,13 +106,19 @@ void increment(int& i) {
   \frametitle{Sometimes we actually want a different operation}
   
   \begin{lstlisting}
-void next_ulp(float& f)
+void add_ulp(float& f)
 {
     (*(int*)(&f))++;
 }
   \end{lstlisting}
+\end{frame}
 
-  But this is actually \emph{illegal} in both C and C++.
+\begin{frame}
+  \frametitle{This is technically illegal in both C and C++.}
+
+  \begin{center}
+  \includegraphics[height=.9\textheight]{resources/technically_illegal.jpg}
+  \end{center}
 \end{frame}
 
 
@@ -185,19 +184,19 @@ foo(&x, reinterpret_cast<float*>(&x));  // illegal!
   \setbeamercolor{alerted text}{fg=red}
   \setbeamerfont{alerted text}{series=\bfseries,family=\ttfamily}
   \begin{semiverbatim}
-\uncover<1->{\alert<0>{{\color{blue}void} next_ulp({\color{blue}float}& f)}}
+\uncover<1->{\alert<0>{{\color{blue}void} add_ulp({\color{blue}float}& f)}}
 \uncover<1->{\alert<0>{\{}}
 \uncover<3->{\alert<0>{    {\color{blue}static_assert}({\color{blue}sizeof}({\color{blue}float}) == {\color{blue}sizeof}(uint32_t));}}
 \uncover<2->{\alert<0>{    uint32_t tmp;}}
 \uncover<4->{\alert<0>{    memcpy(&tmp, &f, {\color{blue}sizeof}({\color{blue}float}));}}
 \uncover<2->{\alert<0>{    ++tmp;}}
-\uncover<5->{\alert<0>{    memcpy(&f, &tmp, {\color{blue}sizeof}({\color{blue}float}));}}
+\uncover<4->{\alert<0>{    memcpy(&f, &tmp, {\color{blue}sizeof}({\color{blue}float}));}}
 \uncover<1->{\alert<0>{\}}}
   \end{semiverbatim}
   \else
   
   \begin{lstlisting}
-void next_ulp(float& f)
+void add_ulp(float& f)
 {
     static_assert(sizeof(float) == sizeof(uint32_t));
     uint32_t tmp;
@@ -208,7 +207,7 @@ void next_ulp(float& f)
   \end{lstlisting}
   \fi
   
-  \iftransitions \uncover<6->{\includegraphics[height=.2\textheight]{resources/ulp_memcpy.png}} \else \includegraphics[height=.2\textheight]{resources/ulp_memcpy.png} \fi
+  \iftransitions \uncover<5->{\includegraphics[height=.2\textheight]{resources/ulp_memcpy.png}} \else \includegraphics[height=.2\textheight]{resources/ulp_memcpy.png} \fi
 
 \end{frame}
 

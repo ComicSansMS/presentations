@@ -916,12 +916,12 @@ std::tuple<Number, String> call(lua_State*,
   \begin{lstlisting}[language={C++}]
 #include <sol.hpp>
   \end{lstlisting}
-
+  \iftransitions \pause \fi
   \begin{lstlisting}[language={C++}]
 lua_state* l;
 sol::state_view sv(l);
   \end{lstlisting}
-  
+  \iftransitions \pause \fi
   \begin{lstlisting}[language={C++}]
 sol::function my_print = sv["print"];
 my_print(42, "Hello World");
@@ -930,33 +930,26 @@ my_print(42, "Hello World");
 
 
 \begin{frame}[fragile]
-  \frametitle{Constraining functions}
+  \frametitle{Exposing C++ to Lua with Sol 2}
 
-  \begin{lstlisting}
-function sum_prod(a, b)
-  return a+b, a*b;
-end
-  \end{lstlisting}
-  
   \begin{lstlisting}[language={C++}]
-    
+auto some_func =
+  [](int a, int b,
+     std::string str,
+     sol::object v)
+  {
+    return std::make_tuple(
+               a+b, str.length(),
+               v.as<sol::table>()[1]);
+  };
+
+sv["some_func"] = some_func;
+lua.script(R"(
+    print(some_func(1, 2, "foo", {3}))
+  )");   // -> 3    3    3  
   \end{lstlisting}
 \end{frame}
 
-\iffalse
-
-\frame{%
-\setbeamercolor{normal text}{fg=gray,bg=}
-\setbeamercolor{alerted text}{fg=black,bg=}
-\usebeamercolor{normal text}
-\begin{itemize}
-\item \alert<+>{Hallo}
-\item \alert<+>{Welt}
-\item \alert<+>{Foobar}
-\end{itemize}
-}
-
-\fi
 
 \begin{frame}
   \frametitle{Wrapping up}
@@ -973,6 +966,11 @@ end
   \item \href{https://www.lua.org/doc/hopl.pdf}{The evolution of Lua (ACM HOPL 2007)}
   \item \href{https://dl.acm.org/citation.cfm?id=1983083}{Passing a language through the eye of a needle}
   \item \href{https://www.lua.org/docs.html}{https://www.lua.org/docs.html}
+  \end{itemize}
+
+  \begin{itemize}
+  \item \href{http://www.drdobbs.com/open-source/lua-an-extensible-embedded-language/184410014}{Dr. Dobbs - Lua: An Extensible Embedded Language}
+  \item \href{http://sol2.readthedocs.io/en/latest/index.html}{Sol2 Documentation}
   \end{itemize}
 \end{frame}
 

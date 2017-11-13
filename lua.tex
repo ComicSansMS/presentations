@@ -25,14 +25,14 @@
 
 
 \newif\iffast
-% \fasttrue
+ \fasttrue
 
 \title{Howling at the Moon:}
 \subtitle{Lua for C++ Programmers}
 \author{Andreas Weis}
 \institute{BMW AG}
-\date{CppCon, September 29, 2017}
-\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
+\date{code::dive, November 14, 2017}
+%\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
 
 
 \begin{document}
@@ -89,18 +89,40 @@
 \end{frame}
 \fi
 
+\begin{frame}[fragile]
+
+  \frametitle{A little bit of history\ldots}
+  
+  \begin{center}
+    \includegraphics[height=.75\textheight]{resources/scumm_bar.png}
+  \end{center}
+  
+  \iftransitions \pause \fi
+  {\scriptsize The Secret of Monkey Island, Lucasfilm Games, 1990}
+\end{frame}
+
+\begin{frame}[fragile]
+
+  \begin{center}
+    \includegraphics[height=.75\textheight]{resources/mi_lua_bar.jpg}
+  \end{center}
+
+  {\scriptsize Escape from Monkey Island, LucasArts, 2000}
+\end{frame}
+
+
 \begin{frame}
   \frametitle{Lua in the wild}
 
   \begin{columns}[t]
     \column{.5\textwidth}
     \centering
-    \includegraphics[height=3.5cm]{resources/mi_lua_bar.jpg}\\
-    \includegraphics[height=3.5cm]{resources/nodemcu_small.png}
+    \includegraphics[height=3.5cm]{resources/wow_raidui.png}\\
+    \includegraphics[height=3.5cm]{resources/love2d.png}
     \column{.5\textwidth}
     \centering
-    \includegraphics[height=3.5cm]{resources/wow_raidui_small.png}\\
-    \includegraphics[height=3.5cm]{resources/lightroom_small.png}
+    \includegraphics[height=3.5cm]{resources/lightroom.png}\\
+    \includegraphics[height=3.5cm]{resources/nodemcu.png}
   \end{columns}
 
 \end{frame}
@@ -883,9 +905,43 @@ std::tuple<Number, String> call(lua_State*,
   char const*,
   Number, Number);
   \end{lstlisting}
-    
+
 \end{frame}
 
+
+\begin{frame}[fragile]
+  \frametitle{Sol 2 - An efficient binding library for C++\footnote{\href{https://github.com/ThePhD/sol2}{https://github.com/ThePhD/sol2}}}
+  
+  
+  \begin{lstlisting}[language={C++}]
+#include <sol.hpp>
+  \end{lstlisting}
+
+  \begin{lstlisting}[language={C++}]
+lua_state* l;
+sol::state_view sv(l);
+  \end{lstlisting}
+  
+  \begin{lstlisting}[language={C++}]
+sol::function my_print = sv["print"];
+my_print(42, "Hello World");
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Constraining functions}
+
+  \begin{lstlisting}
+function sum_prod(a, b)
+  return a+b, a*b;
+end
+  \end{lstlisting}
+  
+  \begin{lstlisting}[language={C++}]
+    
+  \end{lstlisting}
+\end{frame}
 
 \iffalse
 

@@ -21,7 +21,7 @@
     }
 
 \newif\iftransitions
-% \transitionstrue
+ \transitionstrue
 
 
 \newif\iffast
@@ -45,9 +45,9 @@
   \begin{itemize}
     \setlength\itemsep{1.5em}
 
-    \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} Known as ComicSansMS on most sites
+    \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} ComicSansMS
 
-    \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus on Twitter}
+    \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
 
     \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
 
@@ -435,6 +435,8 @@ local str = "The quick brown fox";
 assert(str:find("quick") == 5)
   \end{lstlisting}
 
+  \iftransitions \pause \fi
+  
   Metatables are extensible: Functions can add their own semantics for non-standard fields.
 \end{frame}
 \fi
@@ -923,8 +925,8 @@ sol::state_view sv(l);
   \end{lstlisting}
   \iftransitions \pause \fi
   \begin{lstlisting}[language={C++}]
-sol::function my_print = sv["print"];
-my_print(42, "Hello World");
+sol::function print_lua = sv["print"];
+print_lua(42, "Hello World");
   \end{lstlisting}
 \end{frame}
 
@@ -942,7 +944,10 @@ auto some_func =
                a+b, str.length(),
                v.as<sol::table>()[1]);
   };
+  \end{lstlisting}
+  \iftransitions \pause \fi
 
+  \begin{lstlisting}[language={C++}]
 sv["some_func"] = some_func;
 lua.script(R"(
     print(some_func(1, 2, "foo", {3}))

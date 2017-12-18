@@ -14,3 +14,17 @@ Stack         21:00
 Variant       24:00
 Wrapping Up   27:00
 
+
+Extended Timeline:
+Intro          0:00
+Functions      8:00
+Closures      10:00
+-------------------
+Tables        15:00
+Records       17:00
+Obj. Constr.  18:00
+Encapsulation 20:00
+Reflection    23:00
+_G            25:00
+-------------------
+C++           30:00

@@ -336,6 +336,50 @@ public:
   \frametitle{Inverse Two-Phase Initialisation}
 
   \begin{semiverbatim}
+{\color{blue}static} std::expected<Xxx>
+    create(Arg n_arg) {\color{blue}noexcept}
+\{
+  Xxx ret{};
+  ret.m_state = make_unique_nothrow(n_arg);
+  {\color{blue}if}(!ret.m_state) \{ {\color{blue}return} unexpected(my_errc::error); \}
+  {\color{blue}return} ret;
+\}
+
+
+
+
+  
+  \end{semiverbatim}  
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Inverse Two-Phase Initialisation}
+
+  \begin{semiverbatim}
+{\color{blue}static} std::expected<{\color{red}construction_token}>
+    {\color{red}preconstruct}(Arg n_arg) {\color{blue}noexcept}
+\{
+  {\color{red}construction_token} t;
+  t.state = make_unique_nothrow(n_arg);
+  {\color{blue}if}(!t.state) \{ {\color{blue}return} unexpected(my_errc::error); \}
+  {\color{blue}return} t;
+\}
+
+
+
+
+  
+  \end{semiverbatim}  
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Inverse Two-Phase Initialisation}
+
+  \begin{semiverbatim}
 {\color{blue}static} std::expected<construction_token>
     preconstruct(Arg n_arg) {\color{blue}noexcept}
 \{
@@ -346,7 +390,7 @@ public:
 \}
 
 Xxx(construction_token&& t) {\color{blue}noexcept}
-:m_state(std::move(t.state)
+:m_state(std::move(t.state))
 \{ \}
   
   \end{semiverbatim}  
@@ -361,8 +405,25 @@ Xxx(construction_token&& t) {\color{blue}noexcept}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Thanks for your attention.}
+\begin{frame}[fragile]
+
+  \frametitle{Inverse Two-Phase Initialisation}
+
+  \begin{semiverbatim}
+{\color{blue}static} std::expected<construction_token>
+    preconstruct(Arg n_arg) {\color{blue}noexcept}
+\{
+  construction_token t;
+  t.state = make_unique_nothrow(n_arg);
+  {\color{blue}if}(!t.state) \{ {\color{blue}return} unexpected(my_errc::error); \}
+  {\color{blue}return} t;
+\}
+
+Xxx(construction_token&& t) {\color{blue}noexcept}
+:m_state(std::move(t.state))
+\{ \}
+  
+  \end{semiverbatim}  
 \end{frame}
 
 

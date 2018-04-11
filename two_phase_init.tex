@@ -48,7 +48,7 @@
 
 \frame{\titlepage}
 
-
+\iffalse
 \begin{frame}[fragile]
   \frametitle{About me}
 
@@ -65,6 +65,7 @@
 
   \end{itemize}
 \end{frame}
+\fi
 
 
 \begin{frame}[fragile]
@@ -81,11 +82,11 @@
   \frametitle{The Problem}
   
   \begin{lstlisting}
-class Xxx {
+class Foo {
 private:
   std::unique_ptr<InternalState> m_state;  
 public:
-  Xxx(Arg n_arg)
+  Foo(Arg n_arg)
   :m_state(std::make_unique<InternalState>(n_arg))
   { }
 };
@@ -99,11 +100,11 @@ public:
   \frametitle{The Problem}
   
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 {\color{blue}public}:
-  Xxx(Arg n_arg)
+  Foo(Arg n_arg)
   :m_state(std::make_unique<InternalState>(n_arg))
   \{ \}
 \};
@@ -117,11 +118,11 @@ public:
   \frametitle{The Problem}
   
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 {\color{blue}public}:
-  Xxx(Arg n_arg)
+  Foo(Arg n_arg)
   :m_state({\color{red}std::make_unique<InternalState>(n_arg)})
   \{ \}
 \};
@@ -135,11 +136,11 @@ public:
   \frametitle{Two-Phase Initialisation}
   
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 {\color{blue}public}:
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 \};
@@ -153,11 +154,11 @@ public:
   \frametitle{Two-Phase Initialisation}
   
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 {\color{blue}public}:
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 
@@ -177,11 +178,11 @@ public:
   \frametitle{Two-Phase Initialisation}
   
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 {\color{blue}public}:
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 
@@ -202,11 +203,11 @@ public:
   \frametitle{Two-Phase Initialisation}
   
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 {\color{blue}public}:
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 
@@ -233,11 +234,11 @@ public:
   \frametitle{A first attempt to fix this\ldots}
   
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 {\color{blue}public}:
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 
@@ -257,11 +258,11 @@ public:
   \frametitle{A first attempt to fix this\ldots}
 
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
 
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 {\color{red}public}:
@@ -282,14 +283,14 @@ public:
   \frametitle{A first attempt to fix this\ldots}
 
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 {\color{blue}public}:
-  {\color{red}static std::expected<Xxx> create}(Arg n_arg) {\color{blue}noexcept} \{
+  {\color{red}static expected<Foo> create}(Arg n_arg) {\color{blue}noexcept} \{
 
 
 
@@ -304,18 +305,18 @@ public:
   \frametitle{A first attempt to fix this\ldots}
 
   \begin{semiverbatim}
-{\color{blue}class} Xxx \{
+{\color{blue}class} Foo \{
 {\color{blue}private}:
   std::unique_ptr<InternalState> m_state;  
-  Xxx() {\color{blue}noexcept}
+  Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 {\color{blue}public}:
-  {\color{blue}static} std::expected<Xxx> create(Arg n_arg) {\color{blue}noexcept} \{
-    Xxx ret\{\};
+  {\color{blue}static} expected<Foo> create(Arg n_arg) {\color{blue}noexcept} \{
+    Foo ret\{\};
     ret.m_state = make_unique_nothrow(n_arg);
-    if(!ret.m_state) \{ return unexpected(my_errc::error); \}
-    return ret;
+    {\color{blue}if}(!ret.m_state) \{ {\color{blue}return} unexpected(my_errc::error); \}
+    {\color{blue}return} ret;
   \}
 \};
   \end{semiverbatim}  
@@ -336,10 +337,10 @@ public:
   \frametitle{Inverse Two-Phase Initialisation}
 
   \begin{semiverbatim}
-{\color{blue}static} std::expected<Xxx>
+{\color{blue}static} expected<Foo>
     create(Arg n_arg) {\color{blue}noexcept}
 \{
-  Xxx ret{};
+  Foo ret{};
   ret.m_state = make_unique_nothrow(n_arg);
   {\color{blue}if}(!ret.m_state) \{ {\color{blue}return} unexpected(my_errc::error); \}
   {\color{blue}return} ret;
@@ -358,7 +359,7 @@ public:
   \frametitle{Inverse Two-Phase Initialisation}
 
   \begin{semiverbatim}
-{\color{blue}static} std::expected<{\color{red}construction_token}>
+{\color{blue}static} expected<{\color{red}construction_token}>
     {\color{red}preconstruct}(Arg n_arg) {\color{blue}noexcept}
 \{
   {\color{red}construction_token} t;
@@ -380,7 +381,7 @@ public:
   \frametitle{Inverse Two-Phase Initialisation}
 
   \begin{semiverbatim}
-{\color{blue}static} std::expected<construction_token>
+{\color{blue}static} expected<construction_token>
     preconstruct(Arg n_arg) {\color{blue}noexcept}
 \{
   construction_token t;
@@ -389,7 +390,7 @@ public:
   {\color{blue}return} t;
 \}
 
-Xxx(construction_token&& t) {\color{blue}noexcept}
+Foo(construction_token&& t) {\color{blue}noexcept}
 :m_state(std::move(t.state))
 \{ \}
   
@@ -410,7 +411,7 @@ Xxx(construction_token&& t) {\color{blue}noexcept}
   \frametitle{Inverse Two-Phase Initialisation}
 
   \begin{semiverbatim}
-{\color{blue}static} std::expected<construction_token>
+{\color{blue}static} expected<construction_token>
     preconstruct(Arg n_arg) {\color{blue}noexcept}
 \{
   construction_token t;
@@ -419,7 +420,7 @@ Xxx(construction_token&& t) {\color{blue}noexcept}
   {\color{blue}return} t;
 \}
 
-Xxx(construction_token&& t) {\color{blue}noexcept}
+Foo(construction_token&& t) {\color{blue}noexcept}
 :m_state(std::move(t.state))
 \{ \}
   

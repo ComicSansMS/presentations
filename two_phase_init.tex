@@ -40,7 +40,7 @@
 %\subtitle{Lua for C++ Programmers}
 \author{Andreas Weis}
 \institute{BMW AG}
-\date{ACCU 2018}
+\date{CppCon 2018}
 %\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
 
 
@@ -346,10 +346,6 @@ public:
   {\color{blue}return} ret;
 \}
 
-
-
-
-  
   \end{semiverbatim}  
 \end{frame}
 
@@ -394,6 +390,27 @@ Foo(construction_token&& t) {\color{blue}noexcept}
 :m_state(std::move(t.state))
 \{ \}
   
+  \end{semiverbatim}  
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Inverse Two-Phase Initialisation (User's view)}
+
+  \begin{semiverbatim}
+    {\color{blue}auto} t1 = Foo::preconstruct(args);
+    Foo obj(std::move(t1));
+\pause    
+    {\color{gray} \textit{// or}}
+    {\color{blue}auto} t2 = Foo::preconstruct(args);
+    {\color{blue}auto} obj_ptr = std::make_shared<Foo>(std::move(t2));
+    \pause
+    {\color{gray} \textit{// or}}
+    {\color{blue}auto} t3 = Foo::preconstruct(args);
+    std::vector<Foo> objects;
+    objects.emplace_back(std::move(t3));
   \end{semiverbatim}  
 \end{frame}
 

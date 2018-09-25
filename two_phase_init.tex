@@ -41,7 +41,7 @@
 \author{Andreas Weis}
 \institute{BMW AG}
 \date{CppCon 2018}
-%\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
+\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
 
 
 \begin{document}
@@ -80,83 +80,83 @@
 \begin{frame}[fragile]
 
   \frametitle{The Problem}
-  
+
   \begin{lstlisting}
 class Foo {
 private:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 public:
   Foo(Arg n_arg)
   :m_state(std::make_unique<InternalState>(n_arg))
   { }
 };
   \end{lstlisting}
-  
+
 \end{frame}
 \fi
 
 \begin{frame}[fragile]
 
   \frametitle{The Problem}
-  
+
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 {\color{blue}public}:
   Foo(Arg n_arg)
   :m_state(std::make_unique<InternalState>(n_arg))
   \{ \}
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
 \begin{frame}[fragile]
 
   \frametitle{The Problem}
-  
+
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 {\color{blue}public}:
   Foo(Arg n_arg)
   :m_state({\color{red}std::make_unique<InternalState>(n_arg)})
   \{ \}
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
 \begin{frame}[fragile]
 
   \frametitle{Two-Phase Initialisation}
-  
+
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 {\color{blue}public}:
   Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
 \begin{frame}[fragile]
 
   \frametitle{Two-Phase Initialisation}
-  
+
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 {\color{blue}public}:
   Foo() {\color{blue}noexcept}
   :m_state()
@@ -169,18 +169,18 @@ public:
 
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
 \begin{frame}[fragile]
 
   \frametitle{Two-Phase Initialisation}
-  
+
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 {\color{blue}public}:
   Foo() {\color{blue}noexcept}
   :m_state()
@@ -193,7 +193,7 @@ public:
   \}
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
@@ -201,11 +201,11 @@ public:
 \begin{frame}[fragile]
 
   \frametitle{Two-Phase Initialisation}
-  
+
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 {\color{blue}public}:
   Foo() {\color{blue}noexcept}
   :m_state()
@@ -218,7 +218,7 @@ public:
   \}
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
@@ -232,11 +232,11 @@ public:
 \begin{frame}[fragile]
 
   \frametitle{A first attempt to fix this\ldots}
-  
+
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 {\color{blue}public}:
   Foo() {\color{blue}noexcept}
   :m_state()
@@ -249,7 +249,7 @@ public:
   \}
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
@@ -260,7 +260,7 @@ public:
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
 
   Foo() {\color{blue}noexcept}
   :m_state()
@@ -273,7 +273,7 @@ public:
   \}
 \};
   \end{semiverbatim}
-  
+
 \end{frame}
 
 
@@ -285,7 +285,7 @@ public:
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
   Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
@@ -297,7 +297,7 @@ public:
 
   \}
 \};
-  \end{semiverbatim}  
+  \end{semiverbatim}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -307,7 +307,7 @@ public:
   \begin{semiverbatim}
 {\color{blue}class} Foo \{
 {\color{blue}private}:
-  std::unique_ptr<InternalState> m_state;  
+  std::unique_ptr<InternalState> m_state;
   Foo() {\color{blue}noexcept}
   :m_state()
   \{ \}
@@ -319,7 +319,7 @@ public:
     {\color{blue}return} ret;
   \}
 \};
-  \end{semiverbatim}  
+  \end{semiverbatim}
 \end{frame}
 
 
@@ -346,7 +346,7 @@ public:
   {\color{blue}return} ret;
 \}
 
-  \end{semiverbatim}  
+  \end{semiverbatim}
 \end{frame}
 
 
@@ -367,8 +367,8 @@ public:
 
 
 
-  
-  \end{semiverbatim}  
+
+  \end{semiverbatim}
 \end{frame}
 
 
@@ -389,8 +389,8 @@ public:
 Foo(construction_token&& t) {\color{blue}noexcept}
 :m_state(std::move(t.state))
 \{ \}
-  
-  \end{semiverbatim}  
+
+  \end{semiverbatim}
 \end{frame}
 
 
@@ -400,18 +400,19 @@ Foo(construction_token&& t) {\color{blue}noexcept}
   \frametitle{Inverse Two-Phase Initialisation (User's view)}
 
   \begin{semiverbatim}
-    {\color{blue}auto} t1 = Foo::preconstruct(args);
-    Foo obj(std::move(t1));
-\pause    
-    {\color{gray} \textit{// or}}
-    {\color{blue}auto} t2 = Foo::preconstruct(args);
-    {\color{blue}auto} obj_ptr = std::make_shared<Foo>(std::move(t2));
-    \pause
-    {\color{gray} \textit{// or}}
-    {\color{blue}auto} t3 = Foo::preconstruct(args);
-    std::vector<Foo> objects;
-    objects.emplace_back(std::move(t3));
-  \end{semiverbatim}  
+expected<Foo::construction_token> t1 = Foo::preconstruct(args);
+{\color{blue}if}(!t1.has_value()) \{ {\color{gray}\textit{/* get out\ldots */}} \}
+Foo obj(std::move(*t1));
+\pause
+{\color{gray} \textit{// or}}
+{\color{blue}auto} t2 = Foo::preconstruct(args);
+{\color{blue}auto} obj_ptr = std::make_shared<Foo>(std::move(*t2));
+\pause
+{\color{gray} \textit{// or}}
+{\color{blue}auto} t3 = Foo::preconstruct(args);
+std::vector<Foo> objects;
+objects.emplace_back(std::move(*t3));
+  \end{semiverbatim}
 \end{frame}
 
 
@@ -440,8 +441,8 @@ Foo(construction_token&& t) {\color{blue}noexcept}
 Foo(construction_token&& t) {\color{blue}noexcept}
 :m_state(std::move(t.state))
 \{ \}
-  
-  \end{semiverbatim}  
+
+  \end{semiverbatim}
 \end{frame}
 
 

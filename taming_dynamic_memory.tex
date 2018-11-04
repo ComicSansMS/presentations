@@ -149,8 +149,6 @@ Outline
     \end{semiverbatim}
 \end{frame}
 
-\fi %crop
-
 
 \begin{frame}[fragile]
   \frametitle{Monotonic Allocator}
@@ -200,6 +198,45 @@ Outline
 
     \uncover<3->{\alert<3>{monot.release();}}
   \end{semiverbatim}
+\end{frame}
+
+
+\fi %crop
+
+
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator}
+  \begin{itemize}
+  \item Deterministic runtime cost
+  \item Extremely efficient
+  \item No fragmentation
+  \item Easy to implement
+  \item Trivial to make thread-safe
+  \end{itemize}
+  But:
+  \begin{itemize}
+  \item Memory can only be reclaimed all at once
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator - \texttt{std::vector}}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/monot_vector_010.png}
+    \includegraphics<2>[width=.9\textwidth]{memgfx/monot_vector_020.png}
+    \includegraphics<3>[width=.9\textwidth]{memgfx/monot_vector_030.png}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator - STL containers}
+  \begin{itemize}
+  \item \texttt{vector} should \texttt{reserve} final size upfront
+  \item \texttt{list} and \texttt{map} work fine, but deleted elements are not reclaimed individually
+  \item \texttt{unordered\_map} has same problem as \texttt{vector} when growing but the load-factor triggering rehash is less predictable
+  \end{itemize}
 \end{frame}
 
 

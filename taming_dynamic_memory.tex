@@ -85,6 +85,71 @@ Outline
 
 
 \begin{frame}[fragile]
+  \frametitle{General purpose allocator}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/gp_alloc_000.png}
+    \includegraphics<2>[width=.9\textwidth]{memgfx/gp_alloc_010.png}
+    \includegraphics<3>[width=.9\textwidth]{memgfx/gp_alloc_020.png}
+%    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_030.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_040.png}
+  \end{center}
+
+    \begin{semiverbatim}
+      \uncover<2->{\alert<0>{{\color{blue}auto} p1 = allocate(3);}}
+      \uncover<3->{\alert<0>{{\color{blue}auto} p2 = allocate(4);}}
+      \uncover<4->{\alert<0>{{\color{blue}auto} p3 = allocate(1);}}
+      \uncover<4->{\alert<0>{{\color{blue}auto} p4 = allocate(3);}}
+      \uncover<4->{\alert<0>{{\color{blue}auto} p5 = allocate(2);}}
+    \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{General purpose allocator}
+  \begin{center}
+    \includegraphics<1-2>[width=.9\textwidth]{memgfx/gp_alloc_040.png}
+    \includegraphics<3>[width=.9\textwidth]{memgfx/gp_alloc_050.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_060.png}
+  \end{center}
+
+    \begin{semiverbatim}
+      \uncover<2->{\alert<2>{deallocate(p2);}}
+      \uncover<4->{\alert<0>{{\color{blue}auto} p6 = allocate(2);}}
+    \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Fragmentation}
+  \begin{center}
+    \includegraphics<1->[width=.9\textwidth]{memgfx/gp_alloc_060.png}
+  \end{center}
+
+    \begin{semiverbatim}
+      \uncover<1->{\alert<0>{{\color{blue}auto} p7 = allocate(4);}}
+      \uncover<2->{\alert<2>{\it{Runtime Error!}}}
+    \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Coalescing}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/gp_alloc_060.png}
+    \includegraphics<2-3>[width=.9\textwidth]{memgfx/gp_alloc_070.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_080.png}
+    \includegraphics<5>[width=.9\textwidth]{memgfx/gp_alloc_090.png}
+  \end{center}
+
+    \begin{semiverbatim}
+      \uncover<1->{\alert<1>{deallocate(p4);}}
+      \uncover<3->{\alert<3>{deallocate(p3);}}
+    \end{semiverbatim}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
   \frametitle{Let's talk about memory}
     \begin{itemize}
     \item Dynamic memory: Request objects using allocate, deallocate to give memory back

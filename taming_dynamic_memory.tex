@@ -66,6 +66,8 @@ Outline
 
 \frame{\titlepage}
 
+\iffalse %crop
+
 \begin{frame}[fragile]
   \frametitle{About me}
 
@@ -147,8 +149,61 @@ Outline
     \end{semiverbatim}
 \end{frame}
 
+\fi %crop
 
 
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator}
+  \begin{center}
+    \includegraphics<1-2>[width=.9\textwidth]{memgfx/monot_010.png}
+    \includegraphics<3>[width=.9\textwidth]{memgfx/monot_020.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/monot_030.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<2->{\alert<2>{{\color{blue}auto} p1 = monot.allocate(3);}}
+    \uncover<4->{\alert<2>{{\color{blue}auto} p2 = monot.allocate(2);}}
+    \uncover<4->{\alert<2>{{\color{blue}auto} p3 = monot.allocate(4);}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/monot_030.png}
+    \includegraphics<2>[width=.9\textwidth]{memgfx/monot_040.png}
+    \includegraphics<3>[width=.9\textwidth]{memgfx/monot_050.png}
+    \includegraphics<4-5>[width=.9\textwidth]{memgfx/monot_060.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<1->{\alert<1>{monot.deallocate(p2);}}
+    \uncover<3->{\alert<3>{monot.deallocate(p1);}}
+    \uncover<3->{\alert<3>{monot.deallocate(p3);}}
+    
+    \uncover<4->{\alert<4>{{\color{blue}auto} p4 = allocate(2);}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator - Reclamation}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/monot_060.png}
+    \includegraphics<2-3>[width=.9\textwidth]{memgfx/monot_070.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/monot_010.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<1->{\alert<1>{monot.deallocate(p4);}}
+
+    \uncover<3->{\alert<3>{monot.release();}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\iffalse
 \begin{frame}[fragile]
   \frametitle{Let's talk about memory}
     \begin{itemize}
@@ -185,7 +240,7 @@ Outline
     \item Allocating memory requires access to an allocator.
     \end{itemize}
 \end{frame}
-
+\fi
 
 \begin{frame}
   \frametitle{Thanks for your attention.}

@@ -1,0 +1,130 @@
+\documentclass[aspectratio=43]{beamer}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usetheme{Rochester}
+\usecolortheme{beaver}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\lstloadlanguages{C++}
+    \lstset{%
+        language={C++},
+        basicstyle=\ttfamily,
+        keywordstyle=\color{blue},
+        showstringspaces=false,
+        escapechar={§},
+        escapeinside=||
+    }
+
+\newif\iftransitions
+ \transitionstrue
+
+
+\newif\iffast
+% \fasttrue
+
+\title{Taming Dynamic Memory}
+\subtitle{An Introduction to Custom Allocators}
+\author{Andreas Weis}
+\institute{BMW AG}
+\date{code::dive, November 7, 2018}
+\titlegraphic{\includegraphics[height=.2\textheight]{resources/codedive_logo.png}}
+
+\iffalse
+Taming dynamic memory - An introduction to custom allocators
+
+Dynamic memory allocation is a feature that is often taken for granted. Most developers use some form of new or malloc every day, usually without worrying too much what goes on behind the scenes. But what about those situations where the built-in mechanisms are not good enough, be it for reasons of performance, safety, or due to restrictions of the target hardware? 
+
+In this talk we will explore how custom allocators can be used to overcome those issues. We will explain how basic allocation techniques like pooling and monotonic allocation behave with regards to performance and reliability. We will take a look at some of the technical challenges behind allocators, like the different forms of alignment and the way that the standard library manages stateful allocators. And finally we will take a look at some popular allocator implementations and how to integrate them with a modern C++ codebase.
+
+Audience
+Developers that have never used a custom allocator before and don't know where to get started or don't understand what all the fuss is about.
+
+Outline
+- Scenarios in which the default allocator is not good enough
+- Basic allocator toolbox: Stack, Monotonic, Pool, general-purpose; Explain the basic algorithm and pros & cons of each
+- Popular open-source implementations of these
+- Customization points for allocation in C++ and some popular third-party libraries; How they differ and how to bridge the gap.
+- Using custom allocators for profiling, debugging and diagnostics
+- Technical challenges when writing an allocator: Alignment, Strict aliasing, etc.
+\fi
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+  \frametitle{About me}
+
+  \begin{itemize}
+    \setlength\itemsep{1.5em}
+
+    \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} ComicSansMS
+
+    \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
+
+    \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
+
+    \item Currently working as a Software Architect for BMW \includegraphics[height=.1\textheight]{resources/bmw_group.jpg}
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Let's talk about memory}
+    \begin{itemize}
+    \item Dynamic memory: Request objects using allocate, deallocate to give memory back
+    \item Done! Or is it?
+    \end{itemize}
+    Problems with global allocator:
+    \begin{itemize}
+    \item No one-size fits all allocation strategy. Every allocator has an achilles heel.
+    \item Global allocators don't parallelize well. Allocation/Deallocation typically requires acquiring a lock.
+    \item Runtime performance of global allocators is unpredictable. Understanding runtime behaviour requires understanding the entire program
+    \item Overhead of the allocation algorithm might not be acceptable on the target hardware.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Main concerns about dynamic memory}
+    \begin{itemize}
+    \item Maximum overall memory consumption.
+    \item Runtime behavior.
+    \item Fragmentation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Local allocators to the rescue}
+    Pro:
+    \begin{itemize}
+    \item 
+    \end{itemize}
+
+    Con:
+    \begin{itemize}
+    \item Allocating memory requires access to an allocator.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Thanks for your attention.}
+\end{frame}
+
+
+\end{document}

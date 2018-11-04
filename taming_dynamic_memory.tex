@@ -220,7 +220,7 @@ Outline
 \end{frame}
 
 
-\begin{frame}[fragile]
+ \begin{frame}[fragile]
   \frametitle{Monotonic Allocator - \texttt{std::vector}}
   \begin{center}
     \includegraphics<1>[width=.9\textwidth]{memgfx/monot_vector_010.png}
@@ -237,6 +237,63 @@ Outline
   \item \texttt{list} and \texttt{map} work fine, but deleted elements are not reclaimed individually
   \item \texttt{unordered\_map} has same problem as \texttt{vector} when growing but the load-factor triggering rehash is less predictable
   \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator - Extensions}
+  \begin{itemize}
+  \item Stack
+  \item Stack Coalescing
+  \item Queue
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Pool Allocator}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/pool_010.png}
+    \includegraphics<2-3>[width=.9\textwidth]{memgfx/pool_020.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/pool_030.png}
+    \includegraphics<5-6>[width=.9\textwidth]{memgfx/pool_040.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<2->{\alert<2>{{\color{blue}auto} p1 = pool.allocate(2);}}
+    \uncover<2->{\alert<2>{{\color{blue}auto} p2 = pool.allocate(4);}}
+    \uncover<2->{\alert<2>{{\color{blue}auto} p3 = pool.allocate(3);}}
+    
+    \uncover<4->{\alert<4>{pool.deallocate(p1);}}
+    \uncover<5->{\alert<5>{{\color{blue}auto} p4 = pool.allocate(1);}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Pool Allocator - Reclamation}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/pool_free_010.png}
+    \includegraphics<2-3>[width=.9\textwidth]{memgfx/pool_free_020.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/pool_free_030.png}
+    \includegraphics<5-6>[width=.9\textwidth]{memgfx/pool_free_040.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<2->{\alert<2>{{\color{blue}auto} p1 = pool.allocate(2);}}
+    \uncover<2->{\alert<2>{{\color{blue}auto} p2 = pool.allocate(4);}}
+    
+    \uncover<4->{\alert<4>{pool.deallocate(p1);}}
+    \uncover<5->{\alert<5>{pool.deallocate(p2);}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Pool Allocator - Diffusion}
+  \begin{center}
+    \includegraphics[width=.9\textwidth]{memgfx/pool_diffusion.png}
+  \end{center}
 \end{frame}
 
 

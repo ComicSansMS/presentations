@@ -297,6 +297,21 @@ Outline
 \end{frame}
 
 
+\begin{frame}[fragile]
+  \frametitle{Multipool Allocator}
+  \begin{center}
+    \includegraphics<1-2>[width=.9\textwidth]{memgfx/multipool_010.png}
+    \includegraphics<3-4>[width=.9\textwidth]{memgfx/multipool_020.png}
+    \includegraphics<5>[width=.9\textwidth]{memgfx/multipool_030.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<2->{\alert<2>{{\color{blue}auto} p1 = multipool.allocate(6);}}
+    \uncover<4->{\alert<4>{{\color{blue}auto} p2 = multipool.allocate(2);}}
+  \end{semiverbatim}
+\end{frame}
+
+
 \iffalse
 \begin{frame}[fragile]
   \frametitle{Let's talk about memory}

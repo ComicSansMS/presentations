@@ -201,9 +201,6 @@ Outline
 \end{frame}
 
 
-\fi %crop
-
-
 \begin{frame}[fragile]
   \frametitle{Monotonic Allocator}
   \begin{itemize}
@@ -310,6 +307,36 @@ Outline
     \uncover<4->{\alert<4>{{\color{blue}auto} p2 = multipool.allocate(2);}}
   \end{semiverbatim}
 \end{frame}
+
+
+\fi %crop
+
+
+\begin{frame}[fragile]
+  \frametitle{Stack Allocator}
+  \begin{center}
+    \includegraphics<1-2>[width=.9\textwidth]{memgfx/monot_030.png}
+    \includegraphics<3>[width=.9\textwidth]{memgfx/monot_padding_010.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/monot_padding_011.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<2->{\alert<2-3>{monot.deallocate(p3);}}
+  \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Stack Allocator}
+  \begin{itemize}
+  \item Strict FIFO-ordering of allocations and deallocations.
+  \item Free-pointer is reset to the same pointer passed to the \texttt{deallocate} call
+  \item No way for the implementation to check whether the deallocation order is correct!
+  \item Padding bytes may be lost
+  \end{itemize}
+\end{frame}
+
+
 
 
 \iffalse

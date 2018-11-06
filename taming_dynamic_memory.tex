@@ -404,6 +404,38 @@ void* allocate(std::size_t bytes,
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Monotonic Allocator - Extensions}
+  \begin{itemize}
+  \item Auxiliary data structure required
+  \item Runtime cost of deallocation now linear in number of allocations (amortized O(1))
+  \item Auxiliary nodes have their own alignment requirements
+  \item Where to store the nodes?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Monotonic Allocator - Extensions}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/monot_stack_010.png}
+    \includegraphics<2>[width=.9\textwidth]{memgfx/monot_stack_external_010.png}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Internal or External?}
+
+  \begin{itemize}
+  \item External headers have better cache behavior when iterating the list
+  \item Internal headers have better cache behavior when adjacent data is hot
+  \item Internal headers require managed memory to be readable (think GPUs)
+  \item Where does the storage for external headers come from? Same buffer? Different buffer? How big?
+  \end{itemize}
+  
+  $\Rightarrow$ No easy answers.
+\end{frame}
+
 
 \iffalse % crop
 

@@ -329,13 +329,124 @@ Outline
 \begin{frame}
   \frametitle{Stack Allocator}
   \begin{itemize}
-  \item Strict FIFO-ordering of allocations and deallocations.
-  \item Free-pointer is reset to the same pointer passed to the \texttt{deallocate} call
+  \item Strict FIFO-ordering of allocations and deallocations
   \item No way for the implementation to check whether the deallocation order is correct!
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Stack Allocator}
+  \begin{center}
+    \includegraphics<1-2>[width=.9\textwidth]{memgfx/monot_padding_012.png}
+    \includegraphics<3-4>[width=.9\textwidth]{memgfx/monot_padding_011.png}
+  \end{center}
+
+  \begin{semiverbatim}
+    \uncover<1-2>{\alert<1>{monot.deallocate(p3);}}
+    \uncover<2>{\alert<2>{p3 == top  \checkmark}}
+    \uncover<4>{\alert<4>{top = ???}}
+  \end{semiverbatim}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Stack Allocator}
+  \begin{itemize}
+  \item Strict FIFO-ordering of allocations and deallocations.
+  \item No way for the implementation to check whether the deallocation order is correct!
+    \pause
+  \item Free-pointer is reset to the same pointer passed to the \texttt{deallocate} call
+    \pause
   \item Padding bytes may be lost
   \end{itemize}
 \end{frame}
 
+
+\begin{frame}[fragile]
+  \frametitle{Padding}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/monot_030.png}
+    \includegraphics<2>[width=.9\textwidth]{memgfx/monot_padding_020.png}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Alignment}
+  \begin{semiverbatim}
+    0xdeadbeef =
+
+   d    e    a    d    b    e    e    f
+ 1101 1110 1010 1101 1011 1110 1110 1111
+  \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Alignment}
+  \begin{semiverbatim}
+    0xdeadbeef =
+
+   d    e    a    d    b    e    e    {\color{red}f}
+ 1101 1110 1010 1101 1011 1110 1110 111{\color{red}1}
+  \end{semiverbatim}
+
+  No alignment (1-byte aligned).
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Alignment}
+  \begin{semiverbatim}
+    0xdeadbeef =
+
+   d    e    a    d    b    e    e    {\color{red}c}
+ 1101 1110 1010 1101 1011 1110 1110 11{\color{red}00}
+  \end{semiverbatim}
+
+  4-byte aligned.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Alignment}
+  \begin{semiverbatim}
+    0xdeadbeef =
+
+   d    e    a    d    b    e    e    {\color{red}8}
+ 1101 1110 1010 1101 1011 1110 1110 1{\color{red}000}
+  \end{semiverbatim}
+
+  8-byte aligned.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Alignment}
+
+  \begin{itemize}
+  \item Alignment refers to the least-significant bits of the object address being 0
+  \item Alignment requirements are always specified in powers of 2
+  \item Each C++ type has a \textit{natural} alignment requirement (typically \texttt{alignof(T) == sizeof(T)})
+    \item This is why \texttt{struct}s sometimes insert padding bytes between members
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Alignment}
+
+  \begin{itemize}
+  \item Default allocator typically returns addresses aligned to \texttt{alignof(max\_align\_t)}, which is big enough for all built-in types
+  \item Users may \texttt{extend} the alignment requirement for custom data types using \texttt{alignas}
+  \end{itemize}
+
+  \begin{lstlisting}
+void* allocate(std::size_t bytes,
+               std::size_t alignment);
+  \end{lstlisting}
+\end{frame}
 
 
 

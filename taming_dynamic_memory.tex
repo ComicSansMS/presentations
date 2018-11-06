@@ -150,6 +150,66 @@ Outline
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Problems with default allocator}
+
+  \begin{itemize}
+  \item Complex runtime behavior
+    \begin{itemize}
+    \item What is the maximum memory usage?
+    \item What is the worst-case execution time for an allocation or deallocation?
+    \end{itemize}
+
+  \item Shared global state
+    \begin{itemize}
+    \item Reasoning about allocator behavior requires global knowledge of the whole program
+    \item The singular resource global allocator is a potential bottleneck
+    \end{itemize}
+  \end{itemize}
+
+  It's not just about performance!
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{From Global to Local}
+  
+  \begin{lstlisting}
+
+
+auto p1 = allocate(42);
+deallocate(p1);
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{From Global to Local}
+  
+  \begin{lstlisting}
+Allocator alloc;
+
+auto p1 = alloc.allocate(42);
+alloc.deallocate(p1);
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Problems with default allocator}
+
+  \begin{itemize}
+  \item Complex runtime behavior
+    \begin{itemize}
+    \item What is the maximum memory usage?
+    \item What is the worst-case execution time for an allocation or deallocation?
+    \end{itemize}
+
+  \item {\color{red}Shared global state} \checkmark
+  \end{itemize}
+\end{frame}
+
+
 \begin{frame}[fragile]
   \frametitle{Monotonic Allocator}
   \begin{center}
@@ -284,7 +344,7 @@ Outline
 \begin{frame}
   \frametitle{Stack Allocator}
   \begin{itemize}
-  \item Strict FIFO-ordering of allocations and deallocations
+  \item Strict LIFO-ordering of allocations and deallocations
   \item No way for the implementation to check whether the deallocation order is correct!
   \end{itemize}
 \end{frame}
@@ -402,6 +462,14 @@ void* allocate(std::size_t bytes,
                std::size_t alignment);
   \end{lstlisting}
 \end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Padding}
+  \begin{center}
+    \includegraphics[width=.9\textwidth]{memgfx/monot_padding_020.png}
+  \end{center}
+\end{frame}
+
 
 \fi % crop
 
@@ -560,6 +628,12 @@ void* allocate(std::size_t bytes,
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{But what if I do need different sizes?}
+
+  \vfill $\longrightarrow$ Multipool Allocator \vfill
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Multipool Allocator}
@@ -573,6 +647,16 @@ void* allocate(std::size_t bytes,
     \uncover<2->{\alert<2>{{\color{blue}auto} p1 = multipool.allocate(6);}}
     \uncover<4->{\alert<4>{{\color{blue}auto} p2 = multipool.allocate(2);}}
   \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Multipool Allocator}
+  \begin{itemize}
+  \item Very powerful allocator
+  \item Difficult to set up: How many pools do I need? What chunk sizes? What pool sizes?
+  \item Solid building block for a general purpose allocator
+  \end{itemize}
 \end{frame}
 
 

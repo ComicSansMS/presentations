@@ -66,7 +66,7 @@ Outline
 
 \frame{\titlepage}
 
-\iftrue %crop
+\iffalse %crop
 
 \begin{frame}[fragile]
   \frametitle{About me}
@@ -471,9 +471,6 @@ void* allocate(std::size_t bytes,
 \end{frame}
 
 
-\fi % crop
-
-
 \begin{frame}[fragile]
   \frametitle{Monotonic Allocator - Extensions}
   \begin{center}
@@ -539,7 +536,6 @@ void* allocate(std::size_t bytes,
   Only consider modifications if it's a perfect fit for your use case.
 \end{frame}
 
-\iftrue % crop
 
 \begin{frame}
   \frametitle{But what if I need to reclaim memory?}
@@ -659,8 +655,88 @@ void* allocate(std::size_t bytes,
   \end{itemize}
 \end{frame}
 
-
 \fi %crop
+
+
+\begin{frame}[fragile]
+  \frametitle{Allocator support in C++}
+
+  \begin{semiverbatim}
+std::vector<T, \alert<2>{Allocator<T>}> v;
+    
+v.push\_back(\ldots);
+  \end{semiverbatim}
+
+  \uncover<2->{This is not the class allocating the memory.}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Allocator support in C++}
+
+  Historically, allocators in C++ were a way to abstract different models of addressing memory.
+
+  As such, \textit{Allocators} in C++ are ``stateless''.  \\~\
+
+  \pause
+  \alert<2>{In C++ an Allocator is merely a handle to a \textit{memory resource}.}\footnote{\href{https://www.youtube.com/watch?v=0MdSJsCTRkY}{Arthur O'Dwyer - An Allocator is a Handle to the Heap}}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Allocator support in C++}
+
+  \begin{semiverbatim}
+std::pmr::memory\_resource& mr = \ldots;
+\uncover<1-3>{std::vector<T, \alert<2>{std::pmr::polymorphic\_allocator}> v(\alert<3>{&mr});}
+\uncover<4>{\alert<4>{std::pmr::vector<T> v(\alert<3>{&mr});}}
+    
+v.push\_back(\ldots);
+  \end{semiverbatim}
+
+  \begin{itemize}
+    \uncover<2->{\item Enable custom allocators for the object.}
+    \uncover<3->{\item Pass a \texttt{memory\_resource} to handle allocation/deallocation.}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{C++ Memory Resources\footnote{\href{https://www.youtube.com/watch?v=v3dz-AKOVL8}{Pablo Halpern - Allocators: The Good Parts}}}
+
+  \begin{itemize}
+  \item \texttt{std::pmr::memory\_resource} - Abstract base class for all resources consumable by \texttt{std::pmr::polymorphic\_allocator}
+  \item \texttt{std::pmr::new\_delete\_resource} - Global allocator
+  \item \texttt{std::pmr::monotonic\_buffer\_resource} - Monotonic allocator
+  \item \texttt{std::pmr::unsynchronized\_pool\_resource}/ \texttt{synchronized\_pool\_resource} - Multipool
+  \item \texttt{std::pmr::null\_memory\_resource} - Allocation always fails
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Chaining}
+  \begin{lstlisting}
+explicit monotonic_buffer_resource(
+  std::pmr::memory_resource* upstream);
+  \end{lstlisting}
+
+  Each \texttt{memory\_resource} has an upstream counterpart. \\~\
+
+  If the resource runs out of memory, it tries to allocate more memory from upstream.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Chaining}
+  Possible uses of Chaining:
+  \begin{itemize}
+  \item Fixed-size vs. dynamic storage for allocators
+  \item Combination of different allocation strategies
+  \item Injection points for special purpose allocators for debugging and profiling
+  \end{itemize}
+\end{frame}
+
 
 
 % c++ allocator model: handle to the heap, stateful vs stateless

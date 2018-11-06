@@ -738,6 +738,33 @@ explicit monotonic_buffer_resource(
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{There's no universal interface for allocators}
+
+  \begin{itemize}
+  \item Are size and alignment parameters passed to \texttt{deallocate}?
+  \item Is \texttt{realloc} supported?
+  \item How are out-of-memory errors reported?
+  \item Is extended alignment supported?
+  \item What is the return value for an allocation of size \texttt{0}?
+  \item Different memory regions for internal data structures and allocated memory?
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Don't underestimate the global allocator}
+
+  \begin{itemize}
+  \item Competitive performance in the general case
+  \item Security features (ASLR, secure erase of freed memory)
+  \item Debugging \& Profiling (Valgrind, Windows Debug Runtime)
+  \item Cache Coloring
+  \end{itemize}
+
+  Local allocators are no free lunch!
+\end{frame}
+
 
 % c++ allocator model: handle to the heap, stateful vs stateless
 % pmr memory resource

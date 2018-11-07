@@ -1,4 +1,4 @@
-\documentclass[aspectratio=43]{beamer}
+\documentclass[aspectratio=169]{beamer}
 
 \usepackage[utf8]{inputenc}
 
@@ -66,7 +66,7 @@ Outline
 
 \frame{\titlepage}
 
-\iffalse %crop
+\iftrue %crop
 
 \begin{frame}[fragile]
   \frametitle{About me}
@@ -85,6 +85,16 @@ Outline
   \end{itemize}
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Overview}
+  \begin{itemize}
+  \item What's wrong with global \texttt{new} and \texttt{delete}?
+  \item Local allocators
+  \item Alternative allocation strategies
+  \item Allocator support in C++
+  \end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{General purpose allocator}
@@ -369,7 +379,7 @@ alloc.deallocate(p1);
 \begin{frame}
   \frametitle{Stack Allocator}
   \begin{itemize}
-  \item Strict FIFO-ordering of allocations and deallocations.
+  \item Strict LIFO-ordering of allocations and deallocations.
   \item No way for the implementation to check whether the deallocation order is correct!
     \pause
   \item Free-pointer is reset to the same pointer passed to the \texttt{deallocate} call
@@ -617,7 +627,7 @@ void* allocate(std::size_t bytes,
   \frametitle{Pool Allocator - STL containers}
   \begin{itemize}
   \item \texttt{vector} only if chunk sizes match vector size
-  \item \texttt{list} and \texttt{map} perfect fit, as the size of each node is known beforehand (though this knowledge is implementation-specific)
+  \item \texttt{list} and \texttt{map} are a perfect fit, as the size of each node is known beforehand (though this knowledge is implementation-specific)
   \item Similar for \texttt{deque}
   \item \texttt{unordered\_map} is again complicated
   \end{itemize}
@@ -650,6 +660,8 @@ void* allocate(std::size_t bytes,
   \frametitle{Multipool Allocator}
   \begin{itemize}
   \item Very powerful allocator
+  \item Runtime is still deterministic if number of pools is known beforehand
+  \item Maximum amount of waste through internal fragmentation can be controlled precisely
   \item Difficult to set up: How many pools do I need? What chunk sizes? What pool sizes?
   \item Solid building block for a general purpose allocator
   \end{itemize}
@@ -674,7 +686,7 @@ v.push\_back(\ldots);
 \begin{frame}[fragile]
   \frametitle{Allocator support in C++}
 
-  Historically, allocators in C++ were a way to abstract different models of addressing memory.
+  Historically, C++ used Allocators to abstract over different models of addressing memory.
 
   As such, \textit{Allocators} in C++ are ``stateless''.  \\~\
 
@@ -765,6 +777,19 @@ explicit monotonic_buffer_resource(
   Local allocators are no free lunch!
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Wrapping up}
+
+  \begin{itemize}
+  \item No one size fits all - Each allocator has its Achilles heel
+  \item Global allocator is a good solution for the general case
+  \item But you can do better with special allocators for special use cases, in terms of performance\footnote{\href{https:://youtube.com/}{John Lakos - Local (Arena) Allocators}} as well as reliability
+  \item C++ has good support for local allocators, but the terminology is a bit off
+  \item Different libraries have different concepts of allocators
+  \item No free lunch: You need to understand your use case before you can chose the right allocator
+  \end{itemize}
+\end{frame}
 
 % c++ allocator model: handle to the heap, stateful vs stateless
 % pmr memory resource

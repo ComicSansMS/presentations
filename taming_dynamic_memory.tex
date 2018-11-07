@@ -717,7 +717,7 @@ v.push\_back(\ldots);
   \frametitle{C++ Memory Resources\footnote{\href{https://www.youtube.com/watch?v=v3dz-AKOVL8}{Pablo Halpern - Allocators: The Good Parts}}}
 
   \begin{itemize}
-  \item \texttt{std::pmr::memory\_resource} - Abstract base class for all resources consumable by \texttt{std::pmr::polymorphic\_allocator}
+  \item \texttt{std::pmr::memory\_resource} - Abstract base class for all resources that can be wrapped in a \texttt{std::pmr::polymorphic\_allocator}
   \item \texttt{std::pmr::new\_delete\_resource} - Global allocator
   \item \texttt{std::pmr::monotonic\_buffer\_resource} - Monotonic allocator
   \item \texttt{std::pmr::unsynchronized\_pool\_resource}/ \texttt{synchronized\_pool\_resource} - Multipool
@@ -782,7 +782,7 @@ explicit monotonic_buffer_resource(
   \frametitle{Wrapping up}
 
   \begin{itemize}
-  \item No one size fits all - Each allocator has its Achilles heel
+  \item No one-size-fits-all --- Each allocator has its Achilles heel
   \item Global allocator is a good solution for the general case
   \item But you can do better with special allocators for special use cases, in terms of performance\footnote{\href{https:://youtube.com/}{John Lakos - Local (Arena) Allocators}} as well as reliability
   \item C++ has good support for local allocators, but the terminology is a bit off

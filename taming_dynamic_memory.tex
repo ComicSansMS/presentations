@@ -453,7 +453,7 @@ alloc.deallocate(p1);
   \begin{itemize}
   \item Alignment refers to the least-significant bits of the object address being 0
   \item Alignment requirements are always specified in powers of 2
-  \item Each C++ type has a \textit{natural} alignment requirement (typically \texttt{alignof(T) == sizeof(T)})
+  \item Each built-in C++ type has a \textit{natural} alignment requirement (typically \texttt{alignof(T) == sizeof(T)})
     \item This is why \texttt{struct}s sometimes insert padding bytes between members
   \end{itemize}
 \end{frame}

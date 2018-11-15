@@ -40,8 +40,9 @@
 \subtitle{An Introduction to Custom Allocators}
 \author{Andreas Weis}
 \institute{BMW AG}
-\date{code::dive, November 7, 2018}
-\titlegraphic{\includegraphics[height=.2\textheight]{resources/codedive_logo.png}}
+
+\date{Meeting C++, November 15, 2018}
+% \titlegraphic{\includegraphics[height=.2\textheight]{resources/codedive_logo.png}}
 
 \iffalse
 Taming dynamic memory - An introduction to custom allocators
@@ -718,10 +719,10 @@ v.push\_back(\ldots);
 
   \begin{itemize}
   \item \texttt{std::pmr::memory\_resource} - Abstract base class for all resources that can be wrapped in a \texttt{std::pmr::polymorphic\_allocator}
-  \item \texttt{std::pmr::new\_delete\_resource} - Global allocator
+  \item \texttt{std::pmr::new\_delete\_resource()} - Global allocator
   \item \texttt{std::pmr::monotonic\_buffer\_resource} - Monotonic allocator
   \item \texttt{std::pmr::unsynchronized\_pool\_resource}/ \texttt{synchronized\_pool\_resource} - Multipool
-  \item \texttt{std::pmr::null\_memory\_resource} - Allocation always fails
+  \item \texttt{std::pmr::null\_memory\_resource()} - Allocation always fails
   \end{itemize}
 \end{frame}
 
@@ -741,9 +742,30 @@ explicit monotonic_buffer_resource(
 
 \begin{frame}[fragile]
   \frametitle{Chaining}
+  \begin{lstlisting}
+// fixed size buffer
+std::aligned_storage_t<42> buffer;
+std::pmr::monotonic_buffer_resource alloc(&buffer, 42,
+   std::pmr::null_memory_resource()
+);
+  \end{lstlisting}
+  \pause
+  \begin{lstlisting}
+//dynamically growing
+std::aligned_storage_t<42> buffer;
+std::pmr::monotonic_buffer_resource alloc(&buffer, 42,
+   std::pmr::new_delete_resource()
+);
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Chaining}
   Possible uses of Chaining:
   \begin{itemize}
   \item Fixed-size vs. dynamic storage for allocators
+  \item Customization of error-handling
   \item Combination of different allocation strategies
   \item Injection points for special purpose allocators for debugging and profiling
   \end{itemize}
@@ -784,7 +806,7 @@ explicit monotonic_buffer_resource(
   \begin{itemize}
   \item No one-size-fits-all --- Each allocator has its Achilles heel
   \item Global allocator is a good solution for the general case
-  \item But you can do better with special allocators for special use cases, in terms of performance\footnote{\href{https:://youtube.com/}{John Lakos - Local (Arena) Allocators}} as well as reliability
+  \item But you can do better with special allocators for special use cases, in terms of performance\footnote{\href{https://www.youtube.com/watch?v=ko6uyw0C8r0}{John Lakos - Local (Arena) Allocators}} as well as reliability
   \item C++ has good support for local allocators, but the terminology is a bit off
   \item Different libraries have different concepts of allocators
   \item No free lunch: You need to understand your use case before you can chose the right allocator

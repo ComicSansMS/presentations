@@ -36,13 +36,13 @@
 \newif\iffast
 % \fasttrue
 
-\title{Dynamic Memory on Embedded Systems}
-%\subtitle{}
+\title{Taming Dynamic Memory}
+\subtitle{An Introduction to Custom Allocators}
 \author{Andreas Weis}
 \institute{BMW AG}
 
-\date{emBO, March 15, 2019}
-% \titlegraphic{\includegraphics[height=.2\textheight]{resources/codedive_logo.png}}
+\date{ACCU, April 12, 2019}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/accu2019_logo.png}}
 
 \iffalse
 Taming dynamic memory - An introduction to custom allocators
@@ -90,44 +90,10 @@ Outline
 \begin{frame}
   \frametitle{Overview}
   \begin{itemize}
-  \item Static and dynamic memory management
+  \item What's wrong with global \texttt{new} and \texttt{delete}?
   \item Local allocators
   \item Alternative allocation strategies
   \item Allocator support in C++
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{The embedded way}
-
-  What's wrong with\ldots
-
-  \begin{lstlisting}
-    static int data_buffer[256];
-  \end{lstlisting}
-
-  \begin{itemize}
-    \pause \item In embedded often the only dynamic memory management is the stack
-    \pause \item Out-of-memory errors surface during build or flashing
-    \pause \item Extremely rigid and does often not scale well to big projects
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{The case for dynamic memory}
-
-  \begin{itemize}
-  \item Dynamic memory is an enabler
-    \begin{itemize}
-    \item Libraries (C++ standard library)
-    \item Advanced language features
-    \item Algorithms
-    \end{itemize}
-  \item It can make things easier
-    \begin{itemize}
-    \item Heavy reuse of memory buffers
-    \item Projects with a generous memory budget
-    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -338,7 +304,6 @@ alloc.deallocate(p1);
 
 \end{frame}
 
-\iffalse
  \begin{frame}[fragile]
   \frametitle{Monotonic Allocator - \texttt{std::vector}}
   \begin{center}
@@ -355,7 +320,7 @@ alloc.deallocate(p1);
   \item \texttt{vector} should \texttt{reserve} final size upfront
   \item \texttt{list} and \texttt{map} work fine, but deleted elements are not reclaimed individually
   \item \texttt{deque} works really well
-  \item \texttt{unordered\_map} has same problem as \texttt{vector} when growing but the load-factor triggered rehash is less predictable
+  \item \texttt{unordered\_map} deserves a closer look\ldots
   \end{itemize}
 \end{frame}
 
@@ -363,15 +328,25 @@ alloc.deallocate(p1);
 \begin{frame}[fragile]
   \frametitle{\texttt{unordered\_map}}
   \begin{center}
-    \includegraphics<1>[height=.7\textheight]{memgfx/hash_010.png}
-    \includegraphics<2>[height=.7\textheight]{memgfx/hash_020.png}
-    \includegraphics<3>[height=.7\textheight]{memgfx/hash_030.png}
-    \includegraphics<4>[width=.3\textwidth]{memgfx/hash_040.png}\hfill
-    \includegraphics<4>[width=.3\textwidth]{memgfx/hash_050.png}
+    \includegraphics<1>[height=.7\textheight]{memgfx/hash_110.png}
+    \includegraphics<2>[height=.7\textheight]{memgfx/hash_120.png}
+    \includegraphics<3>[height=.7\textheight]{memgfx/hash_130.png}
+    \includegraphics<4>[width=.4\textwidth]{memgfx/hash_145.png}\hfill
+    \includegraphics<4>[width=.4\textwidth]{memgfx/hash_150.png}
   \end{center}
   \uncover<4>{Exact layout depends on hash function and inserted values}
 \end{frame}
-\fi
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{unordered\_map} -- Rehashing}
+  \begin{center}
+    \includegraphics<1>[height=.7\textheight]{memgfx/hash_140.png}
+    \includegraphics<2->[height=.7\textheight]{memgfx/hash_160.png}
+
+    \uncover<3>{Allocation behavior is a hybrid between \texttt{vector} and \texttt{list}}
+  \end{center}
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Stack Allocator}
@@ -433,7 +408,7 @@ alloc.deallocate(p1);
   \end{center}
 \end{frame}
 
-\iffalse
+
 \begin{frame}[fragile]
   \frametitle{Alignment}
   \begin{semiverbatim}
@@ -481,7 +456,7 @@ alloc.deallocate(p1);
 
   8-byte aligned.
 \end{frame}
-\fi
+
 
 \begin{frame}[fragile]
   \frametitle{Alignment}
@@ -518,7 +493,7 @@ void* allocate(std::size_t bytes,
   \end{center}
 \end{frame}
 
-\iffalse
+
 \begin{frame}[fragile]
   \frametitle{Monotonic Allocator - Extensions}
   \begin{center}
@@ -570,11 +545,10 @@ void* allocate(std::size_t bytes,
   
   $\Rightarrow$ No easy answers.
 \end{frame}
-\fi
 
 
 \begin{frame}
-  \frametitle{Be careful with extending the algorithm\ldots}
+  \frametitle{The Bottom Line\ldots}
 
   Even seemingly simple extensions get complicated very quickly.
 
@@ -661,17 +635,26 @@ void* allocate(std::size_t bytes,
   \end{itemize}
 \end{frame}
 
-\iffalse
+
 \begin{frame}[fragile]
   \frametitle{Pool Allocator - STL containers}
   \begin{itemize}
   \item \texttt{vector} only if chunk sizes match vector size
   \item \texttt{list} and \texttt{map} are a perfect fit, as the size of each node is known beforehand (though this knowledge is implementation-specific)
   \item Similar for \texttt{deque}
-  \item \texttt{unordered\_map} is again complicated
+  \item \texttt{unordered\_map} again deserves a closer look...
   \end{itemize}
 \end{frame}
-\fi
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{unordered\_map}}
+  \begin{center}
+    \hfill
+    \includegraphics[height=.7\textheight]{memgfx/hash_140.png} \hfill
+    \includegraphics[height=.7\textheight]{memgfx/hash_160.png} \hfill
+  \end{center}
+\end{frame}
+
 
 \begin{frame}
   \frametitle{But what if I do need different sizes?}
@@ -679,7 +662,7 @@ void* allocate(std::size_t bytes,
   \vfill $\longrightarrow$ Multipool Allocator \vfill
 \end{frame}
 
-\iffalse
+
 \begin{frame}[fragile]
   \frametitle{Multipool Allocator}
   \begin{center}
@@ -705,20 +688,6 @@ void* allocate(std::size_t bytes,
   \item Solid building block for a general purpose allocator
   \end{itemize}
 \end{frame}
-\fi
-
-\begin{frame}[fragile]
-  \frametitle{Multipool Allocator}
-  \begin{center}
-    \includegraphics[width=.9\textwidth]{memgfx/multipool_030.png}
-  \end{center}
-
-  \begin{semiverbatim}
-    {\color{blue}auto} p1 = multipool.allocate(6);
-    {\color{blue}auto} p2 = multipool.allocate(2);
-  \end{semiverbatim}
-\end{frame}
-
 
 \fi %crop
 
@@ -823,7 +792,7 @@ std::pmr::monotonic_buffer_resource alloc(&buffer, 42,
   \end{itemize}
 \end{frame}
 
-\iffalse
+
 \begin{frame}
   \frametitle{There's no universal interface for allocators}
 
@@ -850,7 +819,7 @@ std::pmr::monotonic_buffer_resource alloc(&buffer, 42,
 
   Local allocators are no free lunch!
 \end{frame}
-\fi
+
 
 \begin{frame}
   \frametitle{Wrapping up}
@@ -858,8 +827,9 @@ std::pmr::monotonic_buffer_resource alloc(&buffer, 42,
   \begin{itemize}
   \item No one-size-fits-all --- Each allocator has its Achilles heel
   \item Global allocator is a good solution for the general case
-  \item For embedded projects a simpler solution is often a better fit
+  \item But you can do better with special allocators for special use cases, in terms of performance\footnote{\href{https://www.youtube.com/watch?v=ko6uyw0C8r0}{John Lakos - Local (Arena) Allocators}} as well as reliability
   \item C++ has good support for local allocators, but the terminology is a bit off
+  \item Different libraries have different concepts of allocators
   \item No free lunch: You need to understand your use case before you can chose the right allocator
   \end{itemize}
 \end{frame}
@@ -910,6 +880,12 @@ std::pmr::monotonic_buffer_resource alloc(&buffer, 42,
 
 \begin{frame}
   \frametitle{Thanks for your attention.}
+
+  \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}}
+  \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}}
+  \includegraphics[height=.05\textheight]{resources/slack-icon.png} ComicSansMS /
+  \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
+
 \end{frame}
 
 

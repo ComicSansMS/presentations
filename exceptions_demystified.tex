@@ -1,0 +1,162 @@
+\documentclass[aspectratio=169]{beamer}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\usetheme{Rochester}
+\usecolortheme{beaver}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\lstloadlanguages{C++}
+    \lstset{%
+        language={C++},
+        basicstyle=\ttfamily,
+        keywordstyle=\color{blue},
+        showstringspaces=false,
+        escapechar={§},
+        escapeinside=||
+    }
+
+\newif\iftransitions
+ \transitionstrue
+
+
+\newif\iffast
+% \fasttrue
+
+\title{Exceptions Demystified}
+% \subtitle{An Introduction to Custom Allocators}
+\author{Andreas Weis}
+\institute{BMW AG}
+
+\date{MUC++, April 25, 2019}
+%\titlegraphic{\includegraphics[height=.15\textheight]{resources/accu2019_logo.png}}
+
+\iffalse
+Exceptions Demystified
+
+Exception Handling is probably one of the most controversial features in C++, with many code bases outright banning them from the start, or only allowing their use in very specific cases. The reasons for this are often unclear and founded on premises that are not well understood.
+
+In this talk, we will explain exception handling from the bottom up, taking a close look at what a compiler actually has to do to implement the mechanism. Instead of focusing on a specific implementation, we will approach the problem from a more abstract, language-design point of view, allowing us to explore the different approaches an implementation could choose. In the end, we will gain a deeper understanding for the problems associated with the feature and how they could be mitigated in the future by alternative language features like the proposed static exceptions.
+
+
+Audience
+Language users familiar with exceptions, but not with the underlying implementation
+
+Outline
+- Lifetime of an exception
+- Anatomy of the call stack
+- Finding the right catch
+- RTTI
+- Unwinding the stack
+- Exceptions in restricted environments (real-time, embedded)
+- Execution time analysis in the presence of exceptions
+- Alternative mechanisms (static exceptions)
+
+Video
+https://www.youtube.com/watch?v=S7I66lZX_zM
+https://www.youtube.com/watch?v=FcpmMmyNNv8
+https://www.youtube.com/watch?v=_8vMAkCp0Rc
+
+Comments
+This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.youtube.com/watch?v=_Ivd3qzgT7U) or James McNellis' CppCon 2018 talk (https://www.youtube.com/watch?v=COEv2kq_Ht8). Unlike those, I don't want to focus on a specific implementation, but explain the underlying algorithmic problems that these implementations want to solve. The focus here will also be very much on how those influence the life of an application developer and hopefully separate the valid concerns about exceptions as a feature from the FUD.
+\fi
+
+\begin{document}
+
+\frame{\titlepage}
+
+\iftrue %crop
+
+\begin{frame}[fragile]
+  \frametitle{About me}
+
+  \begin{itemize}
+    \setlength\itemsep{1.5em}
+
+    \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} \includegraphics[height=.05\textheight]{resources/slack-icon.png} ComicSansMS
+
+    \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
+
+    \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
+
+    \item Currently working as a Software Architect for BMW \includegraphics[height=.1\textheight]{resources/bmw_group.jpg}
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Overview}
+  \begin{itemize}
+  \item Lifetime of an exception
+  \item Anatomy of the call stack
+  \item Finding the right catch
+  \item RTTI
+  \item Unwinding the stack
+  \item Exceptions in restricted environments (real-time, embedded)
+  \item Execution time analysis in the presence of exceptions
+  \item Alternative mechanisms (static exceptions)
+  \end{itemize}
+\end{frame}
+
+% Exception_ptr & Stack of Exceptions
+
+
+\begin{frame}[fragile]
+  \frametitle{General purpose allocator}
+  \begin{center}
+    \includegraphics<1>[width=.9\textwidth]{memgfx/gp_alloc_000.png}
+    \includegraphics<2>[width=.9\textwidth]{memgfx/gp_alloc_010.png}
+    \includegraphics<3>[width=.9\textwidth]{memgfx/gp_alloc_020.png}
+%    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_030.png}
+    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_040.png}
+  \end{center}
+
+    \begin{semiverbatim}
+      \uncover<2->{\alert<0>{{\color{blue}auto} p1 = allocate(3);}}
+      \uncover<3->{\alert<0>{{\color{blue}auto} p2 = allocate(4);}}
+      \uncover<4->{\alert<0>{{\color{blue}auto} p3 = allocate(1);}}
+      \uncover<4->{\alert<0>{{\color{blue}auto} p4 = allocate(3);}}
+      \uncover<4->{\alert<0>{{\color{blue}auto} p5 = allocate(2);}}
+    \end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Wrapping up}
+
+  \begin{itemize}
+  \item No one-size-fits-all --- Each allocator has its Achilles heel
+  \item Global allocator is a good solution for the general case
+  \item But you can do better with special allocators for special use cases, in terms of performance\footnote{\href{https://www.youtube.com/watch?v=ko6uyw0C8r0}{John Lakos - Local (Arena) Allocators}} as well as reliability
+  \item C++ has good support for local allocators, but the terminology is a bit off
+  \item Different libraries have different concepts of allocators
+  \item No free lunch: You need to understand your use case before you can chose the right allocator
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Thanks for your attention.}
+
+  \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}}
+  \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}}
+  \includegraphics[height=.05\textheight]{resources/slack-icon.png} ComicSansMS /
+  \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
+
+\end{frame}
+
+
+\end{document}

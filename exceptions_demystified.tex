@@ -112,41 +112,124 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
   \end{itemize}
 \end{frame}
 
-% Exception_ptr & Stack of Exceptions
+\begin{frame}[fragile]
+  \frametitle{Lifetime of an exception}
+  \begin{lstlisting}[language={C++}]
+void f() {
+    throw MyException{};  // starts here      
+}
 
+void g() {
+  try {
+    f();
+  } catch(MyException& e) {
+    // dies here
+  }
+}
+  \end{lstlisting}
+\end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{General purpose allocator}
-  \begin{center}
-    \includegraphics<1>[width=.9\textwidth]{memgfx/gp_alloc_000.png}
-    \includegraphics<2>[width=.9\textwidth]{memgfx/gp_alloc_010.png}
-    \includegraphics<3>[width=.9\textwidth]{memgfx/gp_alloc_020.png}
-%    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_030.png}
-    \includegraphics<4>[width=.9\textwidth]{memgfx/gp_alloc_040.png}
-  \end{center}
+  \frametitle{Lifetime of an exception}
+  \begin{lstlisting}[language={C++}]
+void f() {
+    throw MyException{};  // starts here      
+}
 
-    \begin{semiverbatim}
-      \uncover<2->{\alert<0>{{\color{blue}auto} p1 = allocate(3);}}
-      \uncover<3->{\alert<0>{{\color{blue}auto} p2 = allocate(4);}}
-      \uncover<4->{\alert<0>{{\color{blue}auto} p3 = allocate(1);}}
-      \uncover<4->{\alert<0>{{\color{blue}auto} p4 = allocate(3);}}
-      \uncover<4->{\alert<0>{{\color{blue}auto} p5 = allocate(2);}}
-    \end{semiverbatim}
+std::exception_ptr g_exc;
+
+void g() {
+  try {
+    f();
+  } catch(...) {
+    g_exc = std::current_exception();
+  }
+}
+  \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Lifetime of an exception}
+  \begin{lstlisting}[language={C++}]
+void f() {
+    throw MyException{};  // starts here      
+}
+
+std::vector<std::exception_ptr> g_excs;
+
+void g() {
+  try {
+    f();
+  } catch(...) {
+    g_excs.push_back(std::current_exception());
+  }
+}
+  \end{lstlisting}
+\end{frame}
 
 \begin{frame}
-  \frametitle{Wrapping up}
+  \frametitle{Responsibilities of \texttt{throw}}
 
   \begin{itemize}
-  \item No one-size-fits-all --- Each allocator has its Achilles heel
-  \item Global allocator is a good solution for the general case
-  \item But you can do better with special allocators for special use cases, in terms of performance\footnote{\href{https://www.youtube.com/watch?v=ko6uyw0C8r0}{John Lakos - Local (Arena) Allocators}} as well as reliability
-  \item C++ has good support for local allocators, but the terminology is a bit off
-  \item Different libraries have different concepts of allocators
-  \item No free lunch: You need to understand your use case before you can chose the right allocator
+  \item Create the exception object
+    \begin{itemize}
+    \item Memory for the exception is allocated in an unspecified way [except.throw]
+    \item As a consequence, there is no official customization point for this allocation
+    \item Many implementations today simply perform a heap allocation
+    \end{itemize}
+  \item Transfer control to the exception handler
+    \begin{itemize}
+    \item The standard does not mention how this transfer of control is achieved
+    \item It does mandate though, that destructors must be invoked for objects along the path from \texttt{throw} to the handler $\Rightarrow$ \emph{stack unwinding} [except.ctor]
+    \end{itemize}
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Storage of the exception object}
+
+  \begin{itemize}
+  \item Exception objects can be of arbitrary size. Allocate on the heap?
+  \item \texttt{std::bad\_alloc} is a common exception
+  \item Stack?
+  \item We still need to perform calls to destructors during unwinding (each of which can have their own, nested exceptions)
+  \item Since C++11, an exception can outlive the handler (\texttt{exception\_ptr}), so these for sure cannot be left on the stack
+  \end{itemize}
+\end{frame}
+
+% Exception_ptr & Stack of Exceptions
+% throw as terminate
+
+\begin{frame}
+  \frametitle{Anatomy of the call stack}
+
+  \begin{columns}
+    \begin{column}{.5\textwidth}
+      \includegraphics<1>[height=.95\textheight]{excgfx/stack_010.png}
+      \includegraphics<2>[height=.95\textheight]{excgfx/stack_020.png}
+      \includegraphics<3>[height=.95\textheight]{excgfx/stack_030.png}
+      \includegraphics<4>[height=.95\textheight]{excgfx/stack_040.png}
+      \includegraphics<5>[height=.95\textheight]{excgfx/stack_050.png}
+      \includegraphics<6>[height=.95\textheight]{excgfx/stack_060.png}
+      \includegraphics<7>[height=.95\textheight]{excgfx/stack_070.png}
+      \includegraphics<8>[height=.95\textheight]{excgfx/stack_080.png}
+      \includegraphics<9>[height=.95\textheight]{excgfx/stack_090.png}
+    \end{column}
+    
+    \begin{column}{.5\textwidth}
+      \begin{center}
+        Lorem ipsum
+
+        Solor domit
+
+        Bli bla blub
+      \end{center}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+
 
 \begin{frame}
   \frametitle{Thanks for your attention.}

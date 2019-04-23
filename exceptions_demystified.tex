@@ -197,6 +197,16 @@ void g() {
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Customizing storage of the exception object}
+  \begin{itemize}
+  \item Most implementations today simply invoke malloc for allocating storage for the exception object
+  \item Replacing malloc can be an option for certain scenarios
+  \item Is it a problem to allocate exceptions from a fixed-size arena? It might be, as that turns each \texttt{throw} and \texttt{exception\_ptr} use into a potential \texttt{terminate}
+  \item In practice, we already have a similar situation today with \texttt{bad\_alloc}
+  \end{itemize}
+\end{frame}
+
 % Exception_ptr & Stack of Exceptions
 % throw as terminate
 

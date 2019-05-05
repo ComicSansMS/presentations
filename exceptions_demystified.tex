@@ -101,11 +101,8 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
 \begin{frame}
   \frametitle{Overview}
   \begin{itemize}
-  \item Anatomy of the call stack
-  \item Lifetime of an exception
-  \item Finding the right catch
-  \item Unwinding the stack
-  \item Execution time analysis in the presence of exceptions
+  \item Implementing Exception Handling
+  \item Dealing with the problems today
   \item Alternative mechanisms (static exceptions)
   \end{itemize}
 \end{frame}
@@ -137,21 +134,21 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
 
     \begin{column}{.5\textwidth}
       \begin{semiverbatim}
-        \uncover<2->{f();}
+        \uncover<2->{f();}  \uncover<2-4>{{\color{green}<= IP}}
 
         \uncover<5->{{\color{blue}void} f() \{}
 
         \uncover<5->{\hspace{20pt}{\color{blue}int} x, y, z;}
 
-        \uncover<5->{\hspace{20pt}g();}
+        \uncover<5->{\hspace{20pt}g();} \uncover<5-8>{{\color{green}<= IP}}
 
         \uncover<5->{\}}
 
         \uncover<9->{{\color{blue}void} g() \{}
 
-        \uncover<9->{\hspace{20pt}{\color{blue}int} x;}
+        \uncover<9->{\hspace{20pt}{\color{blue}int} x;} \uncover<9>{{\color{green}<= IP}}
 
-        \uncover<10->{\hspace{20pt}h();}
+        \uncover<10->{\hspace{20pt}h();} \uncover<10->{{\color{green}<= IP}}
 
         \uncover<9->{\}}
       \end{semiverbatim}
@@ -488,6 +485,70 @@ MyException e;
   \item Both have a significant impact on binary size, even if exceptions are never used (not zero-overhead)
   \end{itemize}
 \end{frame}
+
+
+\begin{frame}
+  \frametitle{The goal}
+
+  \begin{center}
+    Make exceptions usable for everyone.
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Possible restrictions}
+
+\begin{itemize}
+\item Memory
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{What are the options for restricted environments?}
+
+Increase in binary size can be a killer for small controllers
+
+\begin{itemize}
+\item RTTI is too wasteful. Prefer a different mechanism that only stores the relevant information needed for exception handling
+\item Restrict the types that can be used as exception types
+\item Use a stack unwind mechanism that favors size over speed
+\item Get a bigger controller
+\end{itemize}
+
+Compilers so far don't seem to be very enthusiastic about supporting points 1 \& 2.
+
+Realistically, if you want to use exceptions today, you enough ROM to be able to deal with the size increase.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{What are the options for restricted environments?}
+
+Dynamic memory management may not be available or not acceptable due to real-time constraints
+
+\begin{itemize}
+\item Replace the memory management with a custom routine
+\item Restrict size of exception types and number of exception objects that can be active at the same time
+\end{itemize}
+
+The last point is difficult to enforce, even with tool support. It might require banning \texttt{exception\_ptr}.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{What are the options for restricted environments?}
+
+
+
+\begin{itemize}
+\item foo
+\end{itemize}
+
+\end{frame}
+
 
 
 \begin{frame}

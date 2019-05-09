@@ -109,6 +109,17 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
 
 
 \begin{frame}
+  \frametitle{Why exceptions?}
+
+  \begin{itemize}
+    \item They are at the heart of the error handling of many libraries, including the standard library
+    \item Separating error handling code from the normal execution path is often desirable
+    \item Handling errors originating in constructors or operators is difficult without them
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
   \frametitle{The goal}
 
   \begin{center}
@@ -168,7 +179,7 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
     \begin{column}{.5\textwidth}
       \begin{itemize}
       \item The state of the current function is always located between the frame pointer and the stack pointer.
-      \item The stack frames form a singly linked that can be traversed by following the frame pointer
+      \item The stack frames form a singly linked list that can be traversed by following the frame pointer
         \item When the size of the frame is static, the compiler may generate code that does not rely on the frame pointer to free up a register.
       \end{itemize}
     \end{column}
@@ -497,7 +508,7 @@ MyException e;
   \pause
   \item Currently unwinding traverses the stack frames from an external piece of code and transfers control flow directly to the handler
   \pause
-  \item Instead transfer control with each step of the undwinding to the respective function that is being unwound?
+  \item Instead transfer control with each step of the unwinding to the respective function that is being unwound?
   \end{itemize}
 \end{frame}
 
@@ -574,28 +585,42 @@ The last point is difficult to enforce, even with tool support. It might require
 \begin{frame}
 \frametitle{Restrictions - Runtime}
 
-Runtime
+Finding the matching \texttt{catch} clause has unpredictable runtime behavior
 
 \begin{itemize}
-\item Throw triggers watchdog
-\item Throw is potential terminate
-\item Throw is potential terminate
+\item Scanning of the type hierarchy using RTTI is difficult to reason about
+\item All exception types need to be known beforehand
+\item Polymorphism should be limited, ideally we only catch exceptions by their true dynamic type
 \end{itemize}
 
 \end{frame}
 
+
+\begin{frame}[fragile]
+
+\frametitle{Restricting Exception Types}
+
+\begin{itemize}
+\item Polymorphism is used to allow catching exceptions at different levels of generalization
+\item If we disallow catching by base class, equivalent logic can be implemented manually
+\item In practice, how much is this feature actually used?
+\item Restricting the error type does not imply restrictions on the amount of information that can be transported (see Boost.Exception)
+\item Again in practice, how much information do we actually want to transport?
+\end{itemize}
+
+\end{frame}
 
 
 \begin{frame}
 
   \frametitle{Worst-case execution time analysis}
 
-  Real-time systems have to be able to analyse worst-case execution time
+  Real-time systems have to be able to analyze worst-case execution time
   \begin{itemize}
   \item For a given \texttt{throw} statement, how long does it take in the worst-case to reach an exception handler?
   \item Build a global call graph of the application, annotate each node with \texttt{throw}/\texttt{catch} information
   \item Find the paths from each \texttt{throw} to all possible \texttt{catch}es
-  \item Determine WCET for each path
+  \item Determine worst-case execution time for each path
   \end{itemize}
 
   Problematic cases for analysis
@@ -604,6 +629,19 @@ Runtime
   \item Indirect function calls
   \item Functions with no source code
   \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+
+\frametitle{Restrictions}
+
+\begin{itemize}
+\item Throw triggers watchdog
+\item Throw is potential terminate
+\item Throw is potential terminate
+\end{itemize}
+
 \end{frame}
 
 
@@ -669,7 +707,7 @@ try { i = f(); } catch(error e) {
   \begin{itemize}
   \item Error is returned through the same channel as an ordinary return value $\Rightarrow$ no storage problem
   \item Catching of the exceptions requires comparison of values, not of types $\Rightarrow$ no RTTI or similar mechanisms required
-  \item Unwinding is just the same as returning from the function $\Rightarrow$ no additional dat structures needed, no overhead compared to hand-written check of return codes
+  \item Unwinding is just the same as returning from the function $\Rightarrow$ no additional data structures needed, no overhead compared to hand-written check of return codes
   \end{itemize}
 \end{frame}
 

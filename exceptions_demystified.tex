@@ -634,7 +634,7 @@ Finding the matching \texttt{catch} clause has unpredictable runtime behavior
 
 \begin{frame}
 
-\frametitle{Restrictions}
+\frametitle{Worst-case execution time - Fallback solution}
 
 \begin{itemize}
 \item Throw triggers watchdog
@@ -750,6 +750,23 @@ try { i = f(); } catch(error e) {
   \item Making exceptions usable in limited environments requires considerable effort and for some problems, it is questionable whether a solution can be found at all
   \item P0709 proposes an alternative approach based on values that gets rid of the problems while still preserving most of the important properties of exceptions
   \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{References}
+
+\begin{itemize}
+\item \href{https://www.youtube.com/watch?v=_Ivd3qzgT7U}{Dave Watson -- C++ Exceptions and Stack Unwinding (\em{CppCon 2017})}
+\item \href{https://www.youtube.com/watch?v=COEv2kq_Ht8}{James McNellis -- Unwinding the Stack: Exploring How C++ Exceptions Work on Windows (\em{CppCon 2018})}
+\item \href{https://www.youtube.com/watch?v=os7cqJ5qlzo}{Herb Sutter -- De-fragmenting C++: Making exceptions more affordable and usable (\em{ACCU 2019})}
+\item \href{https://www.youtube.com/watch?v=2Jhfubg9yvA}{Phil Nash -- The Dawn Of A New Error (\em{ACCU 2019})}
+\item \href{https://wg21.link/p0709}{\textbf{P0709} --- Zero-overhead deterministic exceptions: Throwing values}
+\item \textbf{P1640} --- Error size benchmarking
+\item \href{https://wg21.link/p1095}{\textbf{P1095/N2289} --- Zero overhead deterministic failure A unified mechanism for C and C++}
+
+\end{itemize}
+
 \end{frame}
 
 \begin{frame}

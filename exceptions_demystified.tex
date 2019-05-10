@@ -30,8 +30,8 @@
     }
 
 \newif\iftransitions
-% \transitionstrue
- \transitionsfalse
+ \transitionstrue
+% \transitionsfalse
 
 \newcommand{\cpause}{\iftransitions \pause \fi}
 
@@ -136,15 +136,15 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
 
   \begin{columns}
     \begin{column}{.5\textwidth}
-      \includegraphics<1-2>[height=.95\textheight]{excgfx/stack_010.png}
-      \includegraphics<3>[height=.95\textheight]{excgfx/stack_020.png}
-      \includegraphics<4>[height=.95\textheight]{excgfx/stack_030.png}
-      \includegraphics<5>[height=.95\textheight]{excgfx/stack_040.png}
-      \includegraphics<6>[height=.95\textheight]{excgfx/stack_050.png}
-      \includegraphics<7>[height=.95\textheight]{excgfx/stack_060.png}
-      \includegraphics<8>[height=.95\textheight]{excgfx/stack_070.png}
-      \includegraphics<9>[height=.95\textheight]{excgfx/stack_080.png}
-      \includegraphics<10>[height=.95\textheight]{excgfx/stack_090.png}
+      \includegraphics<1-2>[width=.95\textwidth]{excgfx/stack_010.png}
+      \includegraphics<3>[width=.95\textwidth]{excgfx/stack_020.png}
+      \includegraphics<4>[width=.95\textwidth]{excgfx/stack_030.png}
+      \includegraphics<5>[width=.95\textwidth]{excgfx/stack_040.png}
+      \includegraphics<6>[width=.95\textwidth]{excgfx/stack_050.png}
+      \includegraphics<7>[width=.95\textwidth]{excgfx/stack_060.png}
+      \includegraphics<8>[width=.95\textwidth]{excgfx/stack_070.png}
+      \includegraphics<9>[width=.95\textwidth]{excgfx/stack_080.png}
+      \includegraphics<10>[width=.95\textwidth]{excgfx/stack_090.png}
     \end{column}
 
     \begin{column}{.5\textwidth}
@@ -177,7 +177,7 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
 
   \begin{columns}
     \begin{column}{.5\textwidth}
-      \includegraphics<1>[height=.95\textheight]{excgfx/stack_090.png}
+      \includegraphics<1>[width=.95\textwidth]{excgfx/stack_090.png}
     \end{column}
 
     \begin{column}{.5\textwidth}
@@ -353,8 +353,8 @@ void f() {
   \frametitle{What's the \texttt{catch}?}
 
   \begin{lstlisting}[language={C++}]
-class MyException : public std::exception { /* ... */ };
-
+class MyException : public std::exception
+ { /* ... */ };
 void g() {
   throw MyException{};
 }
@@ -386,8 +386,8 @@ void f() {
   \frametitle{Runtime Type Identification (RTTI)}
 
   \begin{lstlisting}[language={C++}]
-class MyException : public std::exception { /* ... */ };
-
+class MyException : public std::exception
+ { /* ... */ };
 MyException e;
   \end{lstlisting}
 
@@ -433,9 +433,9 @@ MyException e;
 
   \begin{columns}
     \begin{column}{.5\textwidth}
-      \includegraphics<1>[height=.95\textheight]{excgfx/stack_090.png}
-      \includegraphics<2>[height=.95\textheight]{excgfx/stack_unwind_010.png}
-      \includegraphics<3->[height=.95\textheight]{excgfx/stack_unwind_020.png}
+      \includegraphics<1>[width=.95\textwidth]{excgfx/stack_090.png}
+      \includegraphics<2>[width=.95\textwidth]{excgfx/stack_unwind_010.png}
+      \includegraphics<3->[width=.95\textwidth]{excgfx/stack_unwind_020.png}
     \end{column}
 
     \begin{column}{.5\textwidth}

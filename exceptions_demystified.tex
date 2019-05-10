@@ -35,6 +35,8 @@
 
 \newcommand{\cpause}{\iftransitions \pause \fi}
 
+\newcommand{\cuncover}[2]{\iftransitions \uncover<#1>{#2} \else #2 \fi}
+
 \newif\iffast
 % \fasttrue
 
@@ -212,14 +214,14 @@ void f() {
   \begin{itemize}
   \item Create the exception object
     \begin{itemize}
-    \iftransitions \uncover<2-> \fi {\item Memory for the exception is allocated in an unspecified way [except.throw]}
-    \iftransitions \uncover<3-> \fi {\item As a consequence, there is no official customization point for this allocation}
-    \iftransitions \uncover<4-> \fi {\item Many implementations today simply perform a heap allocation (even for a single \texttt{int})}
+    \cuncover{2-}{\item Memory for the exception is allocated in an unspecified way [except.throw]}
+    \cuncover{3-}{\item As a consequence, there is no official customization point for this allocation}
+    \cuncover{4-}{\item Many implementations today simply perform a heap allocation (even for a single \texttt{int})}
     \end{itemize}
   \item Transfer control to the exception handler
     \begin{itemize}
-    \iftransitions \uncover<5-> \fi {\item The standard does not mention how this transfer of control is achieved}
-    \iftransitions \uncover<6-> \fi {\item It does mandate though, that destructors must be invoked for objects along the path from \texttt{throw} to the handler $\Rightarrow$ \emph{stack unwinding} [except.ctor]}
+    \cuncover{5-}{\item The standard does not mention how this transfer of control is achieved}
+    \cuncover{6-}{\item It does mandate though, that destructors must be invoked for objects along the path from \texttt{throw} to the handler $\Rightarrow$ \emph{stack unwinding} [except.ctor]}
     \end{itemize}
   \end{itemize}
 \end{frame}

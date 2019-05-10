@@ -112,9 +112,9 @@ This talk is similar in spirit to Dave Watson's CppCon 2017 talk (https://www.yo
   \frametitle{Why exceptions?}
 
   \begin{itemize}
-    \item They are at the heart of the error handling of many libraries, including the standard library
-    \item Separating error handling code from the normal execution path is often desirable
-    \item Handling errors originating in constructors or operators is difficult without them
+    \pause \item They are at the heart of the error handling of many libraries, including the standard library
+    \pause \item Separating error handling code from the normal execution path is often desirable
+    \pause \item Handling errors originating in constructors or operators is difficult without them
   \end{itemize}
 \end{frame}
 
@@ -287,22 +287,22 @@ void f() {
   \frametitle{Storage of the exception object}
 
   \begin{itemize}
-  \item An unbounded number of exception objects can be alive at the same time
-  \item Exception objects can be of arbitrary size. Allocate on the heap?
-  \item \texttt{std::bad\_alloc} is a common exception
-  \item Stack?
-  \item We still need to perform calls to destructors during unwinding (each of which can have their own, nested exceptions)
-  \item Since C++11, an exception can outlive the handler (\texttt{exception\_ptr}), so these for sure cannot be left on the stack
+  \pause \item An unbounded number of exception objects can be alive at the same time
+  \pause \item Exception objects can be of arbitrary size. Allocate on the heap?
+  \pause \item \texttt{std::bad\_alloc} is a common exception
+  \pause \item Stack?
+  \pause \item We still need to perform calls to destructors during unwinding (each of which can have their own, nested exceptions)
+  \pause \item Since C++11, an exception can outlive the handler (\texttt{exception\_ptr}), so these for sure cannot be left on the stack
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Customizing storage of the exception object}
   \begin{itemize}
-  \item Most implementations today simply invoke malloc for allocating storage for the exception object
-  \item Replacing malloc can be an option for certain scenarios, requires patching the runtime
-  \item Is it a problem to allocate exceptions from a fixed-size arena? It might be, as that turns each \texttt{throw} and \texttt{exception\_ptr} use into a potential \texttt{terminate}
-  \item In practice, we already have a similar situation today with \texttt{bad\_alloc}
+  \pause \item Most implementations today simply invoke malloc for allocating storage for the exception object
+  \pause \item Replacing malloc can be an option for certain scenarios, requires patching the runtime
+  \pause \item Is it a problem to allocate exceptions from a fixed-size arena? It might be, as that turns each \texttt{throw} and \texttt{exception\_ptr} use into a potential \texttt{terminate}
+  \pause \item In practice, we already have a similar situation today with \texttt{bad\_alloc}
   \end{itemize}
 \end{frame}
 
@@ -370,10 +370,10 @@ void f() {
   \frametitle{Finding the right \texttt{catch}}
 
   \begin{itemize}
-  \item Exception types are not required to match exactly
-  \item Polymorphic catching of exceptions requires determining the types of all base classes of an object at runtime
-  \item Exception class hierarchies are typically complex (one of the few places where multiple inheritance is still common)
-  \item There exists a solution for this problem in C++ already: RTTI
+  \pause \item Exception types are not required to match exactly
+  \pause \item Polymorphic catching of exceptions requires determining the types of all base classes of an object at runtime
+  \pause \item Exception class hierarchies are typically complex (one of the few places where multiple inheritance is still common)
+  \pause \item There exists a solution for this problem in C++ already: RTTI
   \end{itemize}
 \end{frame}
 
@@ -396,17 +396,17 @@ MyException e;
   \frametitle{Problems with RTTI}
 
   \begin{itemize}
-  \item Traversing the Type Info structure is expensive
-  \item The type info structures are open for extension - pulling in a shared library can increase cost of traversals in existing code
-  \item Runtime analysis only possible if all types are known beforehand
-  \item RTTI always brings a non-zero overhead for the binary size:
+  \pause \item Traversing the Type Info structure is expensive
+  \pause \item The type info structures are open for extension - pulling in a shared library can increase cost of traversals in existing code
+  \pause \item Runtime analysis only possible if all types are known beforehand
+  \pause \item RTTI always brings a non-zero overhead for the binary size:
     \begin{itemize}
-    \item Type information is stored for all types, not just the ones participating in exception handling
-    \item The type info structure contains more information than is needed to find the matching catch handler
+    \pause \item Type information is stored for all types, not just the ones participating in exception handling
+    \pause \item The type info structure contains more information than is needed to find the matching catch handler
     \end{itemize}
   \end{itemize}
 
-  An implementation is not required to use RTTI for exception handling. But they typically do.
+  \pause An implementation is not required to use RTTI for exception handling. But they typically do.
 \end{frame}
 
 
@@ -451,18 +451,18 @@ MyException e;
 \begin{frame}
   \frametitle{What about destructors?}
 
-  Frame-based Exception Handling
+  \pause Frame-based Exception Handling
 
   \begin{itemize}
-  \item The program code actively maintains a dynamic data structure for unwinding
-  \item Has to keep track of active objects with non-trivial destructors and any enclosing exception handlers
-  \item Compiler inserts code to update these data structures accordingly while stepping through the code
+  \pause \item The program code actively maintains a dynamic data structure for unwinding
+  \pause \item Has to keep track of active objects with non-trivial destructors and any enclosing exception handlers
+  \pause \item Compiler inserts code to update these data structures accordingly while stepping through the code
   \end{itemize}
 
-  Drawbacks of this approach:
+  \pause Drawbacks of this approach:
   \begin{itemize}
   \item Maintaining the data structure is costly and has to be done even if no exception ever occurs
-  \item Binary code size increases significantly
+  \pause \item Binary code size increases significantly
   \end{itemize}
 \end{frame}
 
@@ -470,19 +470,19 @@ MyException e;
 \begin{frame}
   \frametitle{What about destructors?}
 
-  Table-based Exception Handling
+  \pause Table-based Exception Handling
 
   \begin{itemize}
-  \item The set of active local objects at a certain point in code is known at compile time
-  \item Compiler generates a table from code locations to active objects
-  \item During unwinding, for each stack frame use the IP as a key for a lookup into the table
-  \item If no exception occurs, no additional code for error handling is executed (zero-overhead exceptions)
+  \pause \item The set of active local objects at a certain point in code is known at compile time
+  \pause \item Compiler generates a table from code locations to active objects
+  \pause \item During unwinding, for each stack frame use the IP as a key for a lookup into the table
+  \pause \item If no exception occurs, no additional code for error handling is executed (zero-overhead exceptions)
   \end{itemize}
 
-  Drawbacks of this approach:
+  \pause Drawbacks of this approach:
   \begin{itemize}
   \item Binary size increases even more to store tables
-  \item Table lookup for executing exceptions is very costly
+  \pause \item Table lookup for executing exceptions is very costly
   \end{itemize}
 \end{frame}
 
@@ -491,9 +491,9 @@ MyException e;
   \frametitle{Frame-based vs. table-based}
 
   \begin{itemize}
-  \item Frame-based has better performance when exceptions occur frequently
-  \item Table-based has better performance if exceptions are rare
-  \item Both have a significant impact on binary size, even if exceptions are never used (not zero-overhead)
+  \pause \item Frame-based has better performance when exceptions occur frequently
+  \pause \item Table-based has better performance if exceptions are rare
+  \pause \item Both have a significant impact on binary size, even if exceptions are never used (not zero-overhead)
   \end{itemize}
 \end{frame}
 
@@ -543,8 +543,8 @@ MyException e;
 \frametitle{Exceptions in restricted environments}
 
 \begin{itemize}
-\item Memory may be limited (both RAM and ROM)
-\item Runtime must be predictable
+\pause \item Memory may be limited (both RAM and ROM)
+\pause \item Runtime must be predictable
 \end{itemize}
 
 \end{frame}
@@ -556,15 +556,15 @@ MyException e;
 Increase in binary size can be a killer for small controllers
 
 \begin{itemize}
-\item RTTI is too wasteful. Prefer a different mechanism that only stores the relevant information needed for exception handling
-\item Restrict the types that can be used as exception types
-\item Use a stack unwind mechanism that favors size over speed
-\item Get a bigger controller
+\pause \item RTTI is too wasteful. Prefer a different mechanism that only stores the relevant information needed for exception handling
+\pause \item Restrict the types that can be used as exception types
+\pause \item Use a stack unwind mechanism that favors size over speed
+\pause \item Get a bigger controller
 \end{itemize}
 
-Compilers so far don't seem to be very enthusiastic about supporting points 1 \& 2.
+\pause Compilers so far don't seem to be very enthusiastic about supporting points 1 \& 2.
 
-Realistically, if you want to use exceptions today, you enough ROM to be able to deal with the size increase.
+\pause Realistically, if you want to use exceptions today, you enough ROM to be able to deal with the size increase.
 \end{frame}
 
 
@@ -574,11 +574,11 @@ Realistically, if you want to use exceptions today, you enough ROM to be able to
 Dynamic memory management may not be available or not acceptable due to real-time constraints
 
 \begin{itemize}
-\item Replace the memory management with a custom routine
-\item Restrict size of exception types and number of exception objects that can be active at the same time
+\pause \item Replace the memory management with a custom routine
+\pause \item Restrict size of exception types and number of exception objects that can be active at the same time
 \end{itemize}
 
-The last point is difficult to enforce, even with tool support. It might require banning \texttt{exception\_ptr}.
+\pause The last point is difficult to enforce, even with tool support. It might require banning \texttt{exception\_ptr}.
 \end{frame}
 
 
@@ -588,9 +588,9 @@ The last point is difficult to enforce, even with tool support. It might require
 Finding the matching \texttt{catch} clause has unpredictable runtime behavior
 
 \begin{itemize}
-\item Scanning of the type hierarchy using RTTI is difficult to reason about
-\item All exception types need to be known beforehand
-\item Polymorphism should be limited, ideally we only catch exceptions by their true dynamic type
+\pause \item Scanning of the type hierarchy using RTTI is difficult to reason about
+\pause \item All exception types need to be known beforehand
+\pause \item Polymorphism should be limited, ideally we only catch exceptions by their true dynamic type
 \end{itemize}
 
 \end{frame}
@@ -601,11 +601,11 @@ Finding the matching \texttt{catch} clause has unpredictable runtime behavior
 \frametitle{Restricting Exception Types}
 
 \begin{itemize}
-\item Polymorphism is used to allow catching exceptions at different levels of generalization
-\item If we disallow catching by base class, equivalent logic can be implemented manually
-\item In practice, how much is this feature actually used?
-\item Restricting the error type does not imply restrictions on the amount of information that can be transported (see Boost.Exception)
-\item Again in practice, how much information do we actually want to transport?
+\pause \item Polymorphism is used to allow catching exceptions at different levels of generalization
+\pause \item If we disallow catching by base class, equivalent logic can be implemented manually
+\pause \item In practice, how much is this feature actually used?
+\pause \item Restricting the error type does not imply restrictions on the amount of information that can be transported (see Boost.Exception)
+\pause \item Again in practice, how much information do we actually want to transport?
 \end{itemize}
 
 \end{frame}
@@ -616,6 +616,8 @@ Finding the matching \texttt{catch} clause has unpredictable runtime behavior
   \frametitle{Worst-case execution time analysis}
 
   Real-time systems have to be able to analyze worst-case execution time
+  
+  \pause
   \begin{itemize}
   \item For a given \texttt{throw} statement, how long does it take in the worst-case to reach an exception handler?
   \item Build a global call graph of the application, annotate each node with \texttt{throw}/\texttt{catch} information
@@ -623,11 +625,12 @@ Finding the matching \texttt{catch} clause has unpredictable runtime behavior
   \item Determine worst-case execution time for each path
   \end{itemize}
 
+  \pause 
   Problematic cases for analysis
   \begin{itemize}
-  \item Cycles in the call graph
-  \item Indirect function calls
-  \item Functions with no source code
+  \pause \item Cycles in the call graph
+  \pause \item Indirect function calls
+  \pause \item Functions with no source code
   \end{itemize}
 \end{frame}
 
@@ -638,10 +641,10 @@ Finding the matching \texttt{catch} clause has unpredictable runtime behavior
 What if we cannot guarantee a worst-case execution time through analysis?
 
 \begin{itemize}
-\item Treat each \texttt{throw} as a call to \texttt{terminate()} conceptually
-\item Establish a fallback path that ensures that the critical system invariants hold if a throw is encountered
-\item Instead of terminating the process directly, have the runtime trigger a grace period upon entering the unwind process
-\item If the unwind finishes within the grace period, the process will recover. Otherwise it will be terminated, either by the runtime itself, or by an external mechanism, upon expiry of the grace timer
+\pause \item Treat each \texttt{throw} as a call to \texttt{terminate()} conceptually
+\pause \item Establish a fallback path that ensures that the critical system invariants hold if a throw is encountered
+\pause \item Instead of terminating the process directly, have the runtime trigger a grace period upon entering the unwind process
+\pause \item If the unwind finishes within the grace period, the process will recover. Otherwise it will be terminated, either by the runtime itself, or by an external mechanism, upon expiry of the grace timer
 \end{itemize}
 
 \end{frame}
@@ -653,10 +656,10 @@ What if we cannot guarantee a worst-case execution time through analysis?
 How reasonable is it to treat \texttt{throw}s as potential \texttt{terminate()}s?
 
 \begin{itemize}
-\item Developer needs to design two full error handling paths
-\item Exceptions can no longer be used for non-critical errors
-\item Allows easy transitioning to an \texttt{-fno-exceptions} mode
-\item Is good enough for most parts of the standard library
+\pause \item Developer needs to design two full error handling paths
+\pause \item Exceptions can no longer be used for non-critical errors
+\pause \item Allows easy transitioning to an \texttt{-fno-exceptions} mode
+\pause \item Is good enough for most parts of the standard library
 \end{itemize}
 
 \end{frame}
@@ -667,12 +670,13 @@ How reasonable is it to treat \texttt{throw}s as potential \texttt{terminate()}s
 
   Making exceptions usable for everyone requires
   \begin{itemize}
-  \item Restricting the types of exceptions that can be thrown and the total number of active exceptions
-  \item Controlling the behavior of the dynamic memory allocation
-  \item Knowledge of the complete type hierarchies for all types participating in exception handling
-  \item Access to the complete source code of the program to perform execution time analysis (or sufficient tool support to allow this on closed source)
+  \pause \item Restricting the types of exceptions that can be thrown and the total number of active exceptions
+  \pause \item Controlling the behavior of the dynamic memory allocation
+  \pause \item Knowledge of the complete type hierarchies for all types participating in exception handling
+  \pause \item Access to the complete source code of the program to perform execution time analysis (or sufficient tool support to allow this on closed source)
   \end{itemize}
 
+ \pause 
   No good solution for implementing stack unwinding
 \end{frame}
 
@@ -682,10 +686,10 @@ How reasonable is it to treat \texttt{throw}s as potential \texttt{terminate()}s
 
   Imagine a code base with only \texttt{void} functions
   \begin{itemize}
-  \item Allows use of the return channel of functions for error reporting
-  \item A function can only return a single error type. Different errors are distinguished based on the return value, not the type
-  \item Errors can be propagated up the stack as long as return values are convertible to the return type of the caller function
-  \item Error propagation is done uniformly for every function call
+  \pause \item Allows use of the return channel of functions for error reporting
+  \pause \item A function can only return a single error type. Different errors are distinguished based on the return value, not the type
+  \pause \item Errors can be propagated up the stack as long as return values are convertible to the return type of the caller function
+  \pause \item Error propagation is done uniformly for every function call
   \end{itemize}
 \end{frame}
 
@@ -722,9 +726,9 @@ try { i = f(); } catch(error e) {
   \end{lstlisting}
   
   \begin{itemize}
-  \item Error is returned through the same channel as an ordinary return value $\Rightarrow$ no storage problem
-  \item Catching of the exceptions requires comparison of values, not of types $\Rightarrow$ no RTTI or similar mechanisms required
-  \item Unwinding is just the same as returning from the function $\Rightarrow$ no additional data structures needed, no overhead compared to hand-written check of return codes
+  \pause \item Error is returned through the same channel as an ordinary return value $\Rightarrow$ no storage problem
+  \pause \item Catching of the exceptions requires comparison of values, not of types $\Rightarrow$ no RTTI or similar mechanisms required
+  \pause \item Unwinding is just the same as returning from the function $\Rightarrow$ no additional data structures needed, no overhead compared to hand-written check of return codes
   \end{itemize}
 \end{frame}
 
@@ -734,11 +738,13 @@ try { i = f(); } catch(error e) {
 
   But we still get
   \begin{itemize}
-  \item Automatic propagation of errors up the stack
-  \item Separation of error handling from other program logic
-  \item Ability to distinguish between different categories of exceptions (albeit with a slightly more verbose syntax)
+  \pause \item Automatic propagation of errors up the stack
+  \pause \item Separation of error handling from other program logic
+  \pause \item Ability to distinguish between different categories of exceptions (albeit with a slightly more verbose syntax)
+  \pause \item Interop with traditional exception handling mechanism
   \end{itemize}
 
+ \pause 
   On many architectures this approach can be implemented more efficiently than traditional error return codes, by choosing a suitable ABI for the calling convention
 \end{frame}
 
@@ -748,13 +754,24 @@ try { i = f(); } catch(error e) {
 
   Potential downsides compared to exceptions
   \begin{itemize}
-  \item Transporting arbitrary amounts of information to the catching side is more difficult
-  \item Limited backward-compatibility:
+  \pause \item Transporting arbitrary amounts of information to the catching side is more difficult
+  \pause \item Limited backward-compatibility:
     \begin{itemize}
     \item Signature change implies ABI break
-    \item Deterministic exceptions cannot be propagated through plain functions
+    \pause \item Deterministic exceptions cannot be propagated through plain functions (interop required)
     \end{itemize}
-  \item Runtime overhead in absence of exceptions may be bigger than for table-based implementations
+  \pause \item Runtime overhead in absence of exceptions may be bigger than for table-based implementations
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Deterministic Exceptions - Possible extensions}
+
+  \begin{itemize}
+  \item Global error propagation handler (\texttt{set\_error\_propagation()})
+  \item Explicit \texttt{try} expressions for callers
+  \item Arbitrary exception types (\texttt{throws\string{E\string}})
   \end{itemize}
 \end{frame}
 
@@ -766,6 +783,7 @@ try { i = f(); } catch(error e) {
   \item Exceptions pose a number of unsolved challenges still today
   \item Making exceptions usable in limited environments requires considerable effort and for some problems, it is questionable whether a solution can be found at all
   \item P0709 proposes an alternative approach based on values that gets rid of the problems while still preserving most of the important properties of exceptions
+  \item Restrictions required by P0709 are not significantly worse than what users of traditional exceptions on restricted environments would have to do today
   \end{itemize}
 \end{frame}
 

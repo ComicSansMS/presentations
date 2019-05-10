@@ -706,7 +706,7 @@ How reasonable is it to treat \texttt{throw}s as potential \texttt{terminate()}s
   Signature of a function is changed to reflect that it can throw a deterministic exception
   
   \begin{lstlisting}[language={C++}]
-int f() throws() {
+int f() throws {
   if(something_wrong()) {
     throw errc::oh_noes;
   }

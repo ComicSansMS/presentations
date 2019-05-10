@@ -633,13 +633,30 @@ Finding the matching \texttt{catch} clause has unpredictable runtime behavior
 
 
 \begin{frame}
-
 \frametitle{Worst-case execution time - Fallback solution}
 
+What if we cannot guarantee a worst-case execution time through analysis?
+
 \begin{itemize}
-\item Throw triggers watchdog
-\item Throw is potential terminate
-\item Throw is potential terminate
+\item Treat each \texttt{throw} as a call to \texttt{terminate()} conceptually
+\item Establish a fallback path that ensures that the critical system invariants hold if a throw is encountered
+\item Instead of terminating the process directly, have the runtime trigger a grace period upon entering the unwind process
+\item If the unwind finishes within the grace period, the process will recover. Otherwise it will be terminated, either by the runtime itself, or by an external mechanism, upon expiry of the grace timer
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Worst-case execution time - Fallback solution}
+
+How reasonable is it to treat \texttt{throw}s as potential \texttt{terminate()}s?
+
+\begin{itemize}
+\item Developer needs to design two full error handling paths
+\item Exceptions can no longer be used for non-critical errors
+\item Allows easy transitioning to an \texttt{-fno-exceptions} mode
+\item Is good enough for most parts of the standard library
 \end{itemize}
 
 \end{frame}

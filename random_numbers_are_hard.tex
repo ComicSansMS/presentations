@@ -202,6 +202,7 @@ Uh-oh...
 
 \begin{semiverbatim}
 {\color{blue}struct} MySeedSequence \{
+  {\color{blue}using} result_type = {\color{blue}unsigned int};
   {\color{blue}template}<{\color{blue}typename} It>
   {\color{blue}void} generate(It rb, It re)
   \{
@@ -209,7 +210,6 @@ Uh-oh...
 
   \}
 \};
-
 MySeedSequence seq;
 std::mt19937 rng(seq);
 
@@ -224,14 +224,14 @@ std::mt19937 rng(seq);
 
 \begin{semiverbatim}
 {\color{blue}struct} MySeedSequence \{
+  {\color{blue}using} result_type = {\color{blue}unsigned int};
   {\color{blue}template}<{\color{blue}typename} It>
   {\color{blue}void} generate(It rb, It re)
   \{
     std::cout << std::distance(rb, re) << " "
-      << {\color{blue}sizeof}(std::iterator_traits<It>::value_type);
+      << {\color{blue}sizeof}({\color{blue}typename} std::iterator_traits<It>::value_type);
   \}
 \};
-
 MySeedSequence seq;
 std::mt19937 rng(seq);
 
@@ -246,14 +246,14 @@ std::mt19937 rng(seq);
 
 \begin{semiverbatim}
 {\color{blue}struct} MySeedSequence \{
+  {\color{blue}using} result_type = {\color{blue}unsigned int};
   {\color{blue}template}<{\color{blue}typename} It>
   {\color{blue}void} generate(It rb, It re)
   \{
     std::cout << std::distance(rb, re) << " "
-      << {\color{blue}sizeof}(std::iterator_traits<It>::value_type);
+      << {\color{blue}sizeof}({\color{blue}typename} std::iterator_traits<It>::value_type);
   \}
 \};
-
 MySeedSequence seq;
 std::mt19937 rng(seq);
 
@@ -269,13 +269,12 @@ std::mt19937 rng(seq);
 
   \begin{semiverbatim}
 {\color{blue}struct} LotsoRandomSeedSequence \{
+  {\color{blue}using} result_type = {\color{blue}unsigned int};
   {\color{blue}template}<{\color{blue}typename} It>
   {\color{blue}void} generate(It rb, It re)
   \{
     std::random_device rdev;
-    {\color{blue}for} (It it = rb; it != re; ++it) \{
-      *it = rdev();
-    \}
+    std::generate(rb, re, [&]() \{ return rdev(); \});
   \}
 \};
 

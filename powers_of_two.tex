@@ -1,0 +1,306 @@
+\documentclass[aspectratio=43]{beamer}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage[normalem]{ulem}
+
+\usetheme{Rochester}
+\usecolortheme{beaver}
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\lstloadlanguages{C++}
+    \lstset{%
+        language={C++},
+        basicstyle=\ttfamily,
+        keywordstyle=\color{blue},
+        showstringspaces=false,
+        escapechar={§},
+        escapeinside=||
+    }
+
+\newif\iftransitions
+ \transitionstrue
+
+
+\title{Quickly Estimating Powers-of-Two}
+\author{Andreas Weis}
+\institute{Woven Planet}
+\date{CppCon 2021}
+\titlegraphic{\includegraphics[height=.25\textheight]{resources/cppcon.png}}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+  \frametitle{About me}
+
+  \begin{itemize}
+    \setlength\itemsep{1.5em}
+
+    \item \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}} \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}} ComicSansMS
+
+    \item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
+
+    \item \includegraphics[height=.05\textheight]{resources/mucpp-logo-128x128.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
+
+    \item Currently working as a Runtime Framework Engineer for Woven Planet
+
+    \vspace{10pt}
+    \includegraphics[height=.1\textheight]{resources/woven_planet.jpg}
+
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{center}
+    \pause
+    \Huge $2^{23}=?$
+    \vspace{20pt}
+    \\ \pause
+    \Huge $2^{36}=?$
+    \vspace{20pt}
+    \\ \pause
+    \Huge $2^{128}=?$
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Small Powers of Two}
+
+  \begin{itemize}
+    \item $2^1 = 2$
+    \item $2^2 = 4$
+    \item $2^3 = 8$
+    \item $2^4 = 16$
+    \item $2^5 = 32$
+    \item $2^6 = 64$
+    \item $2^7 = 128$
+    \item $2^8 = 256$
+    \item $2^9 = 512$
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+  \frametitle{Small Powers of Two}
+
+  \begin{itemize}
+    \item $2^1 = 2$
+    \item $2^2 = 4$
+    \item $2^3 = 8$
+    \item $2^4 = 16$
+    \item $2^5 = 32$
+    \item $2^6 = 64$
+    \item $2^7 = 128$ (Number of ASCII characters)
+    \item $2^8 = 256$
+    \item $2^9 = 512$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Small Powers of Two}
+
+  \begin{itemize}
+    \item $2^1 = 2$
+    \item $2^2 = 4$
+    \item $2^3 = 8$
+    \item $2^4 = 16$
+    \item $2^5 = 32$
+    \item $2^6 = 64$
+    \item $2^7 = 128$
+    \item $2^8 = 256$ (Number of states in an 8 bit \texttt{char})
+    \item $2^9 = 512$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Small Powers of Two}
+
+  \begin{itemize}
+    \item $2^1 = 2$
+    \item $2^2 = 4$
+    \item $2^3 = 8$
+    \item[$\diamond$] \textcolor{gray}{$2^4 = 16$}
+    \item $2^5 = 32$
+    \item[$\diamond$] \textcolor{gray}{$2^6 = 64$}
+    \item $2^7 = 128$
+    \item $2^8 = 256$
+    \item[$\diamond$] \textcolor{gray}{$2^9 = 512$}
+  \end{itemize}
+
+\end{frame}
+
+\iffalse
+\begin{frame}[fragile]
+
+    \boxed{2^a * 2^b = 2^{(a+b)}}
+    \boxed{\frac{2^a}{2^b} = 2^{(a-b)}}
+\end{frame}
+\fi
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Filling the gaps for small powers of two}
+
+  $2^9 = ???$
+  \pause
+  \begin{itemize}
+    \item {$2^9 = 2^{(8 + 1)} \pause = 2 * 2^8 \pause = 2 * 256 \pause = 512$}
+  \end{itemize}
+
+  \pause
+  $2^6 = ???$
+  \begin{itemize}
+    \pause
+    \item $2^6 = 2^{(7 - 1)} \pause = \frac{1}{2}* 2^7 \pause = \frac{128}{2} \pause = 64$
+    \pause
+    \item $2^6 = 2^{2*3} \pause = (2^3)^2 \pause = 8^2 \pause = 64$
+  \end{itemize}
+
+  \pause
+  $2^5 = ???$
+  \pause
+  \begin{itemize}
+    \item $2^5 = 2^{(2+3)} \pause = 2^2 * 2^3 \pause = 4 * 8 \pause = 32$
+  \end{itemize}
+
+  \pause
+
+  \vspace{10pt}
+  Easy, but impractical for larger powers.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+\begin{center}
+\huge{$2^{10} = 1024 \pause \approx 1000$}
+\end{center}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Two to the $(n * 10)$}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{ l l l l }
+    $2^{10} $ & $ = 1024   $ & $ \approx 10^{3}  $ &              \\ \pause
+    $2^{20} $ & $ = 1024^2 $ & $ \approx 10^{2*3}$ & $ = 10^{6}$  \\ \pause
+    $2^{30} $ & $ = 1024^3 $ & $ \approx 10^{3*3}$ & $ = 10^{9}$  \\ \pause
+    $2^{40} $ & $ = 1024^4 $ & $ \approx 10^{4*3}$ & $ = 10^{12}$ \\
+    $2^{50} $ & $ = 1024^5 $ & $ \approx 10^{5*3}$ & $ = 10^{15}$ \\
+    $2^{60} $ & $ = 1024^6 $ & $ \approx 10^{6*3}$ & $ = 10^{18}$ \\
+  \end{tabular}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+  \frametitle{Two to the $(n * 10)$}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{ l l l l r }
+    $2^{10} $ & $ = 1024   $   & $ \approx 10^{3} $  &              & { (Kilo)} \\
+    $2^{20} $ & $ = 1024^{2} $ & $ \approx 10^{2*3}$ & $ = 10^{6}$  & { (Mega)} \\
+    $2^{30} $ & $ = 1024^{3} $ & $ \approx 10^{3*3}$ & $ = 10^{9}$  & { (Giga)} \\
+    $2^{40} $ & $ = 1024^{4} $ & $ \approx 10^{4*3}$ & $ = 10^{12}$ & { (Tera)} \\
+    $2^{50} $ & $ = 1024^{5} $ & $ \approx 10^{5*3}$ & $ = 10^{15}$ & { (Peta)} \\
+    $2^{60} $ & $ = 1024^{6} $ & $ \approx 10^{6*3}$ & $ = 10^{18}$ & { (Exa)}  \\
+  \end{tabular}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+  \frametitle{Two to the $(n * 10)$}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{ l l l l r }
+    $2^{\textcolor{purple}{1}0} $ & $ = 1024   $                       & $ \approx 10^{3}  $                     &              & { (Kilo)} \\
+    $2^{\textcolor{purple}{2}0} $ & $ = 1024^{\textcolor{purple}{2}} $ & $ \approx 10^{\textcolor{purple}{2}*3}$ & $ = 10^{6}$  & { (Mega)} \\
+    $2^{\textcolor{purple}{3}0} $ & $ = 1024^{\textcolor{purple}{3}} $ & $ \approx 10^{\textcolor{purple}{3}*3}$ & $ = 10^{9}$  & { (Giga)} \\
+    $2^{\textcolor{purple}{4}0} $ & $ = 1024^{\textcolor{purple}{4}} $ & $ \approx 10^{\textcolor{purple}{4}*3}$ & $ = 10^{12}$ & { (Tera)} \\
+    $2^{\textcolor{purple}{5}0} $ & $ = 1024^{\textcolor{purple}{5}} $ & $ \approx 10^{\textcolor{purple}{5}*3}$ & $ = 10^{15}$ & { (Peta)} \\
+    $2^{\textcolor{purple}{6}0} $ & $ = 1024^{\textcolor{purple}{6}} $ & $ \approx 10^{\textcolor{purple}{6}*3}$ & $ = 10^{18}$ & { (Exa)}  \\
+  \end{tabular}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  \frametitle{Estimating larger powers of two}
+  
+  $2^{\textcolor{purple}{3}\textcolor{teal}{2}} \pause =  \textcolor{teal}{2^2} * \textcolor{purple}{2^{30}} \pause \approx \textcolor{teal}{4} * \textcolor{purple}{10^9}$ \pause
+  \vspace{20pt}
+
+  $2^{\textcolor{purple}{2}\textcolor{teal}{3}} \pause =  \textcolor{teal}{2^3} * \textcolor{purple}{2^{20}} \pause \approx \textcolor{teal}{8} * \textcolor{purple}{10^6}$ \pause
+  \vspace{20pt}
+
+  $2^{\textcolor{purple}{3}\textcolor{teal}{6}} \pause =  \textcolor{teal}{2^6} * \textcolor{purple}{2^{30}} \pause \approx \textcolor{teal}{64} * \textcolor{purple}{10^9} \pause = 6.4 * 10^{10} $ \pause
+  \vspace{20pt}
+
+  $2^{\textcolor{purple}{12}\textcolor{teal}{8}} \pause =  \textcolor{teal}{2^8} * \textcolor{purple}{2^{120}} \pause \approx \textcolor{teal}{256} * \textcolor{purple}{10^{36}} \pause = 2.56 * 10^{38} $
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+    \frametitle{Relative error of the estimation}
+    
+    \begin{itemize}
+    \item The relative error of $2^{10} \approx 1000$ is $2.34\%$. \pause
+    \item The relative error \emph{only} increases on the ten steps:
+     \\
+    \begin{tabular}{ l r l l r l l r }
+        $2^{10}$ & $  2.34\% $ & & $ 2^{70}$ & $ 15.30\% $ & & $ 2^{130}$ & $ 26.53\% $ \\
+        $2^{20}$ & $  4.63\% $ & & $ 2^{80}$ & $ 17.28\% $ & & $ 2^{140}$ & $ 28.25\% $ \\
+        $2^{30}$ & $  6.87\% $ & & $ 2^{90}$ & $ 19.22\% $ & & $ 2^{150}$ & $ 29.94\% $\\
+        $2^{40}$ & $  9.05\% $ & & $2^{100}$ & $ 21.11\% $ & & $ 2^{160}$ & $ 31.58\% $\\
+        $2^{50}$ & $ 11.18\% $ & & $2^{110}$ & $ 22.96\% $ & & $ 2^{170}$ & $ 33.18\% $\\
+        $2^{60}$ & $ 13.26\% $ & & $2^{120}$ & $ \textcolor<3->{red}{24.77\%} $ & & $ 2^{180}$ & $ 34.75\% $\\
+    \end{tabular}
+    
+    \pause
+    
+    \item Mind you, for $2^{128}$ this is merely the difference between $2.56*10^{38}$ and $3.40*10^{38}$.
+    
+    
+    \end{itemize}
+    
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+  $2^{\textcolor{purple}{x*10} + \textcolor{teal}{y}} =  \textcolor{teal}{2^y} * \textcolor{purple}{2^{x*10}} \approx \textcolor{teal}{2^y} * \textcolor{purple}{10^{3*x}}$
+  \vspace{20pt}
+
+\end{frame}
+
+
+\end{document}

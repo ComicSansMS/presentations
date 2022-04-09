@@ -1,0 +1,15 @@
+digraph D {
+  graph [ dpi = 300 ]; 
+
+  main [shape=box, label="Caller"]
+  f1 [shape=box, label="Callee"]
+  ret [shape=diamond, label="Return Object"]
+  p [shape=diamond label="promise"]
+  handle [shape=diamond label="coroutine_handle"]
+  awaitable [shape=diamond label="Awaitable"]
+
+  main -> ret
+  f1 -> awaitable
+  p -> handle [label = "::from_promise()"]
+  handle -> p [label = ".promise()"]
+}

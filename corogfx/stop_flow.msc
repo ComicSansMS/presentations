@@ -1,0 +1,21 @@
+msc {
+    Compiler, promise_type;
+    
+    |||;
+    
+    --- [label="Returning void or falling off the end"];
+    Compiler => promise_type [label="return_void()"];
+    --- [label="Returning a value"];
+    Compiler => promise_type [label="return_value(T)"];
+    --- [label="Raising an exception"];
+    Compiler => promise_type [label="unhandled_exception()"];
+    
+    |||;
+    
+    ---;
+    Compiler => promise_type [label="final_suspend()"];
+    Compiler << promise_type [label="co_await the result", textbgcolour="#b3ffb3"];
+    
+    Compiler => promise_type [label="~promise_type()", textbgcolour="#ffb3b3"];
+    Compiler rbox Compiler [label="Destroy coroutine frame"];
+}

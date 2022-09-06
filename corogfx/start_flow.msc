@@ -1,0 +1,19 @@
+msc {
+    Compiler, ReturnType, promise_type;
+    
+    |||;
+    
+    Compiler rbox Compiler [label="Initialize coroutine frame"];
+    
+    Compiler rbox Compiler [label="Determine return type of the coroutine function", textbgcolour="#b3b3ff"];
+    
+    Compiler :> ReturnType [label="Determine promise_type"];
+    Compiler => promise_type [label="promise_type::promise_type(Args...)"];
+    promise_type >> Compiler [label="Store in coroutine frame", textbgcolour="#ffb3b3"];
+    Compiler => promise_type [label="promise_type::get_return_object()"];
+    promise_type => ReturnType [label="construct ReturnType"];
+    promise_type << ReturnType;
+    Compiler << promise_type [label="Store in coroutine frame", textbgcolour="#b3b3ff"];
+    Compiler => promise_type [label="promise_type::initial_suspend()"];
+    Compiler << promise_type [label="co_await the result", textbgcolour="#b3ffb3"];
+}

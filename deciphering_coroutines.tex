@@ -40,14 +40,14 @@
     }
 
 \lstdefinestyle{cpp20}{language={C++},
-  morekeywords={co_await,co_return,co_yield,requires,consteval,constinit,concept}
+  morekeywords={noexcept,co_await,co_return,co_yield,requires,consteval,constinit,concept}
 }
 
 \tikzstyle{every picture}+=[remember picture]
 
 \newif\iftransitions
- \transitionstrue
-% \transitionsfalse
+% \transitionstrue
+ \transitionsfalse
 
 \newcommand{\cpause}{\iftransitions \pause \fi}
 
@@ -66,8 +66,8 @@
 \author{Andreas Weis}
 \institute{Woven Planet}
 
-\date{Core C++ 2022}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/corecpp_logo.png}}
+\date{CppCon 2022}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/cppcon.png}}
 
 \iffalse
 Deciphering Coroutines - A Visual Approach
@@ -101,6 +101,18 @@ Outline:
 \fi
 
 \begin{document}
+{ % all template changes are local to this group.
+    \setbeamertemplate{navigation symbols}{}
+    \begin{frame}<article:0>[plain]
+        \begin{tikzpicture}[remember picture,overlay]
+            \node[at=(current page.center)] {
+                \includegraphics[keepaspectratio,
+                                 width=\paperwidth,
+                                 height=\paperheight]{corogfx/cppcon_titlecard.png}
+            };
+        \end{tikzpicture}
+     \end{frame}
+}
 
 \frame{\titlepage}
 
@@ -155,7 +167,7 @@ Outline:
     \end{itemize}
 \end{frame}
 
-% \iffalse %!!!!!!!!!!!!!!!!!
+%\iffalse %!!!!!!!!!!!!!!!!!
 
 \begin{frame}
   \frametitle{Disclaimer}
@@ -265,8 +277,8 @@ class FiboGenerator {
 // will start from the first Fibonacci number
 (*@\tikz[baseline,inner sep=0]\node[anchor=base](nom1){};@*)FiboGenerator(*@\tikz[baseline,inner sep=0]\node[anchor=base](nom2){};@*) makeFiboGenerator();
   \end{lstlisting}
-  \uncover<2->{Is \texttt{makeFiboGenerator()} a coroutine?}
-  \uncover<3->{ \tikz[overlay]\filldraw[blue, opacity=0.3] (nom1) rectangle ([shift={(0,2ex)}]nom2); }
+  \iftransitions \pause \fi Is \texttt{makeFiboGenerator()} a coroutine?
+  \iftransitions \pause \fi \tikz[overlay]\filldraw[blue, opacity=0.3] (nom1) rectangle ([shift={(0,2ex)}]nom2);
   
   \note{
   \begin{itemize}
@@ -360,7 +372,7 @@ FiboGenerator makeFiboGenerator() {
 }
   \end{lstlisting}
 
-  \uncover<3->{ \tikz[overlay]\filldraw[blue, opacity=0.3] ([shift={(0,-0.5ex)}]ar01) rectangle ([shift={(0,2ex)}]br01); }
+  \iftransitions \pause \fi \tikz[overlay]\filldraw[blue, opacity=0.3] ([shift={(0,-0.5ex)}]ar01) rectangle ([shift={(0,2ex)}]br01);
 
   \note{
   \begin{itemize}
@@ -380,7 +392,7 @@ struct ReturnType {
 };
   \end{lstlisting}
   
-  \pause
+  \iftransitions \pause \fi
   
   \vfill
   
@@ -404,7 +416,7 @@ struct ReturnType {
 };
   \end{lstlisting}
 
-  \uncover<2->{ \tikz[overlay]\filldraw[red, opacity=0.3] ([shift={(0,-0.5ex)}]ar02) rectangle ([shift={(0,2ex)}]br02); }
+  \iftransitions \pause \fi \tikz[overlay]\filldraw[red, opacity=0.3] ([shift={(0,-0.5ex)}]ar02) rectangle ([shift={(0,2ex)}]br02);
   
   \note{
   \begin{itemize}
@@ -435,6 +447,7 @@ struct ReturnType {
   }
 \end{frame}
 
+\iftransitions
 \begin{frame}[fragile]
   \frametitle{Implementing the promise}
   
@@ -467,6 +480,26 @@ struct ReturnType {
   
   }
 \end{frame}
+\else
+\begin{frame}[fragile]
+  \frametitle{Implementing the promise}
+
+  \begin{semiverbatim}
+{\color{blue}struct} promise_type \{
+  
+  ReturnType get_return_object() \{ {\color{blue}return} \{\}; \}
+  std::suspend_always initial_suspend() \{ {\color{blue}return} \{\}; \}
+  
+  void return_void() \{ \}
+  void unhandled_exception() \{ \};
+  std::suspend_always final_suspend() noexcept \{ {\color{blue}return} \{\}; \}
+  
+\};
+  \end{semiverbatim}
+  
+  \tikz[overlay]\filldraw[blue, opacity=0.3] (1em,4.9) rectangle ++ (5.5em,-0.4);
+\end{frame}
+\fi
 
 \begin{frame}[fragile]
 
@@ -486,6 +519,10 @@ int main() {
   hello_coroutine();    // prints nothing
 }
 \end{lstlisting}
+
+  \note {
+    Leaks the coroutine frame!
+  }
 
 \end{frame}
 
@@ -554,6 +591,7 @@ auto [ec, bytes_read] = co_await awaitable;
 
 \end{frame}
 
+\iftransitions
 \begin{frame}[fragile]
   \frametitle{Implementing the awaitable}
   
@@ -570,7 +608,9 @@ auto [ec, bytes_read] = co_await awaitable;
   
   \uncover<1->{ \tikz[overlay]\filldraw[red, opacity=0] (23.15em,2.5) rectangle ++ (6.2em,-0.4); }
 \end{frame}
+\fi
 
+\iftransitions
 \begin{frame}[fragile]
   \frametitle{Implementing the awaitable}
   
@@ -587,7 +627,21 @@ auto [ec, bytes_read] = co_await awaitable;
   
   \uncover<2->{ \tikz[overlay]\filldraw[red, opacity=0.3] (23.15em,2.5) rectangle ++ (6.2em,-0.4); }
 \end{frame}
+\else
+\begin{frame}[fragile]
+  \frametitle{Implementing the awaitable}
 
+  \begin{semiverbatim}
+{\color{blue}struct} Awaitable \{
+  {\color{blue}bool} await_ready();
+  {\color{blue}void} await_suspend(std::coroutine_handle promise_type>);
+  {\color{blue}void} await_resume();
+\};
+  \end{semiverbatim}
+  
+  \tikz[overlay]\filldraw[red, opacity=0.3] (22.5em,2.5) rectangle ++ (6.4em,-0.4);
+\end{frame}
+\fi
 
 \begin{frame}[fragile]
   \frametitle{The simplest awaitable}
@@ -602,6 +656,25 @@ struct SuspendAlways {
 \end{frame}
 
 
+\begin{frame}[fragile]
+
+  \frametitle{Coroutine handle interface}
+  
+  \begin{lstlisting}[style=cpp20]
+struct std::coroutine_handle<promise_type> {
+  // ...
+  void resume() const; (*@ \iftransitions \pause \fi @*)
+  void destroy() const; (*@ \iftransitions \pause \fi @*)
+  promise_type& promise() const;
+  static coroutine_handle from_promise(promise_type&); 
+};
+  \end{lstlisting}
+
+\end{frame}
+
+
+\iffalse
+
 \begin{frame}
   \frametitle{Order of events on Coroutine startup}
 
@@ -614,8 +687,8 @@ struct SuspendAlways {
   \includegraphics[height=.9\textheight]{corogfx/stop_flow.png}
 \end{frame}
 
+\fi
 
-% \fi %!!!!!!!!!!!!!!!!!
 
 \iffalse
 \begin{frame}[fragile]
@@ -685,7 +758,6 @@ struct (*@\tikz[baseline,inner sep=0]\node[anchor=base](ar101){};@*)Awaitable(*@
   \tikz[overlay]\filldraw[red, opacity=0.3] ([shift={(0,-0.5ex)}]cr101) rectangle ([shift={(0,2ex)}]dr101);
 \end{frame}
 
-
 \begin{frame}
 
   \frametitle{The key components}
@@ -711,6 +783,11 @@ struct (*@\tikz[baseline,inner sep=0]\node[anchor=base](ar101){};@*)Awaitable(*@
 \begin{frame}[fragile]
 
   \frametitle{Back to Hello World}
+
+%\begin{tikzpicture}[overlay]
+%  \draw (15,0) circle [radius=2pt];
+%  \node[draw,minimum width=10em] at (10,-2) {main 1};
+%\end{tikzpicture}
 
   \begin{semiverbatim}
 \alert<1>{std::suspend_always} initial_suspend() \{ return \{ \}; \}
@@ -795,6 +872,10 @@ struct (*@\tikz[baseline,inner sep=0]\node[anchor=base](ar07){};@*)ReturnType(*@
   \tikz[overlay]\filldraw[blue, opacity=0.3] ([shift={(0,-0.5ex)}]ar07) rectangle ([shift={(0,2ex)}]br07);
   \tikz[overlay]\filldraw[red, opacity=0.3] ([shift={(0,-0.5ex)}]cr07) rectangle ([shift={(0,2ex)}]dr07);
   \tikz[overlay]\filldraw[blue, opacity=0.3] ([shift={(0,-0.5ex)}]er07) rectangle ([shift={(0,2ex)}]fr07);
+  
+  \note {
+  When suspending on initial\_suspend, handle must be stored somewhere
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -829,7 +910,7 @@ struct (*@\tikz[baseline,inner sep=0]\node[anchor=base](ar08){};@*)Awaitable(*@\
 
 \begin{frame}[fragile]
   \frametitle{Getting data out of a coroutine}
-  \pause
+  \iftransitions \pause \fi
   \begin{center}
   \includegraphics[height=.9\textheight]{corogfx/path_out_010.png}
   \end{center}
@@ -926,8 +1007,10 @@ int main() {
 \begin{frame}
   \frametitle{Getting data into a coroutine}
   
+  \iftransitions \pause \fi
+  
   \begin{center}
-  \includegraphics<2>[height=.9\textheight]{corogfx/path_in_010.png}
+  \includegraphics[height=.9\textheight]{corogfx/path_in_010.png}
   \end{center}
   
   \note{Timecheck: 0:46}
@@ -1007,6 +1090,14 @@ struct OutsideAnswer {
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Getting data into a coroutine}
+  
+  \begin{center}
+  \includegraphics[height=.9\textheight]{corogfx/path_in_040.png}
+  \end{center}
+\end{frame}
+
 
 \begin{frame}[fragile]
 
@@ -1053,6 +1144,30 @@ struct promise_type {
   \end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Yielding values}
+
+  \begin{lstlisting}[style=cpp20]
+struct promise_type {
+  // ...
+  int value;
+  std::suspend_always yield_value(int i) {
+    value = i;
+    return {};
+  }
+};
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Yielding values}
+  \begin{center}
+  \includegraphics[height=.9\textheight]{corogfx/path_yield_010.png}
+  \end{center}
+\end{frame}
+
+
+
 \iftransitions
 \begin{frame}[fragile]
   \frametitle{Symmetric transfer}
@@ -1082,13 +1197,13 @@ co_await Transfer{};
 
 struct promise {
   // ...
-  std::optional<std::coroutine_handle<promise>> other;
+  std::coroutine_handle<promise> other;
 };
 
 std::coroutine_handle<> Transfer::await_suspend(
               std::coroutine_handle<promise> me)
 {
-  return me.promise().other.value_or(me);
+  return me.promise().other ? me.promise().other : me;
 }
   \end{lstlisting}
   \note{Timecheck: 0:55}
@@ -1156,7 +1271,7 @@ struct (*@\tikz[baseline,inner sep=0]\node[anchor=base](ar101){};@*)Awaitable(*@
   \frametitle{Cheat Sheet: Map of Coroutine Land}
   
   \begin{center}
-  \includegraphics[height=.9\textheight]{corogfx/acquaintances03.png}
+  \includegraphics[height=.9\textheight]{corogfx/acquaintances05.png}
   \end{center}
 \end{frame}
 
@@ -1169,8 +1284,9 @@ struct (*@\tikz[baseline,inner sep=0]\node[anchor=base](ar101){};@*)Awaitable(*@
 \item \href{https://devblogs.microsoft.com/oldnewthing/}{The Old New Thing - Raymond Chen's blog} \href{https://devblogs.microsoft.com/oldnewthing/20191209-00/?p=103195}{[1]} \href{https://devblogs.microsoft.com/oldnewthing/20210301-00/?p=104914}{[2]}
 \end{itemize}
 
-
 \end{frame}
+
+%\fi %!!!!!!!!!!!!!!!!!
 
 \begin{frame}
   \frametitle{Thanks for your attention.}
@@ -1183,7 +1299,9 @@ struct (*@\tikz[baseline,inner sep=0]\node[anchor=base](ar101){};@*)Awaitable(*@
 \vspace{20pt}
 
 \begin{center}
-  \includegraphics[height=.6\textheight]{corogfx/acquaintances03.png}
+  \includegraphics[height=.6\textheight]{corogfx/acquaintances05.png}
+  \hspace{12ex}
+  \href{https://github.com/ComicSansMS/cpp20_coroutine_cheat_sheet}{\includegraphics[height=.4\textheight]{corogfx/qrcode}}
 \end{center}
 
 \end{frame}

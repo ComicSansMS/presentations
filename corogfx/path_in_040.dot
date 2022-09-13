@@ -15,6 +15,6 @@ digraph D {
   ret -> handle [label = ".handle"]
   awaitable -> handle [label = ".await_suspend()"]
   p -> ret [label ="get_return_object()", weight=0, arrowhead=none, style=dashed]
-  awaitable -> f1 [label = ".await_resume()", weight=0]
+  awaitable -> f1 [label = ".await_resume()", weight=0, color="red"]
   f1:e -> p:ne [label="yield_value", weight=0, style=invis]
 }

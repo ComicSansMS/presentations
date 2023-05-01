@@ -1,0 +1,16 @@
+digraph D {
+  graph [ dpi = 300 ];
+  rankdir=LR;
+
+  s [shape=circle, label="S"]
+  a [shape=circle, label="A"]
+  b [shape=circle, label="B"]
+  c [shape=circle, label="C"]
+  d [shape=doublecircle, label="D"]
+
+  s -> a [label="E1"]
+  s -> b [label="E2"]
+  a -> c [label="E3"]
+  c -> d [label="X"]
+  b -> d [label="X"]
+}

@@ -66,8 +66,8 @@
 \author{Andreas Weis}
 \institute{Woven by Toyota}
 
-\date{ACCU 2023}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/accu2023_logo.png}}
+\date{C++ On Sea 2023}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/cpponsea-logo.png}}
 
 \iffalse
 Building Interfaces That Are Hard to Use Incorrectly
@@ -100,7 +100,7 @@ Comment: The talk will mainly consist of a number of code snippets demonstrating
             \node[at=(current page.center)] {
                 \includegraphics[keepaspectratio,
                                  width=\paperwidth,
-                                 height=\paperheight]{ifgfx/title_card.png}
+                                 height=\paperheight]{ifgfx/title_card_cpponsea.png}
             };
         \end{tikzpicture}
      \end{frame}
@@ -124,7 +124,7 @@ Comment: The talk will mainly consist of a number of code snippets demonstrating
 
     \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
 
-    \item Currently working as a Runtime Engineer for Woven by Toyota \includegraphics[height=.1\textheight]{resources/woven_toyota_logo.png}
+    \item Currently working as a Vehicle Architect for Woven by Toyota \includegraphics[height=.1\textheight]{resources/woven_toyota_logo.png}
 
   \end{itemize}
 \end{frame}
@@ -167,13 +167,21 @@ Comment: The talk will mainly consist of a number of code snippets demonstrating
 
   \frametitle{Motivation}
   
-  Good interfaces are:
+  Good interfaces are:  \vspace{20pt}
   \begin{itemize}
-    \item \textbf{Easy to use correctly.} People using a well-designed interface almost always use the interface correctly, because that's the path of least resistance. In a GUI, they almost always click on the right icon, button, or menu entry, because it's the obvious and easy thing to do. In an API, they almost always pass the correct parameters with the correct values, because that's what's most natural. With interfaces that are easy to use correctly, things just work.
+    \item \textbf{Easy to use correctly.}  \vspace{24pt}
   \end{itemize}
   
   \note{
   Item 55 by Scott Meyers: \textit{Make Interfaces Easy to Use Correctly and Hard to Use Incorrectly}
+  
+  People using a well-designed interface almost always use the interface correctly, because that's the path of least resistance. 
+  
+  In a GUI, they almost always click on the right icon, button, or menu entry, because it's the obvious and easy thing to do.
+
+  In an API, they almost always pass the correct parameters with the correct values, because that's what's most natural.
+
+  With interfaces that are easy to use correctly, things just work.
   }
 
 \end{frame}
@@ -201,14 +209,19 @@ Comment: The talk will mainly consist of a number of code snippets demonstrating
 
   \frametitle{Motivation}
   
-  Good interfaces are:
+  Good interfaces are: \vspace{20pt}
   \begin{itemize}
-    \item \textbf{Easy to use correctly.} People using a well-designed interface almost always use the interface correctly, because that's the path of least resistance. In a GUI, they almost always click on the right icon, button, or menu entry, because it's the obvious and easy thing to do. In an API, they almost always pass the correct parameters with the correct values, because that's what's most natural. With interfaces that are easy to use correctly, things just work.
-    \item \textbf{Hard to use incorrectly.} Good interfaces anticipate mistakes people might make and make them difficult — ideally impossible — to commit. A GUI might disable or remove commands that make no sense in the current context, for example, or an API might eliminate argument-ordering problems by allowing parameters to be passed in any order.
+    \item \textbf{Easy to use correctly.} \vspace{20pt}
+    \cpause
+    \item \textbf{Hard to use incorrectly.}
   \end{itemize}
   
   \note{
   Item 55 by Scott Meyers: \textit{Make Interfaces Easy to Use Correctly and Hard to Use Incorrectly}
+  
+  Good interfaces anticipate mistakes people might make and make them difficult — ideally impossible — to commit.
+
+  A GUI might disable or remove commands that make no sense in the current context, for example, or an API might eliminate argument-ordering problems by allowing parameters to be passed in any order.
   }
 
 \end{frame}
@@ -239,9 +252,9 @@ int i = v[99];
   \frametitle{Function Preconditions}
   
   \begin{itemize}
-    \item The contract provided of a function can be expressed through \textit{preconditions} and \textit{postconditions}.
-    \item When calling the functions within the defined preconditions, the contract guarantees that the function will establish the postcondtions.
-    \item When calling the function outside the preconditions, anything can happen.
+    \item The contract provided of a function can be expressed through \textit{preconditions} and \textit{postconditions}. \cpause
+    \item When calling the functions within the defined preconditions, the contract guarantees that the function will establish the postcondtions.  \cpause
+    \item When calling the function outside the preconditions, anything can happen. \cpause
   \end{itemize}
   
   \vspace{20pt}
@@ -301,11 +314,11 @@ float f = std::sqrtf(-1.f);
   \frametitle{Wide Contracts - Defensive Programming}
   
   \begin{itemize}
-    \item Widening a contract reduces the number of preconditions
-    \item Thus a function with a wide contract has seemingly fewer opportunities for incorrect use
-    \item However, the postconditions under the widened contract are usually significantly more complex
-    \item Which again reintroduces new opportunities for incorrect use in other places
-    \item Many preconditions are not detectable
+    \item Widening a contract reduces the number of preconditions \cpause
+    \item Thus a function with a wide contract has seemingly fewer opportunities for incorrect use \cpause
+    \item However, the postconditions under the widened contract are usually significantly more complex \cpause
+    \item Which again reintroduces new opportunities for incorrect use in other places \cpause
+    \item Many preconditions are not detectable \cpause
   \end{itemize}
   
   \vspace{20pt}
@@ -338,6 +351,15 @@ void compute(std::span<std::byte> buffer) {
   \begin{itemize}
     \item Invalid argument
   \end{itemize}
+  
+  \note{
+  \textbf{TIMECHECK}: 0:15
+  
+  \begin{itemize}
+  \item All the examples so far have been invalid argument/domain error
+  \item Now we will look at some examples that are not invalid argument errors
+  \end{itemize}
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -389,6 +411,7 @@ void compute(std::span<std::byte> buffer) {
     \begin{itemize}
       \item Spooky action at a distance: Changes to the vector invalidate the iterator
       \item Shared mutable state
+      \item These are particularly difficult (re: Sean's talk)
     \end{itemize}
   }
 \end{frame}
@@ -448,9 +471,19 @@ void compute(std::span<std::byte> buffer) {
   \cpause
   
   \begin{itemize}
-    \item Type system allows us to restrict the set of values assigned to an object
+    \item Type system allows us to restrict the set of values assigned to an object \cpause
     \item Type system allows us to restrict the set of operations that can be applied to an object
   \end{itemize}
+  
+  \note{
+  \begin{itemize}
+  \item The type system enforces two kinds of restrictions.
+  \item These map exactly to the kinds of misuse that we want to address.
+  \item We will now look at different techniques for utilizing the type system.
+  
+  \textbf{TIMECHECK: 0:20}
+  \end{itemize}
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -473,6 +506,15 @@ void compute(std::span<std::byte> buffer) {
   \begin{lstlisting}[style=cpp20]
   glTexImage2D(1, 2, 3, 4, 5, 6, 7, 8, &data);
   \end{lstlisting}
+  
+  \note{
+  \begin{itemize}
+  \item Specifying a texture
+  \item Lots of parameters for all the different properties of a texture
+  \item No protection from incorrect arguments
+  \end{itemize}
+  }
+
 \end{frame}
 
 \begin{frame}
@@ -480,9 +522,9 @@ void compute(std::span<std::byte> buffer) {
   \frametitle{Enumerations}
 
   \begin{itemize}
-    \item \texttt{GLenum} is just a typedef for an \texttt{unsigned int}.
-    \item Enumerator values are defined as preprocessor constants.
-    \item Some values even overlap, defining two unrelated enumerators to the same integer value.
+    \item \texttt{GLenum} is just a typedef for an \texttt{unsigned int}. \cpause
+    \item Enumerator values are defined as preprocessor constants. \cpause
+    \item Some values even overlap, defining two unrelated enumerators to the same integer value. \cpause
     \item Compiler will never catch an invalid enumerator argument. This is a runtime error at best.
   \end{itemize}
 
@@ -498,7 +540,7 @@ enum class Shape {
 enum class Color {
   Red = 1, Green = 2, Blue = 4
 };
-void setShapeColor(Shape, Color);
+void setShapeColor(Shape, Color); (*@ \cpause @*)
 
 setShapeColor(Color::Red,
               Shape::Circle);     // does not compile!
@@ -513,15 +555,19 @@ Shape s2 = static_cast<Shape>(3); // requires cast
 
   \begin{lstlisting}[style=cpp20]
   enum class Handle : std::uint32_t { Invalid = 0 };
-  Handle createResource();
+  Handle createResource(); (*@ \cpause @*)
   
   Handle h1 = createResource();
-  Handle h2 = Handle::Invalid;
-  Handle h3{ 42 };
-  Handle h4 = 42;         // does not compile
+  Handle h2 = Handle::Invalid;  (*@ \cpause @*)
+  Handle h3{ 42 };  (*@ \cpause @*)
+  Handle h4 = 42;         // does not compile  (*@ \cpause @*)
   enum class OtherHandle : std::uint32_t {};
   OtherHandle h5 = h1;    // does not compile
   \end{lstlisting}
+  
+  \note{
+  Not perfect, but better than plain ints.
+  }
 \end{frame}
 
 
@@ -530,18 +576,23 @@ Shape s2 = static_cast<Shape>(3); // requires cast
   
   \begin{lstlisting}[style=cpp20]
 template<typename Tag_T>
-struct OpaqueHandle { std::uint32_t i; };
+struct OpaqueHandle { std::uint32_t i; };  (*@ \cpause @*)
 
 struct FileHandleTag {};
 using FileHandle = OpaqueHandle<FileHandleTag>;
 struct ProcessHandleTag {};
-using ProcessHandle = OpaqueHandle<ProcessHandleTag>;
+using ProcessHandle = OpaqueHandle<ProcessHandleTag>;  (*@ \cpause @*)
 
 FileHandle openFile(std::filesystem::path);
 
 FileHandle h1 = openFile("important.dat");
 ProcessHandle h2 = h1;    // does not compile
   \end{lstlisting}
+  
+  \note{
+  We can get stronger protection if we invest more work.
+  Make the \texttt{int} private, restrict construction options...
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -555,6 +606,8 @@ ProcessHandle h2 = h1;    // does not compile
   \item Printed to the console (\texttt{operator<<(std::ostream)}, \texttt{std::formatter})
   \item Arithmetic
   \end{itemize}
+  
+  \cpause
   
   Libraries like \href{https://github.com/rollbear/strong_type}{Björn Fahller's \texttt{strong\_type}} provide customizable opaque types.
   
@@ -571,6 +624,8 @@ void* memset(void* buffer, int fill_char,
 memset(buffer, 10, 20);
   \end{lstlisting}
 
+  \cpause
+
   \vspace{10pt}
   Compare with:
 
@@ -579,6 +634,12 @@ void* my_memset(std::span<std::byte> span, int fill_char);
   
 my_memset(std::span(buffer, 20), 10);
   \end{lstlisting}
+  
+  \note{
+  \textbf{TIMECHECK}: 0:30
+  
+  Second version is harder to get wrong and more expressive on caller side
+  }
 \end{frame}
 
 
@@ -591,10 +652,14 @@ struct MemsetArgs {
   size_t size;
   int fill_char;
 };
-void* my_memset(MemsetArgs const& args);
+void* my_memset(MemsetArgs const& args);  (*@ \cpause @*)
   
 my_memset({ .buffer = b, .size = 20, .fill_char = 10 });
   \end{lstlisting}
+  
+  \note{
+  Designated initializers with C++20 is the game changer here
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -618,11 +683,20 @@ Rectangle r3{Point{ .x = 10, .y = 20 },
   \begin{lstlisting}[style=cpp20]
 using Shape = std::variant<Rectangle, Circle, Triangle>;
 
-Shape s = getShape();
+Shape s = getShape(); (*@ \cpause @*)
+
 if (std::holds_alternative<Circle>(s)) {
   float r = std::get<Circle>(s).getRadius();
 }
   \end{lstlisting}
+  
+  \note{
+  Easy to mess up:
+  \begin{itemize}
+    \item I forget to handle one case
+    \item breaks silently when adding new shapes.
+  \end{itemize}
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -656,6 +730,7 @@ std::visit(overloaded{
   \end{lstlisting}
 \end{frame}
 
+\iffalse
 \begin{frame}[fragile]
   \frametitle{Data Types with special properties}
 
@@ -684,6 +759,7 @@ void processString(std::string_view str);
 void processString(gsl::czstring str);
   \end{lstlisting}
 \end{frame}
+\fi
 
 \begin{frame}[fragile]
   \frametitle{Limited Friendship}
@@ -700,10 +776,14 @@ private:
 class Client;
 class PrivilegedClient;
   \end{lstlisting}
+  
+  \note{
+  \textbf{TIMECHECK}: 0:35
+  }
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Limited Friendship}
+  \frametitle{Limited Friendship - Passkey Idiom}
   
   \begin{lstlisting}[style=cpp20]
 struct AccessToken {
@@ -719,6 +799,8 @@ public:
   Data retrievePrivilegedData(Handle h, AccesToken t);
 };
   \end{lstlisting}
+  
+  See Arne's blog: \href{https://arne-mertz.de/2016/10/passkey-idiom/}{Passkey Idiom: More Useful Empty Classes}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -738,8 +820,17 @@ glVertexAttribPointer(index_pos, 3, GL_FLOAT,
                       stride, offset_pos);
 // ...
   \end{lstlisting}
+  
+  \note{
+  \begin{itemize}
+  \item Geometry data starts its life as structured data in C++.
+  \item Data gets memcopied into a single buffer that is transferred to the GPU.
+  \item Location of the individual vertex components inside this buffer are configured through a series of \texttt{glVertexAttribPointer} calls.
+  \end{itemize}
+  }
 \end{frame}
 
+\iffalse
 \begin{frame}[fragile]
   \frametitle{Declarative Interface}
   
@@ -758,6 +849,7 @@ std::vector<Vertex> vertex_buffer;
   \item Location of the individual vertex components inside this buffer are configured through a series of \texttt{glVertexAttribPointer} calls.
   \end{itemize}
 \end{frame}
+\fi
 
 \begin{frame}[fragile]
   \frametitle{Declarative Interface}
@@ -789,7 +881,7 @@ shader.bind<MyFormat, Component::TexCoord2f>("TexCoord");
 
 \begin{frame}[fragile]
   \frametitle{Modeling State Through Types}
-  
+  \cpause
   \begin{lstlisting}[style=cpp20]
 class Widget {
 public:
@@ -802,6 +894,10 @@ public:
   void doStuff();
 };
   \end{lstlisting}
+  
+  \note{
+  \textbf{TIMECHECK}: 0:40
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -809,11 +905,11 @@ public:
 
   \begin{lstlisting}[style=cpp20]
 class Widget {
-private:
   Widget();
   void init();
 public:
   void doStuff();
+  friend Widget createWidget();
 };
 
 Widget createWidget() {
@@ -822,6 +918,10 @@ Widget createWidget() {
   return w;
 }
   \end{lstlisting}
+  
+  \note{
+  First attempt: wrap the initialization
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -831,18 +931,27 @@ Widget createWidget() {
 class UninitializedWidget {
 public:
   UninitializedWidget();
-};
+}; (*@ \cpause @*)
 class Widget {
 private:
   Widget();
 public:
   void doStuff();
-};
+}; (*@ \cpause @*)
 
 Widget initializeWidget(UninitializedWidget&& w);
   \end{lstlisting}
+  
+  \note{
+  \begin{itemize}
+  \item Converting the type by consuming the source object - functional update 
+  \item Functional update changes the value
+  \item If the operation depends on the value, it has to change the type as well
+  \end{itemize}
+  }
 \end{frame}
 
+\iffalse
 \begin{frame}[fragile]
   \frametitle{Error Handling Paradigms}
   
@@ -900,7 +1009,7 @@ f.value_or(defaultFrob).doStuff();
 .
   \end{lstlisting}
 \end{frame}
-
+\fi
 
 \begin{frame}[fragile]
   \frametitle{Execution Tokens}
@@ -919,19 +1028,28 @@ f.value_or(defaultFrob).doStuff();
 class ExecutionToken {
 private:
   ExecutionToken();
-};
+}; (*@ \cpause @*)
 class Provider {
 public:
   ExecutionToken establishContext();
-};
+}; (*@ \cpause @*)
 
 class Widget {
 public:
   void process(ExecutionToken&& token);
 };
   \end{lstlisting}
+  
+  \note{
+  \begin{itemize}
+    \item Unlike the functional update, we don't have to move the full object state around
+    \item Models one-off events: Establishing the context allows us to execute one operation
+    \item C++ move semantics allow us to retain a consumed execution token (e.g. in a member variable). Again, external tools can help prevent this.
+  \end{itemize}
+  }
 \end{frame}
 
+\iffalse
 \begin{frame}
   \frametitle{Execution Tokens}
   \begin{itemize}
@@ -939,6 +1057,7 @@ public:
     \item C++ move semantics allow us to retain a consumed execution token (e.g. in a member variable). Again, external tools can help prevent this.
   \end{itemize}
 \end{frame}
+\fi
 
 \begin{frame}[fragile]
   \frametitle{Scoped Execution Contexts}
@@ -952,6 +1071,10 @@ public:
     vkCmdEndRenderPass(cmd_buffer, ...);
   vkEndCommandBuffer(cmd_buffer);
   \end{lstlisting}
+  
+  \note{
+  \textbf{TIMECHECK}: 0:50
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1052,7 +1175,7 @@ struct State {
   virtual void doStuff() = 0;
 };
 struct StateA : public State { /* ... */ };
-struct StateB : public State { /* ... */ };
+struct StateB : public State { /* ... */ }; (*@ \cpause @*)
 
 class Context {
   std::unique_ptr<State> m_state;
@@ -1076,6 +1199,10 @@ public:
   \item A variety of techniques exist to move precondition checks to compile-time.
   \item Difficult trade-offs between correctness and implementation effort and usability.
   \end{itemize}
+  
+  \note{
+  \textbf{TIMECHECK}: 0:55
+  }
 \end{frame}
 
 \begin{frame}

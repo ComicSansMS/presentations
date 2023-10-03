@@ -14,8 +14,8 @@
   \notesfalse
 
 \newif\iftransitions
- \transitionstrue
-% \transitionsfalse
+% \transitionstrue
+ \transitionsfalse
 
 \newif\iffast
 % \fasttrue
@@ -116,7 +116,7 @@ Wrapup                  2 (0:55)
         \end{tikzpicture}
      \end{frame}
 }
-
+\addtocounter{framenumber}{-1}
 
 \frame{\titlepage}
 
@@ -420,7 +420,7 @@ namespace a {
   void will_be_exported_in_b();
 }
 export namespace b {
-  export using a::will_be_exported_in_b;
+  export using ::a::will_be_exported_in_b;
 }
   \end{lstlisting}
 
@@ -552,6 +552,16 @@ export char const* my_function() {
   return "Hello Modules!";
 }
   \end{lstlisting}
+
+  \note{
+  \begin{itemize}
+  \item Primary module interface
+  \begin{itemize}
+    \item Primary because there can be only one for each module name
+    \item By default, put everything in primary module
+  \end{itemize}
+  \end{itemize}
+  }
 \end{frame}
 
 \begin{frame}[fragile]
@@ -577,11 +587,6 @@ char const* my_function() {
 
   \note{
   \begin{itemize}
-  \item Primary module interface
-  \begin{itemize}
-    \item Primary because there can be only one for each module name
-    \item By default, put everything in primary module
-  \end{itemize}
   \item Module implementation;
   \item Module declaration without export; Export only on declaration in interface, not in implementation; compile error otherwise
     \begin{itemize}
@@ -806,10 +811,10 @@ set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API
   \item Latest Visual Studio 2022 (at least 19.34)
   \item Ninja 1.11
   \item Clang at least 17, prefer trunk
-  \item gcc trunk, still without dependency scanning
+  \item gcc trunk
   \end{itemize}
 
-  Even with the latest tools there are still plenty of bugs and inconsistent behaviour between compilers!
+  Even with the latest tools there are still plenty of bugs and inconsistent behavior between compilers!
 \end{frame}
 
 
@@ -1052,7 +1057,9 @@ target_sources(my_executable PUBLIC
 \begin{frame}
   \frametitle{Some useful advice for starting out...}
 
-  % @todo it's dangerous to go alone
+  \begin{center}
+  \includegraphics[height=.90\textheight]{modulesgfx/its_dangerous_to_go_alone.png}
+  \end{center}
   \note{
   \textbf{TIMECHECK}: 0:45
   }
@@ -1254,7 +1261,7 @@ class AwesomeType;
 module;
 #include <lib.hpp>
 export module lib;
-using ::AwesomeType;
+export using ::AwesomeType;
   \end{lstlisting}
 
   \note {
@@ -1370,8 +1377,22 @@ int main() {
   }
 \end{frame}
 
+\begin{frame}
+  \frametitle{Where to go from here...}
+
+  \begin{itemize}
+    \item Luis Caro Campos - C++20 Modules: The Packaging and Binary Redistribution Story (CppCon 2023, right afterwards in Cottonwood)
+    \vspace{1em}
+    \item \href{https://www.youtube.com/watch?v=Kqo-jIq4V3I}{Daniela Engert - Modules: The Beginner's Guide (Meeting C++ 2019)}
+    \item \href{https://www.youtube.com/watch?v=nP8QcvPpGeM}{Daniela Engert - A Short Tour of C++ Modules (CppCon 2021)}
+    \item \href{https://www.youtube.com/watch?v=c563KgO-uf4}{Bill Hoffman - import CMake: 2023 State of C++20 modules in CMake (CppNow 2023)}
+    \item \href{https://www.youtube.com/watch?v=IZXNsim9TWI}{Bret Brown - Modern CMake Modules (CppCon 2021)}
+    \item \href{https://vector-of-bool.github.io/2019/03/10/modules-1.html}{vector-of-bool - Understanding C++ Modules (Blog post series)}
+    \item \href{https://mathstuf.fedorapeople.org/fortran-modules/fortran-modules.html}{Boeckel, King, Maynard, Hoffman - How CMake supports Fortran modules and its applicability to C++ (WG21 D1483)}
+  \end{itemize}
+\end{frame}
+
 % @todo: Other modules talks
-% @todo: Fix slide numbers after title card
 
 \begin{frame}
   \frametitle{Thanks for your attention.}

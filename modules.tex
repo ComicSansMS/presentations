@@ -55,6 +55,9 @@
   morekeywords={add_executable,add_library,cmake_minimum_required,project,target_include_directories,target_link_libraries,target_sources}
 }
 
+\lstdefinestyle{none}{keywordstyle=none}
+
+
 \tikzstyle{every picture}+=[remember picture]
 
 \newcommand{\cpause}{\iftransitions \pause \fi}
@@ -67,8 +70,8 @@
 \author{Andreas Weis}
 \institute{Woven by Toyota}
 
-\date{CppCon 2023}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/cppcon.png}}
+\date{ACCU 2024}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/accu2024_logo.png}}
 
 \iffalse
 Modules have been one of the most highly anticipated features of C++20. Unfortunately, it was also the language feature that took the longest to become widely available for developers to use. This year for the first time we see broad support for the feature in all major compilers and mainstream build system support through CMake. The goal of this talk is to provide you with all the basic knowledge to allow you getting started with C++20 modules today.
@@ -111,7 +114,7 @@ Wrapup                  2 (0:55)
             \node[at=(current page.center)] {
                 \includegraphics[keepaspectratio,
                                  width=\paperwidth,
-                                 height=\paperheight]{modulesgfx/titlecard_cppcon.png}
+                                 height=\paperheight]{modulesgfx/titlecard_accu.png}
             };
         \end{tikzpicture}
      \end{frame}
@@ -133,7 +136,7 @@ Wrapup                  2 (0:55)
 
   We are going to focus on the mechanisms that are available in implementations today, that is, named modules. We are not going to cover some of the more advanced features, or features for which implementation support is still particularly bad today.
 
-  I submitted this talk because I wanted to provide a \textit{first talk to watch} about modules that covers all the basics without assuming prior knowledge. There are many excellent second talks to watch and you should watch them. I will refer to some in this presentation which I found useful, and you will find others during this week at the conference.
+  I submitted this talk because I wanted to provide a \textit{first talk to watch} about modules that covers all the basics without assuming prior knowledge. There are many excellent second talks to watch and you should watch them. I will refer to some in this presentation which I found useful, and you will find others online from other conferences.
   }
 \end{frame}
 
@@ -612,13 +615,13 @@ export module mice;
   \cpause
   --- \textit{File:} \texttt{my\_module\_p1.cpp}
   \begin{lstlisting}[style=cpp20]
-export module (*@\tmrk{a032}{}@*)m:pinky(*@\tmrk{b032}{}@*);
+export module (*@\tmrk{a032}{}@*)mice:pinky(*@\tmrk{b032}{}@*);
 export void narf() {}
   \end{lstlisting}
 
   --- \textit{File:} \texttt{my\_module\_p2.cpp}
   \begin{lstlisting}[style=cpp20]
-export module (*@\tmrk{a033}{}@*)m:the_brain(*@\tmrk{b033}{}@*);
+export module (*@\tmrk{a033}{}@*)mice:the_brain(*@\tmrk{b033}{}@*);
 export void take_over_the_world() {}
 (*@\tmrk{a034}{}@*)struct SecretMasterplan {}(*@\tmrk{b034}{}@*);
   \end{lstlisting}
@@ -687,7 +690,7 @@ export void take_over_the_world() {}
   \frametitle{Building with CMake - Old School}
 
   \begin{lstlisting}[style=cmake]
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.28)
 project(my_project)
 
 add_executable(my_executable)
@@ -718,7 +721,7 @@ target_include_directories(my_executable PUBLIC
   \frametitle{Building with CMake - File Sets (since v3.23)}
 
   \begin{lstlisting}[style=cmake]
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.28)
 project(my_project)
 
 add_executable(my_executable)
@@ -745,10 +748,10 @@ target_sources(my_executable PUBLIC
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Building with CMake - Modules (experimental as of v3.37)}
+  \frametitle{Building with CMake - Modules (since v3.28)}
 
   \begin{lstlisting}[style=cmake]
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.28)
 project(my_project)
 set((*@\tmrk{a015}{}@*)CMAKE_CXX_STANDARD 20(*@\tmrk{b015}{}@*))
 
@@ -756,7 +759,7 @@ add_executable(my_executable)
 target_sources(my_executable PUBLIC
     ${PROJECT_SOURCE_DIR}/my_src.cpp
   PUBLIC
-  (*@\tmrk{a010}{}@*)FILE_SET MODULES(*@\tmrk{b010}{}@*)
+  (*@\tmrk{a010}{}@*)FILE_SET CXX_MODULES(*@\tmrk{b010}{}@*)
   (*@\tmrk{a011}{}@*)BASE_DIRS(*@\tmrk{b011}{}@*) ${PROJECT_SOURCE_DIR}/mod
   (*@\tmrk{a012}{}@*)FILES(*@\tmrk{b012}{}@*)
     ${PROJECT_SOURCE_DIR}/mod/my_module.cpp
@@ -775,6 +778,7 @@ target_sources(my_executable PUBLIC
   }
 \end{frame}
 
+\iffalse
 \begin{frame}[fragile]
   \frametitle{Some boilerplate required...}
 
@@ -802,16 +806,17 @@ set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API
   \end{itemize}
   }
 \end{frame}
+\fi
 
 \begin{frame}
   \frametitle{Use the latest tools!}
 
   \begin{itemize}
-  \item Absolute latest CMake (3.27)
-  \item Latest Visual Studio 2022 (at least 19.34)
+  \item Absolute latest CMake (at least 3.28)
+  \item Latest Visual Studio 2022 (at least toolset version 19.34)
   \item Ninja 1.11
   \item Clang at least 17, prefer trunk
-  \item gcc trunk
+  \item gcc trunk (will be part of gcc 14)
   \end{itemize}
 
   Even with the latest tools there are still plenty of bugs and inconsistent behavior between compilers!
@@ -859,7 +864,7 @@ $ g++ my_executable.o -o my_executable
   \end{lstlisting}
 
   \note{
-  \textbf{TIMECHECK}: 0:35
+  \textbf{TIMECHECK}: 0:40
   \begin{itemize}
   \item What's all this talk about build systems?
   \item We can just build from the command line!
@@ -886,6 +891,23 @@ $ g++ my_executable.o -o my_executable
     \item This can be done independently for each source; Compiler can be invoked in parallel on all sources
   \end{itemize}
   How does the build system know which sources need rebuilding?
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Old-school: Manual tracking}
+
+  Makefile
+  \begin{lstlisting}
+my_src.o: my_src.cpp my_header1.hpp my_header2.hpp other.hpp
+main.o: main.cpp main.hpp my_header1.hpp my_header2.hpp
+
+my_executable: main.o my_src.o
+  $(CXX) -o my_executable main.o my_src.o
+  \end{lstlisting}
+
+  \note{
+  This is a full tree of dependencies. But I don't want to write the full tree, I want to give only a flat set and have the build system figure it out!
   }
 \end{frame}
 
@@ -1017,7 +1039,7 @@ add_executable(my_executable)
 target_sources(my_executable PUBLIC
     ${PROJECT_SOURCE_DIR}/my_src.cpp
   PUBLIC
-  FILE_SET MODULES
+  FILE_SET CXX_MODULES
   BASE_DIRS ${PROJECT_SOURCE_DIR}
   FILES
     (*@\tmrk{a050}{}@*)${PROJECT_SOURCE_DIR}/my_module1.cpp (*@\tmrk{b050}{}@*)
@@ -1061,7 +1083,7 @@ target_sources(my_executable PUBLIC
   \includegraphics[height=.90\textheight]{modulesgfx/its_dangerous_to_go_alone.png}
   \end{center}
   \note{
-  \textbf{TIMECHECK}: 0:45
+  \textbf{TIMECHECK}: 0:55
   }
 \end{frame}
 
@@ -1184,6 +1206,73 @@ int main() {
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Names exported from a module become attached to the module}
+
+  \begin{onlyenv}<1>
+  \begin{lstlisting}[style=cpp20]
+int the_answer() {
+  return 42;
+}
+  \end{lstlisting}
+
+  \begin{lstlisting}
+$ nm my_source.o
+0000000000000000 T _Z10the_answerv
+$ c++filt _Z10the_answerv
+the_answer()
+  \end{lstlisting}
+  \end{onlyenv}
+
+  \begin{onlyenv}<2>
+  \begin{lstlisting}[style=cpp20]
+namespace my_namespace {
+  int the_answer() {
+    return 42;
+  }
+}
+  \end{lstlisting}
+
+  \begin{lstlisting}
+$ nm my_source.o
+0000000000000000 T _ZN12my_namespace10the_answerEv
+$ c++filt _ZN12my_namespace10the_answerEv
+my_namespace::the_answer()
+  \end{lstlisting}
+  \end{onlyenv}
+
+  \begin{onlyenv}<3>
+  \begin{lstlisting}[style=cpp20]
+export module my_module;
+int the_answer() {
+  return 42;
+}
+  \end{lstlisting}
+
+  \begin{lstlisting}[style=none]
+$ nm my_source.o
+0000000000000000 T _ZGIW9my_module
+0000000000000000 T _ZW9my_module10the_answerv
+$ c++filt _ZGIW9my_module
+initializer for module my_module
+$ c++filt _ZW9my_module10the_answerv
+the_answer@my_module()
+  \end{lstlisting}
+  \end{onlyenv}
+
+  \note{
+  \begin{itemize}
+  \item Mangled name, global namespace
+  \item Within namespace
+  \item Within module
+  \begin{itemize}
+    \item Strong ownership: Linker sees different mangled names
+    \item Weak ownership: Linker sees same name, picks one at random
+  \end{itemize}
+  \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{When mixing, always put \texttt{\#includes} first!}
 
   \begin{lstlisting}[style=cpp20]
@@ -1266,7 +1355,28 @@ export using ::AwesomeType;
 
   \note {
   Include in GMF, export what is needed with using.
+  Fully qualify name!
   }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Modularizing legacy libraries - Detach from module}
+
+  \begin{lstlisting}[style=cpp20]
+module;
+// Global module fragment - can't export from here
+void f1() {}
+
+export module lib;
+// Model purview - declaring here attaches to module
+export void f2() {}
+  \end{lstlisting}
+
+  \cpause
+  \begin{lstlisting}[style=cpp20]
+// Use extern to detach declaration
+export extern "C++" void f3() {}
+  \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1356,6 +1466,39 @@ int main() {
   \end{center}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{External libraries}
+
+  How to deal with external libraries that are built on their own?
+  \cpause
+  \begin{itemize}
+  \item In addition to binaries, clients also need access to library BMIs
+  \cpause
+  \item BMIs are consumed by the compiler, not the linker - much less resilient to changes in build options
+  \cpause
+  \item Current best practice: Distribute BMI in source form. Move confidential parts to implementation files if they should not be redistributed
+  \cpause
+  \item BMI files only need to be compiled once! But need access to all headers.
+  \cpause
+  \item Build system needs to know the compatible build options for consuming the module. Tooling vendors are still working on this.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{External shared libraries}
+
+  \begin{itemize}
+  \item Shared libraries are not part of the ISO-148882 standard
+  \cpause
+  \item Module visibility is independent of shared library visibility
+  \cpause
+  \item Shared libraries are already linked on their own, dependent on the BMI that was used in the build process of the shared library
+  \cpause
+  \item The client application compiles its own BMI and links with that. The resulting binaries need to be compatible.
+  \cpause
+  \item Again, tools should ensure that all relevant constraints get propagated to the client automatically.\footnote{\href{https://crascit.com/2024/04/04/cxx-modules-cmake-shared-libraries/}{Craig Scott - C++20 Modules, CMake, And Shared Libraries}}
+  \end{itemize}
+\end{frame}
 
 \begin{frame}
   \frametitle{Conclusion}
@@ -1373,7 +1516,7 @@ int main() {
     \item Try it; Still bugs; Beware legacy
     \item Implementation opportunities!
   \end{itemize}
-  \textbf{TIMECHECK}: 0:55
+  \textbf{TIMECHECK}: 0:70
   }
 \end{frame}
 
@@ -1381,10 +1524,9 @@ int main() {
   \frametitle{Where to go from here...}
 
   \begin{itemize}
-    \item Luis Caro Campos - C++20 Modules: The Packaging and Binary Redistribution Story (CppCon 2023, right afterwards in Cottonwood)
-    \vspace{1em}
     \item \href{https://www.youtube.com/watch?v=Kqo-jIq4V3I}{Daniela Engert - Modules: The Beginner's Guide (Meeting C++ 2019)}
     \item \href{https://www.youtube.com/watch?v=nP8QcvPpGeM}{Daniela Engert - A Short Tour of C++ Modules (CppCon 2021)}
+    \item \href{https://www.youtube.com/watch?v=-p9lvvV8F-w}{Luis Caro Campos - C++20 Modules: The Packaging and Binary Redistribution Story (CppCon 2023)}
     \item \href{https://www.youtube.com/watch?v=c563KgO-uf4}{Bill Hoffman - import CMake: 2023 State of C++20 modules in CMake (CppNow 2023)}
     \item \href{https://www.youtube.com/watch?v=IZXNsim9TWI}{Bret Brown - Modern CMake Modules (CppCon 2021)}
     \item \href{https://vector-of-bool.github.io/2019/03/10/modules-1.html}{vector-of-bool - Understanding C++ Modules (Blog post series)}
@@ -1396,6 +1538,11 @@ int main() {
 
 \begin{frame}
   \frametitle{Thanks for your attention.}
+
+  Modules \emph{Hello World} example on Compiler Explorer:
+
+  \href{https://godbolt.org/z/Ea54d1Ta3}{https://godbolt.org/z/Ea54d1Ta3}
+  \vspace{3em}
 
   \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}}
   \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}}

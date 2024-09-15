@@ -20,8 +20,7 @@
     minimum width=50mm,
     % The border:
     thick,
-    draw=black!80, % 50% red and 50% black,
-    % and that mixed with 50% white
+    draw=black!80,
     % The filling:
     %top color=white, % a shading that is white at the top...
     %bottom color=red!50!black!20, % and something else at the bottom
@@ -33,7 +32,7 @@
     minimum size=6mm,
     minimum width=50mm,
     dotted,
-    draw=black!80, % 50% red and 50% black,
+    draw=black!80,
     font=\ttfamily,
     text=blue!50!black!50,
     },
@@ -44,6 +43,7 @@
     top color=black!5, bottom color=black!25,
     },
 }
+\tikzstyle{every picture}+=[remember picture]
 
 \newif\ifnotes
 %  \notesfalse
@@ -78,8 +78,6 @@
 \lstdefinestyle{cpp20}{language={C++},
   morekeywords={noexcept,co_await,co_return,co_yield,requires,consteval,constinit,concept}
 }
-
-\tikzstyle{every picture}+=[remember picture]
 
 \newif\iftransitions
  \transitionstrue
@@ -123,8 +121,8 @@
 \author{Andreas Weis}
 %\institute{...}
 
-\date{MUC++, August 2024}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/mucpp-logo-128x128.png}}
+\date{CppCon 2024}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/cppcon.png}}
 
 \iffalse
 Deciphering Coroutines - A Visual Approach
@@ -185,6 +183,18 @@ This talk is aimed at people who understand the basics of the coroutine language
 \fi
 
 \begin{document}
+{ % all template changes are local to this group.
+    \setbeamertemplate{navigation symbols}{}
+    \begin{frame}<article:0>[plain]
+        \begin{tikzpicture}[remember picture,overlay]
+            \node[at=(current page.center)] {
+                \includegraphics[keepaspectratio,
+                                 width=\paperwidth,
+                                 height=\paperheight]{corogfx2/cppcon_title_card.png}
+            };
+        \end{tikzpicture}
+     \end{frame}
+}
 
 \frame{\titlepage}
 
@@ -215,7 +225,7 @@ This talk is aimed at people who understand the basics of the coroutine language
   \begin{center}
     \includegraphics[height=.95\textheight]{corogfx2/talk_deciphering_part1.jpg}
   \end{center}
-  
+
   \note{
   \begin{itemize}
   \item This is part 2 of a series of talks on coroutines. \\ This talk assumes that you are familiar with the contents of part 1, that is, you should now the basic mechanisms of the coroutine language mechanics. \\ If you are watching on YouTube and you have not seen part 1, go search for \textit{Deciphering Coroutines CppCon 2022} now and watch it before continuing here. \\ We will do a quick recap of part 1 now, but it will be very brief, so hang on tight.
@@ -225,11 +235,11 @@ This talk is aimed at people who understand the basics of the coroutine language
 
 \begin{frame}
   \frametitle{Where we left off...}
-  
+
   \begin{center}
   \includegraphics[height=.75\textheight]{corogfx/icon_play_pause.png}
   \end{center}
-  
+
   \note{
   \begin{itemize}
     \item Function that can be paused
@@ -245,7 +255,7 @@ This talk is aimed at people who understand the basics of the coroutine language
   \begin{center}
     \tikz \draw node[pos=.5,fill=co_return_object,scale=4] {ReturnType};
   \end{center}
-  
+
   \note{
   \begin{itemize}
     \item The return type is the return type of the function
@@ -299,7 +309,7 @@ int main() {
   \frametitle{The coroutine promise}
 
   \begin{center}
-    \tikz \draw node[pos=.5,fill=co_promise,scale=4] {promise\_type};
+    \tikz \draw node[pos=.5,fill=co_promise,scale=4,font=\ttfamily] {promise\_type};
   \end{center}
 
   \note{
@@ -328,7 +338,7 @@ struct (*@\danch(ar100)@*)ReturnType(*@\danch(br100)@*) / std::coroutine_traits<
   };
 };
   \end{lstlisting}
-  
+
   \monobox[blue](ar100:br100)
   \monobox[blue](mr100:nr100)
   \monobox[red](cr100:dr100)
@@ -345,11 +355,11 @@ struct (*@\danch(ar100)@*)ReturnType(*@\danch(br100)@*) / std::coroutine_traits<
 
 \begin{frame}
   \frametitle{Awaitable}
-  
+
   \begin{center}
     \tikz \draw node[pos=.5,fill=co_awaitable,scale=4] {Awaitable};
   \end{center}
-  
+
   \note{
   \begin{itemize}
     \item The last piece of the puzzle is the awaitable. An awaitable is a type that we can call \texttt{co\_await} on.
@@ -369,10 +379,10 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
   void await_resume(); 
 };
 \end{lstlisting}
-  
+
   \monobox[green](ar101:br101)
   \monobox[red](cr101:dr101)
-  
+
   \note{
   \begin{itemize}
     \item This was our cheat sheet from Part 1. Again, we will not revisit the details for time's sake.
@@ -404,7 +414,7 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
     \href{https://github.com/ComicSansMS/cpp20_coroutine_cheat_sheet}{\includegraphics[height=.6\textheight]{corogfx/qrcode}}
   \end{center}
   \vspace{20em}
-  
+
   \note{
   \begin{itemize}
     \item You can find a copy of the entire cheat sheet here. I will leave this up for a second to give you time to scan the QR code if you want to use the cheat sheet to follow along later.
@@ -421,7 +431,7 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
   \begin{center}
     \href{https://www.youtube.com/watch?v=ZSkign_3Hp4}{\includegraphics[height=.95\textheight]{corogfx2/talk_andrzej.jpg}}
   \end{center}
-  
+
   \note{
   \begin{itemize}
   \item Andrzej gave a great talk focusing exclusively on motivating exactly this use case for coroutines at code::dive 2023. Definitely check it out, it did not get the attention it deserves.
@@ -431,7 +441,7 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
 
 \begin{frame}
   \frametitle{Words of caution}
-  
+
   \begin{itemize}
   \item I will at times lead you astray. This is intentional and will hopefully deepen your insight.
   \vspace{20pt}
@@ -443,7 +453,7 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
 
 \begin{frame}[fragile]
   \frametitle{A mental model for coroutines: Cooperative Threads}
-  
+
   \begin{onlyenv}<1-2>
   \begin{lstlisting}[style=cpp20]
 void spawn_task() {
@@ -457,7 +467,7 @@ Result outer_function() {
 }
   \end{lstlisting}
   \end{onlyenv}
-  
+
   \begin{onlyenv}<3-4>
   \begin{lstlisting}[style=cpp20]
 PartialResult middle_function() {
@@ -471,13 +481,13 @@ IoResult inner_function() {
 }
   \end{lstlisting}
   \end{onlyenv}
-  
+
   \note{ \color{green}{TIME!} }
 \end{frame}
 
 \begin{frame}
   \frametitle{Call Stack}
-  
+
   \begin{onlyenv}<1>
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe]                  {main()};
@@ -496,7 +506,7 @@ IoResult inner_function() {
     \node (inner)   [suspended,above=of middle]  {inner\_function()};
   \end{tikzpicture}
   \end{onlyenv}
-  
+
   \begin{onlyenv}<3>
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe]                       {main()};
@@ -509,10 +519,10 @@ IoResult inner_function() {
     \node (inner)   [suspended,above=of middle]        {inner\_function()};
 
     \node(task)     [taskobj,below=of spawn,shift={(-3ex,-5ex)}] {Task};
-    \path (task) edge[->] (spawn);
+    \path (task.north) edge[->,bend right] (spawn);
   \end{tikzpicture}
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{inner\_function will take a long time. Blocking I/O will prevent program from doing useful work.}
@@ -526,7 +536,7 @@ IoResult inner_function() {
 
 \begin{frame}[fragile]
   \frametitle{Threads - A straightforward solution}
-  
+
   \begin{onlyenv}<1>
   \begin{lstlisting}[style=cpp20]
 auto spawn_task() {
@@ -543,14 +553,14 @@ auto spawn_task() {
 }
   \end{lstlisting}
   \end{onlyenv}
-  
+
   \begin{onlyenv}<2>
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe]                       {main()};
     \node (other)   [stackframe,above=of main]         {spawn\_task()};
   \end{tikzpicture}
   \end{onlyenv}
-  
+
   \begin{onlyenv}<3>
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe]                       {main()};
@@ -562,7 +572,7 @@ auto spawn_task() {
     \node (inner)   [stackframe,above=of middle]        {inner\_function() \includegraphics[height=9pt]{corogfx2/icon_clock.png}};
 
     \node(task)     [taskobj,below=of spawn,shift={(-3ex,-5ex)}] {std::jthread / std::future<Result>};
-    \path (task) edge[->] (spawn);
+    \path (task) edge[->,bend right] (spawn);
   \end{tikzpicture}
   \end{onlyenv}
 \end{frame}
@@ -578,15 +588,15 @@ auto spawn_task() {
   \item Shared data must be synchronized correctly. \cpause
   \item ... \cpause
   \end{itemize}
-  
+
   Not a solution that scales well.
-  
+
   Can be a good solution for small number of tasks.
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Green Threads aka Stackful Coroutines}
-  
+
   \begin{onlyenv}<1-2>
   \begin{lstlisting}[style=cpp20]
 auto spawn_task() {
@@ -610,12 +620,13 @@ IoResult inner_function() {
     \node (outer)   [stackframe,above=of spawn2]  {outer\_function()};
     \node (middle)  [stackframe,above=of outer]   {middle\_function()};
     \node (inner)   [stackframe,above=of middle]  {inner\_function()};
+    \node (place)   [stackframe,above=of inner,style={draw=white}]   {};
     \only<4>{
     \node (inner2)   [stackframe,above=of inner]  {suspend()};
     }
   \end{tikzpicture}
   \end{onlyenv}
-  
+
   \begin{onlyenv}<5>
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe]                       {main()};
@@ -627,10 +638,10 @@ IoResult inner_function() {
     \node (inner2)  [suspended,above=of inner]         {suspend()};
 
     \node(task)     [taskobj,below=of spawn,shift={(-3ex,-5ex)}] {GreenThread};
-    \path (task) edge[->] (spawn);
+    \path (task) edge[->,bend right] (spawn);
   \end{tikzpicture}
   \end{onlyenv}
-  
+
   \begin{onlyenv}<6>
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe]                       {main()};
@@ -642,10 +653,10 @@ IoResult inner_function() {
     \node (inner2)  [suspended,above=of inner]         {suspend()};
 
     \node(task)     [taskobj,below=of spawn,shift={(-3ex,-5ex)}] {GreenThread};
-    \path (task) edge[->] (spawn);
+    \path (task) edge[->,bend right] (spawn);
   \end{tikzpicture}
   \end{onlyenv}
-  
+
   \begin{onlyenv}<7>
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe]                  {main()};
@@ -656,10 +667,10 @@ IoResult inner_function() {
     \node (inner2)   [stackframe,above=of inner]  {suspend()};
   \end{tikzpicture}
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
-  \item \alert<+>{aka Fibers, aka User-mode Threads}
+  \item \alert<+>{aka Fibers, aka User-mode Threads, aka Cooperative MT}
   \item \alert<+>{***TRANSITION*** inner function suspends}
   \item \alert<+>{ ***TRANSITION*** task call stack}
   \item \alert<+>{***TRANSITION*** call stack + suspend}
@@ -672,18 +683,18 @@ IoResult inner_function() {
 
 \begin{frame}
   \frametitle{Green Threads - Evaluation}
-  
+
   \begin{itemize}
-  \item Little overhead - Simple manipulation of the function frames list making up the call stack.
-  \item No synchronization needed.
-  \item Green Threads cooperatively decide when to suspend and resume
+  \item Little overhead \cpause
+  \item No synchronization needed. \cpause
+  \item Green Threads cooperatively decide when to suspend and resume \cpause
   \item Intuition about control-flow is still very similar to threads
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{C++20 Coroutines}
-  
+
   \begin{itemize}
   \item Stackless
   \item We can only suspend one function at a time
@@ -702,7 +713,7 @@ IoResult inner_function() {
 
 \begin{frame}[fragile]
   \frametitle{Suspending nested coroutines}
-  
+
     \begin{onlyenv}<1>
   \begin{lstlisting}[style=cpp20]
 IoResult inner_function() {
@@ -728,11 +739,11 @@ IoResult inner_function() {
   \end{lstlisting}
   \monobox[blue](ar200:br200)
   \end{onlyenv}
-  
+
   \vspace{20pt}
   % Checkmark
-  \only<4>{ \tikz\fill[scale=0.4,fill=red!40!green!100](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle; }
-  
+  \only<4>{ \tikz\fill[fill=red!40!green!100](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle; }
+
   \note{
   \begin{itemize}
   \item \alert<+>{starting from the inner function we had before...}
@@ -745,7 +756,7 @@ IoResult inner_function() {
 
 \begin{frame}[fragile]
   \frametitle{Moving up the stack}
-  
+
   \begin{lstlisting}[style=cpp20]
 (*@\danch(ar210)@*)Async<IoResult>(*@\danch(br210)@*) inner_function();
   \end{lstlisting}
@@ -779,7 +790,7 @@ PartialResult middle_function() {
   \monobox[blue](ar212:br212)
   \only<4>{\monobox[green](ar213:br213)}
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{one level up the call stack}
@@ -813,7 +824,7 @@ PartialResult middle_function() {
 
 \begin{frame}[fragile]
   \frametitle{Resuming}
-  
+
   \begin{lstlisting}[style=cpp20]
 (*@\danch(ar221)@*)Async<IoResult>(*@\danch(br221)@*) inner_function();
 (*@\danch(ar222)@*)Async<PartialResult>(*@\danch(br222)@*) middle_function();
@@ -832,10 +843,10 @@ int main() {
 }
   \end{lstlisting}
   \monobox[blue](ar225:br225)
-  
-  \only<3-8>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar226.north) -- ([shift={(1em,0.25em)}]ar226.north);}
-  \only<9>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar227.north) -- ([shift={(1em,0.25em)}]ar227.north);}
-  \only<10->{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar228.north) -- ([shift={(1em,0.25em)}]ar228.north);}
+
+  \only<3-8>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar226.north) -- ([shift={(1em,0.25em)}]ar226.north);}
+  \only<9>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar227.north) -- ([shift={(1em,0.25em)}]ar227.north);}
+  \only<10->{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar228.north) -- ([shift={(1em,0.25em)}]ar228.north);}
 
   \begin{onlyenv}<3>
   \resizebox{.008\textwidth}{!}{%
@@ -935,7 +946,7 @@ int main() {
   \end{tikzpicture}
   }
   \end{onlyenv}
-  
+
   \note{
   \begin{onlyenv}<1-8>
   \begin{itemize}
@@ -964,24 +975,24 @@ int main() {
 
 \begin{frame}[fragile]
   \frametitle{Zooming in...}
-  
+
   \begin{lstlisting}[style=cpp20]
 (*@\danch(ar232)@*)Async<PartialResult>(*@\danch(br232)@*) middle_function();
 
 (*@\danch(ar231)@*)Async<Result>(*@\danch(br231)@*) outer_function() {
 (*@\danch(ar233)@*)  (*@\danch(ar236)@*)Async<PartialResult>(*@\danch(br236)@*) awaitable = middle_function();
 (*@\danch(ar234)@*)  PartialResult r = co_await awaitable;
-(*@\danch(ar235)@*)  return Result::from_partial_result(r);
+(*@\danch(ar235)@*)  co_return Result::from_partial_result(r);
 }
   \end{lstlisting}
   \monobox[blue](ar231:br231)
   \monobox[green](ar236:br236)
   \mixedbox(ar232:br232)
 
-  \only<1>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar233.north) -- ([shift={(1em,0.25em)}]ar233.north);}
-  \only<2-7>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar234.north) -- ([shift={(1em,0.25em)}]ar234.north);}
-  \only<8->{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar235.north) -- ([shift={(1em,0.25em)}]ar235.north);}
-  
+  \only<1>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar233.north) -- ([shift={(1em,0.25em)}]ar233.north);}
+  \only<2-7>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar234.north) -- ([shift={(1em,0.25em)}]ar234.north);}
+  \only<8->{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar235.north) -- ([shift={(1em,0.25em)}]ar235.north);}
+
   \begin{onlyenv}<1-2,7-8>
   \resizebox{.008\textwidth}{!}{%
   \begin{tikzpicture}[node distance = 0mm and 5mm,overlay]
@@ -1022,7 +1033,7 @@ int main() {
   \end{tikzpicture}
   }
   \end{onlyenv}
-  
+
   \begin{onlyenv}<9>
   \resizebox{.04\textwidth}{!}{%
   \begin{tikzpicture}[node distance = 0mm and 5mm,overlay]
@@ -1030,7 +1041,7 @@ int main() {
   \end{tikzpicture}
   }
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{let's take a closer look}
@@ -1048,10 +1059,11 @@ int main() {
 
 \begin{frame}
   Resuming nested suspended coroutines from the outside in does not work!
-  
+
+  \cpause
   \begin{itemize}
-  \item Once a coroutine has been resumed, it cannot be suspended, unless we call \texttt{co\_await} again
-  \item We do not know from the outside how often we need to resume an inner function before it succeeds
+  \item Once a coroutine has been resumed, it cannot be suspended, unless we call \texttt{co\_await} again \cpause
+  \item We do not know from the outside how often we need to resume an inner function before it succeeds \cpause
   \item We want \texttt{co\_await}ing an async function to mean: Wake me up once that function has completed and its result is available.
   \end{itemize}
 
@@ -1059,30 +1071,30 @@ int main() {
 
 \begin{frame}
   \frametitle{What is a call stack anyway?}
-  
+
   \cpause
-  
+
    Anatomy of a stack frame
    \vspace{20pt}
-   
+
    \begin{onlyenv}<2>
    \begin{tikzpicture}[node distance = 0mm and 5mm,
     point/.style={circle,inner sep=0pt,minimum size=0pt,fill=black!100},
     memcell/.style={rectangle,minimum size=6mm,minimum width=50mm,thick,draw=black!80},
     invis/.style={rectangle,minimum size=6mm,minimum width=50mm,thick,draw=black!0},
    ]
-   
+
     \node (func) [memcell]  { ... };
     \node (fp)   [invis,below=of func]  {}; \node (point_fp) [point,right=of fp,shift={(21.5ex,2ex)}]{};
     \node (ip)   [invis,below=of fp]  {};
-    
+
     \node (rsp) [above right=of func,shift={(10ex,5ex)},fill=black!20] { rsp };
     \node (rbp) [right=of rsp,shift={(2ex,0ex)}, fill={rgb,255:red,230; green,200; blue,180}] { rbp };
     \node (rip) [right=of rbp,shift={(2ex,0ex)}, fill={rgb,255:red,160; green,230; blue,230}] { rip };
-    
+
     \node (reg) [above=of rsp,shift={(2ex,0.5ex)}] { Registers };
     \node (mem) [above=of func,shift={(0,4ex)}] { Memory };
-    
+
     \draw[line width=0.5mm, black!80] (rsp.south) edge[->] (func.north east);
     \draw[line width=0.5mm, black!80] (rbp.south) edge (point_fp)
           (point_fp) edge[->] (func.south east);
@@ -1093,24 +1105,24 @@ int main() {
     point/.style={circle,inner sep=0pt,minimum size=0pt,fill=black!100},
     memcell/.style={rectangle,minimum size=6mm,minimum width=50mm,thick,draw=black!80},
    ]
-   
+
     \node (func) [memcell]  { ... };
     \node (fp)   [memcell,below=of func, fill={rgb,255:red,230; green,200; blue,180}]  { Frame Pointer }; \node (point_fp) [point,right=of fp,shift={(21.5ex,2ex)}]{};
     \node (ip)   [memcell,below=of fp, fill={rgb,255:red,160; green,230; blue,230}]  { Instruction Pointer };
-    
+
     \node (rsp) [above right=of func,shift={(10ex,5ex)},fill=black!20] { rsp };
     \node (rbp) [right=of rsp,shift={(2ex,0ex)}, fill={rgb,255:red,230; green,200; blue,180}] { rbp };
     \node (rip) [right=of rbp,shift={(2ex,0ex)}, fill={rgb,255:red,160; green,230; blue,230}] { rip };
-    
+
     \node (reg) [above=of rsp,shift={(2ex,0.5ex)}] { Registers };
     \node (mem) [above=of func,shift={(0,4ex)}] { Memory };
-    
+
     \draw[line width=0.5mm, black!80] (rsp.south) edge[->] (func.north east);
     \draw[line width=0.5mm, black!80] (rbp.south) edge (point_fp)
           (point_fp) edge[->] (fp.north east);
    \end{tikzpicture}
    \end{onlyenv}
-   
+
    \note{
    \color{green}{TIME!}
   \begin{itemize}
@@ -1123,22 +1135,22 @@ int main() {
 
 \begin{frame}
   \frametitle{What is a call stack anyway?}
-  
+
   \begin{tikzpicture}[node distance = 0mm and 5mm,
     point/.style={circle,inner sep=0pt,minimum size=0pt,fill=black!100},
     memcell/.style={rectangle,minimum size=6mm,minimum width=20mm,thick,draw=black!80},
    ]
-    
+
     \node (rbp) [fill={rgb,255:red,230; green,200; blue,180}] { rbp };
 
     \node (func1) [memcell,below right=of rbp,style={font=\ttfamily}]  { inner() };
     \node (fp1)   [memcell,below=of func1, fill={rgb,255:red,230; green,200; blue,180}]  { FP };
     \node (ip1)   [memcell,below=of fp1, fill={rgb,255:red,160; green,230; blue,230}]  { IP };
-    
+
     \node (func2) [memcell,right=of func1,shift={(8ex,0)},style={font=\ttfamily}]  { middle() };
     \node (fp2)   [memcell,below=of func2, fill={rgb,255:red,230; green,200; blue,180}]  { FP };
     \node (ip2)   [memcell,below=of fp2, fill={rgb,255:red,160; green,230; blue,230}]  { IP };
-    
+
     \node (func3) [memcell,right=of func2,shift={(8ex,0)},style={font=\ttfamily}]  { outer() };
     \node (fp3)   [memcell,below=of func3, fill={rgb,255:red,230; green,200; blue,180}]  { FP };
     \node (ip3)   [memcell,below=of fp3, fill={rgb,255:red,160; green,230; blue,230}]  { IP };
@@ -1150,11 +1162,11 @@ int main() {
     \draw[line width=0.5mm, black!80] (fp2.east) edge[->] (fp3.north west);
     \draw[line width=0.5mm, black!80] (fp3.east) edge[->] (dotdot.west);
   \end{tikzpicture}
-  
+
   \cpause
   \vspace{3em}
   $\Rightarrow$ Singly-linked list of stack frames with links from callee-frame to caller-frame.
-  
+
   \note{
   \begin{itemize}
   \item linked list
@@ -1166,7 +1178,7 @@ int main() {
 
 \begin{frame}[fragile]
   \frametitle{Connecting a coroutine to its caller}
-  
+
   \begin{lstlisting}[style=cpp20]
 (*@\danch(ar241)@*)Async<IoResult>(*@\danch(br241)@*) (*@\danch(ar245)@*)inner_function()(*@\danch(br245)@*) {
     // ...
@@ -1184,7 +1196,7 @@ Async<PartialResult> (*@\danch(ar246)@*)middle_function()(*@\danch(br246)@*) {
   \monobox[blue](ar241:br241)
   \monobox[green](ar242:br242)
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item inner=indigo, outer=orange
@@ -1199,7 +1211,7 @@ Async<PartialResult> (*@\danch(ar246)@*)middle_function()(*@\danch(br246)@*) {
   \begin{center}
   \includegraphics[height=.9\textheight]{corogfx/acquaintances05.png}
   \end{center}
-  
+
   \note{
   \begin{itemize}
     \item The inner coroutine builds an Async object and hands it to the caller
@@ -1216,51 +1228,49 @@ Async<PartialResult> (*@\danch(ar246)@*)middle_function()(*@\danch(br246)@*) {
   \iftransitions
   \begin{onlyenv}<1>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
-  struct promise_type {
-    /* ... */
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+  struct promise_type { /* ... */
 
 
 
 
-    }
+
   };
 
 
 
 
 };
+
+.
   \end{lstlisting}
   \monobox[blue](ar251:br251)
   \end{onlyenv}
   \begin{onlyenv}<2>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
-  struct promise_type {
-    /* ... */
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+  struct promise_type { /* ... */
 
 
 
 
-    }
+
   };
   (*@\danch(ar252)@*)std::coroutine_handle<promise_type> self(*@\danch(br252)@*);
 
 
 
 };
+
+.
   \end{lstlisting}
   \monobox[blue](ar251:br251)
   \monobox[indigo](ar252:br252)
   \end{onlyenv}
   \begin{onlyenv}<3>
     \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
-  struct promise_type {
-    /* ... */
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+  struct promise_type { /* ... */
     (*@\danch(ar253)@*)Async<T>(*@\danch(br253)@*) get_return_object() {
       auto h = std::coroutine_handle<promise_type>
                 ::from_promise(*this);
@@ -1272,6 +1282,8 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
     :self(h)
   {}
 };
+
+.
   \end{lstlisting}
   \monobox[blue](ar251:br251)
   \monobox[blue](ar253:br253)
@@ -1280,8 +1292,7 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   \end{onlyenv}
   \begin{onlyenv}<4>
     \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   struct promise_type { /* ... */ };
 
 
@@ -1293,17 +1304,19 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 
 
 
+
 };
+
+.
   \end{lstlisting}
   \monobox[blue](ar251:br251)
   \monobox[indigo](ar252:br252)
   \end{onlyenv}
-  
-  
-  \else  
+
+
+  \else
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   struct promise_type {
     /* ... */
     (*@\danch(ar253)@*)Async<T>(*@\danch(br253)@*) get_return_object() {
@@ -1317,13 +1330,14 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
     :self(h)
   {}
 };
+.
   \end{lstlisting}
   \monobox[blue](ar251:br251)
   \monobox[blue](ar253:br253)
   \monobox[indigo](ar252:br252)
   \monobox[indigo](ar254:br254)
   \fi
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{first the return object perspective}
@@ -1336,11 +1350,10 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 
 \begin{frame}[fragile]
   \frametitle{Connecting a coroutine to its caller}
-  
+
   \begin{onlyenv}<1>
    \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   struct promise_type { /* ... */ };
 
 
@@ -1353,14 +1366,15 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 
 
 };
+
+.
   \end{lstlisting}
   \monobox[indigo](ar252:br252)
   \monobox[green](ar251:br251)
   \end{onlyenv}
   \begin{onlyenv}<2>
    \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   struct promise_type { /* ... */ };
 
 
@@ -1373,55 +1387,59 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 
   }
 };
+
+.
   \end{lstlisting}
   \monobox[indigo](ar252:br252)
   \monobox[green](ar251:br251)
   \end{onlyenv}
   \begin{onlyenv}<3>
    \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   struct promise_type { /* ... */ };
 
-  
+
   (*@\danch(ar252)@*)std::coroutine_handle<promise_type> self(*@\danch(br252)@*);
-  
-  
+
+
   bool await_ready() { return false; }
   T await_resume() { /* ... */ }
   auto await_suspend((*@\danch(ar254)@*)std::coroutine_handle<> handle(*@\danch(br254)@*)) {
 
   }
 };
+
+.
   \end{lstlisting}
   \monobox[indigo](ar252:br252)
   \monobox[orange](ar254:br254)
   \monobox[green](ar251:br251)
   \end{onlyenv}
-  
+
   \begin{onlyenv}<4>
    \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
+template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   struct promise_type { /* ... */ 
     (*@\danch(ar253)@*)std::coroutine_handle<> my_caller(*@\danch(br253)@*);
   };
   (*@\danch(ar252)@*)std::coroutine_handle<promise_type> self(*@\danch(br252)@*);
-  
-  
+
+
   bool await_ready() { return false; }
   T await_resume() { /* ... */ }
   auto await_suspend((*@\danch(ar254)@*)std::coroutine_handle<> handle(*@\danch(br254)@*)) {
     self.promise().my_caller = handle;
   }
 };
+
+.
   \end{lstlisting}
   \monobox[indigo](ar252:br252)
   \monobox[orange](ar253:br253)
   \monobox[orange](ar254:br254)
   \monobox[green](ar251:br251)
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{switch to awaitable}
@@ -1432,11 +1450,10 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   }
 \end{frame}
 
-%\fi % !!!!!!!!!!!!!!
 
 \begin{frame}
   \frametitle{We have our own call stack now}
-  
+
   \begin{tikzpicture}[node distance = 0mm and 5mm,
     point/.style={circle,inner sep=0pt,minimum size=0pt,fill=black!100},
     memcell/.style={rectangle,minimum size=6mm,minimum width=26mm,thick,draw=black!80,font=\ttfamily},
@@ -1456,7 +1473,7 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
     \node (self1)   [memcell,below=of func1,style={minimum width=33mm}]  { self };
     \node (promise1)   [memcell,below=of self1,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller1)   [memcell,below=of promise1]  { my\_caller };
-    
+
     \node (func2) [memcell,right=of func1,shift={(3ex,0)},style={minimum width=43mm}]  { Async<PartialResult> };
     \filldraw[green, opacity=0.3][] (func2.south west)
         -- (func2.south east)
@@ -1469,7 +1486,7 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
     \node (self2)   [memcell,below=of func2,,style={minimum width=43mm}]  { self };
     \node (promise2)   [memcell,below=of self2,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller2)   [memcell,below=of promise2]  { my\_caller };
-    
+
     \node (func3) [memcell,right=of func2,shift={(3ex,0)},style={minimum width=30mm}]  { Async<Result> };
     \filldraw[green, opacity=0.3][] (func3.south west)
         -- (func3.south east)
@@ -1495,6 +1512,7 @@ struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 
   \note{ \color{green}{TIME!} }
 \end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Resuming the caller from a nested coroutine}
@@ -1546,9 +1564,6 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*);
   \end{onlyenv}
   \begin{onlyenv}<4>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*);
-  
 struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
 
 
@@ -1560,6 +1575,8 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
 
 
 };
+
+
 .
   \end{lstlisting}
   \monobox[blue](ar271:br271)
@@ -1567,9 +1584,6 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   \end{onlyenv}
   \begin{onlyenv}<5>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*);
-  
 struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   (*@\danch(ar277)@*)coroutine_handle<> my_caller(*@\danch(br277)@*);
   ResumeCaller((*@\danch(ar278)@*)coroutine_handle<> h(*@\danch(br278)@*)) : my_caller(h) {}
@@ -1581,6 +1595,8 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
 
 
 };
+
+
 .
   \end{lstlisting}
   \monobox[blue](ar271:br271)
@@ -1590,9 +1606,6 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   \end{onlyenv}
   \begin{onlyenv}<6>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*);
-  
 struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   (*@\danch(ar277)@*)coroutine_handle<> my_caller(*@\danch(br277)@*);
   ResumeCaller((*@\danch(ar278)@*)coroutine_handle<> h(*@\danch(br278)@*)) : my_caller(h) {}
@@ -1604,6 +1617,8 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
 
 
 };
+
+
 .
   \end{lstlisting}
   \monobox[blue](ar271:br271)
@@ -1613,9 +1628,6 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   \end{onlyenv}
   \begin{onlyenv}<7>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*);
-  
 struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   (*@\danch(ar277)@*)coroutine_handle<> my_caller(*@\danch(br277)@*);
   ResumeCaller((*@\danch(ar278)@*)coroutine_handle<> h(*@\danch(br278)@*)) : my_caller(h) {}
@@ -1627,6 +1639,8 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
     return (*@\danch(ar276)@*)my_caller(*@\danch(br276)@*);
   }
 };
+
+
 .
   \end{lstlisting}
   \monobox[blue](ar271:br271)
@@ -1638,9 +1652,6 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   \end{onlyenv}
   \begin{onlyenv}<8>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*);
-  
 struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   (*@\danch(ar277)@*)coroutine_handle<> my_caller(*@\danch(br277)@*);
   ResumeCaller((*@\danch(ar278)@*)coroutine_handle<> h(*@\danch(br278)@*)) : my_caller(h) {}
@@ -1652,6 +1663,8 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
     return (*@\danch(ar276)@*)my_caller(*@\danch(br276)@*);
   }
 };
+
+
 .
   \end{lstlisting}
   \monobox[blue](ar271:br271)
@@ -1660,31 +1673,6 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   \monobox[orange](ar276:br276)
   \monobox[orange](ar277:br277)
   \monobox[orange](ar278:br278)
-  \end{onlyenv}
-  \begin{onlyenv}<9>
-  \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*) {
-  struct promise_type { /* ... */ 
-    (*@\danch(ar272)@*)coroutine_handle<> my_caller(*@\danch(br272)@*);
-    auto final_suspend() noexcept {
-      return ResumeCaller{(*@\danch(ar273)@*)my_caller(*@\danch(br273)@*)};
-    }
-  };
-};
-
-struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
-  (*@\danch(ar275)@*)coroutine_handle<>(*@\danch(br275)@*) await_suspend(coroutine_handle<>) {
-    return (*@\danch(ar276)@*)my_caller(*@\danch(br276)@*);
-  }
-};
-  \end{lstlisting}
-  \monobox[blue](ar271:br271)
-  \monobox[green](ar274:br274)
-  \monobox[orange](ar272:br272)
-  \monobox[orange](ar273:br273)
-  \monobox[orange](ar275:br275)
-  \monobox[orange](ar276:br276)
   \end{onlyenv}
   \else
   \begin{lstlisting}[style=cpp20]
@@ -1711,7 +1699,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \monobox[orange](ar275:br275)
   \monobox[orange](ar276:br276)
   \fi
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{we have the links, now we can resume from inside out}
@@ -1721,19 +1709,163 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \item \alert<+>{***TRANSITION*** it stores handle to outer}
   \item \alert<+>{***TRANSITION*** await\_ready and await\_resume}
   \item \alert<+>{***TRANSITION*** await\_suspend returns handle}
-  \item \alert<+>{***TRANSITION*** symmetric transfer!}
-  \item ***TRANSITION*** overview slide
+  \item ***TRANSITION*** symmetric transfer!
   \end{itemize}
   }
 \end{frame}
 
+\begin{frame}[fragile]
+
+  \frametitle{Resuming caller via symmetric transfer}
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar310)@*)Async<> (*@\danch(ar311)@*)middle_function()(*@\danch(br311)@*) {
+(*@\danch(ar320)@*)  auto r = co_await inner_function();
+(*@\danch(ar330)@*)  co_return PartialResult::from_io_result(r);
+(*@\danch(ar340)@*)}
+(*@\danch(ar350)@*)Async<> (*@\danch(ar351)@*)inner_function()(*@\danch(br351)@*) { /* ... */
+(*@\danch(ar360)@*)  co_return IoResult::from_io_data(data);
+(*@\danch(ar370)@*)}
+  \end{lstlisting}
+  \begin{onlyenv}<1-2>
+  \begin{lstlisting}[style=cpp20]
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  .
+  \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<3>
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar380)@*)auto (*@\danch(ar381)@*)promise_type(*@\danch(br381)@*)::final_suspend() {
+(*@\danch(ar390)@*)  return ResumeCaller{my_caller};
+(*@\danch(ar400)@*)}
+  \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<4->
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar410)@*)auto (*@\danch(ar411)@*)ResumeCaller(*@\danch(br411)@*)::await_suspend(
+        coroutine_handle<>) {
+(*@\danch(ar420)@*)  return my_caller;
+(*@\danch(ar430)@*)}
+  \end{lstlisting}
+  \end{onlyenv}
+
+  \monobox[orange](ar311:br311)
+  \monobox[indigo](ar351:br351)
+  \only<3>{ \monobox[red](ar381:br381) }
+  \only<4->{ \monobox[green](ar411:br411) }
+
+  \only<1-5>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,teal,very thick] ([shift={(-1em,0.25em)}]ar320.north) -- ([shift={(1em,0.25em)}]ar320.north);}
+  \only<6>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar320.north) -- ([shift={(1em,0.25em)}]ar320.north);}
+  \only<1>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar360.north) -- ([shift={(1em,0.25em)}]ar360.north);}
+  \only<2>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar370.north) -- ([shift={(0.2em,0.25em)}]ar370.north);}
+  \only<3>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar390.north) -- ([shift={(1em,0.25em)}]ar390.north);}
+  \only<4>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar420.north) -- ([shift={(1em,0.25em)}]ar420.north);}
+  \only<5>{\tikz[transform shape,overlay] \draw[>=triangle 45,->,darkred,very thick] ([shift={(-1em,0.25em)}]ar430.north) -- ([shift={(0.2em,0.25em)}]ar430.north);}
+
+  \begin{onlyenv}<1-2>
+  \scalebox{0.7}{
+  \begin{tikzpicture}[node distance = 0mm and 5mm,overlay]
+    \node (main) at ([shift={(17cm,-0.5cm)}]ar350.east) [stackframe,fill=lightgray,style={minimum width=80mm}] {base()};
+    \node (inner)   [stackframe,fill=indigo!30,above=of main,style={minimum width=80mm}]  {inner\_function()};
+    \node (await)   [above=of inner,style={minimum size=6mm,minimum width=80mm}]   {};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+  \begin{onlyenv}<3>
+  \scalebox{0.7}{
+  \begin{tikzpicture}[node distance = 0mm and 5mm,overlay]
+    \node (main) at ([shift={(17cm,-1.9cm)}]ar350.east) [stackframe,fill=lightgray,style={minimum width=80mm}] {base()};
+    \node (inner)   [stackframe,fill=indigo!30,above=of main,style={minimum width=80mm}]      {inner\_function()};
+    \node (await)   [stackframe,above=of inner,fill=co_promise,style={minimum width=80mm}]   {Async<>::promise\_type::final\_suspend()};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+  \begin{onlyenv}<4>
+  \scalebox{0.7}{
+  \begin{tikzpicture}[node distance = 0mm and 5mm,overlay]
+    \node (main) at ([shift={(17cm,-1.5cm)}]ar350.east) [stackframe,fill=lightgray,style={minimum width=80mm}] {base()};
+    \node (inner)   [stackframe,fill=indigo!30,above=of main,style={minimum width=80mm}]      {inner\_function()};
+    \node (await)   [stackframe,above=of inner,fill=co_awaitable,style={minimum width=80mm}]   {ResumeCaller::await\_suspend()};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+  \begin{onlyenv}<5>
+  \scalebox{0.7}{
+  \begin{tikzpicture}[node distance = 0mm and 5mm,overlay]
+    \node (main) at ([shift={(17cm,-1.5cm)}]ar350.east) [stackframe,fill=lightgray,style={minimum width=80mm}] {base()};
+    \node (inner)   [stackframe,fill=orange!30,above=of main,style={minimum width=80mm}]      {middle\_function()};
+    \node (await)   [above=of inner,style={minimum size=6mm,minimum width=80mm}]   {};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+  \begin{onlyenv}<6>
+  \scalebox{0.7}{
+  \begin{tikzpicture}[node distance = 0mm and 5mm,overlay]
+    \node (main) at ([shift={(17cm,-1.5cm)}]ar350.east) [stackframe,fill=lightgray,style={minimum width=80mm}] {base()};
+    \node (inner)   [stackframe,fill=orange!30,above=of main,style={minimum width=80mm}]      {middle\_function()};
+    \node (await)   [stackframe,above=of inner,fill=co_awaitable,style={minimum width=80mm}]   {Async::await\_resume()};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+
+  \note{
+  \begin{itemize}
+  \item \alert<+>{call stack for resuming with symmetric transfer; base is frozen; inner above; goal is teal arrow}
+  \item \alert<+>{***TRANSITION*** inner is done; promise::return\_value runs}
+  \item \alert<+>{***TRANSITION*** final suspend; triggers ResumeCaller via co\_await}
+  \item \alert<+>{***TRANSITION*** ResumeCaller is awaited; returnns handle to caller}
+  \item \alert<+>{***TRANSITION*** symmetric transfer to middle}
+  \item ***TRANSITION*** middle resumes
+  \end{itemize}
+  }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Resuming the caller from a nested coroutine}
+
+  \begin{lstlisting}[style=cpp20]
+template<typename T> struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*) {
+  struct promise_type { /* ... */ 
+    (*@\danch(ar272)@*)coroutine_handle<> my_caller(*@\danch(br272)@*);
+    auto final_suspend() noexcept {
+      return ResumeCaller{(*@\danch(ar273)@*)my_caller(*@\danch(br273)@*)};
+    }
+  };
+};
+struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
+  (*@\danch(ar275)@*)coroutine_handle<>(*@\danch(br275)@*) await_suspend(coroutine_handle<>) {
+    return (*@\danch(ar276)@*)my_caller(*@\danch(br276)@*);
+  }
+};
+  \end{lstlisting}
+  \monobox[blue](ar271:br271)
+  \monobox[green](ar274:br274)
+  \monobox[orange](ar272:br272)
+  \monobox[orange](ar273:br273)
+  \monobox[orange](ar275:br275)
+  \monobox[orange](ar276:br276)
+  
+  \note{
+  Overview slide
+  }
+\end{frame}
+
+\iffalse
 \begin{frame}
   \frametitle{Resuming caller via symmetric transfer}
+
   \begin{onlyenv}<1>
   \begin{center}
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe,fill=lightgray,style={minimum width=80mm}] {base()};
-    \node (inner)   [stackframe,above=of main,style={minimum width=80mm}]  {inner\_function()};
+    \node (inner)   [stackframe,fill=indigo!30,above=of main,style={minimum width=80mm}]  {inner\_function()};
     \node (await)   [above=of inner,style={minimum size=6mm,minimum width=80mm}]   {};
   \end{tikzpicture}
   \end{center}
@@ -1742,7 +1874,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \begin{center}
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe,fill=lightgray,style={minimum width=80mm}]     {base()};
-    \node (inner)   [stackframe,above=of main,style={minimum width=80mm}]      {inner\_function()};
+    \node (inner)   [stackframe,fill=indigo!30,above=of main,style={minimum width=80mm}]      {inner\_function()};
     \node (await)   [stackframe,above=of inner,fill=co_promise,style={minimum width=80mm}]   {Async<>::promise\_type::final\_suspend()};
   \end{tikzpicture}
   \end{center}
@@ -1751,7 +1883,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \begin{center}
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe,fill=lightgray,style={minimum width=80mm}]     {base()};
-    \node (inner)   [stackframe,above=of main,style={minimum width=80mm}]      {inner\_function()};
+    \node (inner)   [stackframe,fill=indigo!30,above=of main,style={minimum width=80mm}]      {inner\_function()};
     \node (await)   [stackframe,above=of inner,fill=co_awaitable,style={minimum width=80mm}]   {ResumeCaller::await\_suspend()};
   \end{tikzpicture}
   \end{center}
@@ -1760,7 +1892,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \begin{center}
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe,fill=lightgray,style={minimum width=80mm}]     {base()};
-    \node (inner)   [stackframe,above=of main,style={minimum width=80mm}]      {middle\_function()};
+    \node (inner)   [stackframe,fill=orange!30,above=of main,style={minimum width=80mm}]      {middle\_function()};
     \node (await)   [above=of inner,style={minimum size=6mm,minimum width=80mm}]   {};
   \end{tikzpicture}
   \end{center}
@@ -1769,12 +1901,12 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \begin{center}
   \begin{tikzpicture}[node distance = 0mm and 5mm]
     \node (main)    [stackframe,fill=lightgray,style={minimum width=80mm}]     {base()};
-    \node (inner)   [stackframe,above=of main,style={minimum width=80mm}]      {middle\_function()};
+    \node (inner)   [stackframe,fill=orange!30,above=of main,style={minimum width=80mm}]      {middle\_function()};
     \node (await)   [stackframe,above=of inner,fill=co_awaitable,style={minimum width=80mm}]   {Async::await\_resume()};
   \end{tikzpicture}
   \end{center}
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{call stack for resuming with symmetric transfer; base is frozen; inner above;}
@@ -1785,10 +1917,11 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \end{itemize}
   }
 \end{frame}
+\fi
 
 \begin{frame}[fragile]
   \frametitle{Resuming the innermost coroutine}
-  
+
   \begin{tikzpicture}[node distance = 0mm and 5mm,
     point/.style={circle,inner sep=0pt,minimum size=0pt,fill=black!100},
     memcell/.style={rectangle,minimum size=6mm,minimum width=26mm,thick,draw=black!80,font=\ttfamily},
@@ -1808,7 +1941,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
     \node (self1)   [memcell,below=of func1,style={minimum width=33mm}]  { self };
     \node (promise1)   [memcell,below=of self1,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller1)   [memcell,below=of promise1]  { my\_caller };
-    
+
     \node (func2) [memcell,right=of func1,shift={(1ex,0)},style={minimum width=43mm}]  { Async<PartialResult> };
     \filldraw[green, opacity=0.3][] (func2.south west)
         -- (func2.south east)
@@ -1821,7 +1954,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
     \node (self2)   [memcell,below=of func2,,style={minimum width=43mm}]  { self };
     \node (promise2)   [memcell,below=of self2,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller2)   [memcell,below=of promise2]  { my\_caller };
-    
+
     \node (func3) [memcell,right=of func2,shift={(1ex,0)},style={minimum width=30mm}]  { Async<Result> };
     \filldraw[green, opacity=0.3][] (func3.south west)
         -- (func3.south east)
@@ -1847,7 +1980,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
     \only<2>{\node (quest)  [left=of self1,shift={(0ex,4.5ex)}] {???};}
     \only<2>{\draw[line width=0.5mm, black!80] (quest.south) edge[->] (self1.west);}
   \end{tikzpicture}
-  
+
   \note{
   \color{green}{TIME!}
   \begin{itemize}
@@ -1901,6 +2034,37 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   }
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Where does the scheduler come from?}
+
+  \begin{onlyenv}<1>
+  \begin{lstlisting}[style=cpp20]
+Async<IoResult> inner_function() {
+  auto data = co_await async_io(scheduler, ...);
+  /* ... */
+}
+
+int main() {
+  (*@\color{red}{Scheduler scheduler@*);
+  spawn_task((*@\color{red}{scheduler@*));
+}
+  \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<2>
+  \begin{lstlisting}[style=cpp20]
+Async<IoResult> inner_function((*@\color{red}{Scheduler\& scheduler}@*)) {
+  auto data = co_await async_io(scheduler, ...);
+  /* ... */
+}
+
+int main() {
+  Scheduler scheduler;
+  spawn_task(scheduler);
+}
+  \end{lstlisting}
+  \end{onlyenv}
+\end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Passing data from the outside in}
@@ -1913,7 +2077,7 @@ struct (*@\danch(ar290)@*)Async(*@\danch(br290)@*) { /* ... */
 
     std::coroutine_handle<> my_child;
   };
-  
+
   void await_suspend(std::coroutine_handle<promise_type> h) {
     self.promise().my_caller = h;
 
@@ -1930,7 +2094,7 @@ struct (*@\danch(ar290)@*)Async(*@\danch(br290)@*) { /* ... */
     std::coroutine_handle<> my_caller;
     std::coroutine_handle<> my_child;
   };
-  
+
   void await_suspend(std::coroutine_handle<promise_type> h) {
     self.promise().my_caller = h;
     h.promise().my_child = self;
@@ -1947,7 +2111,7 @@ struct (*@\danch(ar290)@*)Async(*@\danch(br290)@*) { /* ... */
     std::coroutine_handle<> my_caller;
     std::coroutine_handle<> my_child;
   };
-  
+
   void await_suspend(std::coroutine_handle<(*@\color{red}{promise\_type}@*)> h) {
     self.promise().my_caller = h;
     h.promise().my_child = self;
@@ -1956,7 +2120,7 @@ struct (*@\danch(ar290)@*)Async(*@\danch(br290)@*) { /* ... */
   \end{lstlisting}
   \monobox[green](ar290:br290)
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{our Async awaitable; we have the link to caller}
@@ -1965,6 +2129,7 @@ struct (*@\danch(ar290)@*)Async(*@\danch(br290)@*) { /* ... */
   \end{itemize}
   }
 \end{frame}
+
 
 \begin{frame}[fragile]
   \frametitle{Handling different promise types}
@@ -1997,21 +2162,20 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
 
 \begin{frame}[fragile]
   \frametitle{Spawning up a stack of nested lazy tasks}
-  
+
   \begin{onlyenv}<1>
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar280)@*)Async(*@\danch(br280)@*) { /* ... */
+template<typename T> struct (*@\danch(ar280)@*)Async(*@\danch(br280)@*) { /* ... */
   struct promise_type { /* ... */
     std::suspend_always initial_suspend() { return {}; }
   };
 (*@\danch(ar281)@*)};
-
 Async<PartialResult> middle_function();
 
 
 
 Async<Result> outer_function();
+
 
 
 .
@@ -2020,28 +2184,27 @@ Async<Result> outer_function();
   \end{onlyenv}
   \begin{onlyenv}<2->
   \begin{lstlisting}[style=cpp20]
-template<typename T>
-struct (*@\danch(ar280)@*)Async(*@\danch(br280)@*) { /* ... */
+template<typename T> struct (*@\danch(ar280)@*)Async(*@\danch(br280)@*) { /* ... */
   struct promise_type { /* ... */
     std::suspend_always initial_suspend() { return {}; }
   };
 (*@\danch(ar281)@*)};
-
 Async<PartialResult> middle_function() {
   IoResult r = co_await inner_function();
   co_return PartialResult::from_io_result(r);
 }
 Async<Result> outer_function() {
 (*@\danch(ar282)@*)  PartialResult r = co_await middle_function();
-(*@\danch(ar283)@*)  return Result::from_partial_result(r);
+(*@\danch(ar283)@*)  co_return Result::from_partial_result(r);
 }
+.
   \end{lstlisting}
   \mixedbox(ar280:br280)
   \only<3>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar282.north) -- ([shift={(1em,0.25em)}]ar282.north);}
   \only<4>{\tikz[transform shape,overlay] \node (pause) [darkred,above right=of ar283,shift={(65ex,-5ex)}] { \includegraphics[height=.15\textheight]{corogfx/icon_pause.png} };}
-  \only<5>{\tikz[transform shape,overlay] \node (quest) [darkred,below=of ar281] {???};}
+  \only<5>{\tikz[transform shape,overlay] \node (quest) [darkred,below=of ar281,shift={(0ex,2.5ex)}] {???};}
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{this helps with another problem: spawning lazy tasks; we initial suspend always}
@@ -2055,7 +2218,7 @@ Async<Result> outer_function() {
 
 \begin{frame}[fragile]
   \frametitle{Symmetric transfer to the rescue}
-  
+
   \begin{onlyenv}<1>
   \begin{lstlisting}[style=cpp20]
 template<MyPromiseConcept OtherPromise_T>
@@ -2079,7 +2242,7 @@ template<MyPromiseConcept OtherPromise_T>
   \monobox[indigo](ar287:br287)
   \monobox[indigo](ar288:br288)
   \end{onlyenv}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{closer look at suspend; what are the handles again?}
@@ -2090,7 +2253,8 @@ template<MyPromiseConcept OtherPromise_T>
 
 \begin{frame}[fragile]
   \frametitle{Symmetric transfer to the rescue}
-  
+%  @todo needs more detail
+
   \begin{lstlisting}[style=cpp20]
 Async<PartialResult> middle_function() {
 (*@\danch(ar281)@*)  IoResult r = co_await inner_function();
@@ -2098,7 +2262,7 @@ Async<PartialResult> middle_function() {
 }
 Async<Result> outer_function() {
 (*@\danch(ar282)@*)  PartialResult r = co_await middle_function();
-(*@\danch(ar283)@*)  return Result::from_partial_result(r);
+(*@\danch(ar283)@*)  co_return Result::from_partial_result(r);
 }
   \end{lstlisting}
 
@@ -2106,7 +2270,7 @@ Async<Result> outer_function() {
   \only<2>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar281.north) -- ([shift={(1em,0.25em)}]ar281.north);}
   %\only<3>{\tikz[transform shape,overlay] \node (pause) [darkred,above right=of ar283,shift={(65ex,6ex)}] { \includegraphics[height=.15\textheight]{corogfx/icon_pause.png} };}
   \only<2>{\tikz[transform shape,overlay] \node (pause) [darkred,above right=of ar283,shift={(65ex,-5ex)}] { \includegraphics[height=.15\textheight]{corogfx/icon_pause.png} };}
-  
+
   \note{
   \begin{itemize}
   \item \alert<+>{execute again}
@@ -2120,11 +2284,17 @@ Async<Result> outer_function() {
   \frametitle{Passing a scheduler along}
   
   \begin{onlyenv}<1>
+  \begin{center}
+  \includegraphics[height=.9\textheight]{corogfx/path_in_010.png}
+  \end{center}
+  \end{onlyenv}
+
+  \begin{onlyenv}<2>
   \begin{lstlisting}[style=cpp20]
 struct promise_type { /* ... */
   Scheduler* scheduler;
 };
-  
+
 
 
 
@@ -2135,17 +2305,17 @@ struct promise_type { /* ... */
   \end{lstlisting}
   \end{onlyenv}
 
-  \begin{onlyenv}<2>
+  \begin{onlyenv}<3>
   \begin{lstlisting}[style=cpp20]
 struct promise_type { /* ... */
   Scheduler* scheduler;
 };
-  
+
 template<MyPromiseConcept OtherPromise_T>
 void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
   self.promise().my_caller = h;
   h.promise().my_child = self;
-  
+
   (*@\danch(ar288)@*)self.promise()(*@\danch(br288)@*).scheduler = (*@\danch(ar289)@*)h.promise()(*@\danch(br289)@*).scheduler;
 }
   \end{lstlisting}
@@ -2153,6 +2323,8 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
   \monobox[orange](ar289:br289)
   \end{onlyenv}
 \end{frame}
+
+%\fi % !!!!!!!!!!!!!!
 
 
 \begin{frame}[fragile]
@@ -2178,7 +2350,7 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
     \node (promise1)   [memcell,below=of self1,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller1)   [memcell,below=of promise1]  { my\_caller };
     \node (callee1)   [memcell,below=of caller1,text=black!40]  { my\_child };
-    
+
     \node (func2) [memcell,right=of func1,shift={(3ex,0)},style={minimum width=43mm}]  { Async<PartialResult> };
     \filldraw[green, opacity=0.3][] (func2.south west)
         -- (func2.south east)
@@ -2192,7 +2364,7 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
     \node (promise2)   [memcell,below=of self2,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller2)   [memcell,below=of promise2]  { my\_caller };
     \node (callee2)   [memcell,below=of caller2]  { my\_child };
-    
+
     \node (func3) [memcell,right=of func2,shift={(3ex,0)},style={minimum width=30mm}]  { Async<Result> };
     \filldraw[green, opacity=0.3][] (func3.south west)
         -- (func3.south east)
@@ -2215,7 +2387,7 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
     \draw[line width=0.5mm, black!80] (caller1.east) edge[->] (promise2.west);
     \draw[line width=0.5mm, black!80] (caller2.east) edge[->] (promise3.west);
     \draw[line width=0.5mm, black!80] (caller3.east) edge[->] (dotdot.west);
-    
+
     \draw[line width=0.5mm, black!80] (callee3.west) edge[->] (promise2.east);
     \draw[line width=0.5mm, black!80] (callee2.west) edge[->] (promise1.east);
   \end{tikzpicture}
@@ -2224,7 +2396,7 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
 \iffalse % @todo
 \begin{frame}[fragile]
   \frametitle{Terminating the \texttt{Async<>} chain}
-  
+
   \begin{lstlisting}[style=cpp20]
 (*@\danch(ar290)@*)Async<Result>(*@\danch(br290)@*) outer_function();
 
@@ -2239,7 +2411,7 @@ int main() {
 
 \begin{frame}[fragile]
   \frametitle{Terminating the \texttt{Async<>} chain}
-  
+
   \begin{lstlisting}[style=cpp20]
 template<typename T>
 void invoke_async_function(Async<T>& f) {
@@ -2255,15 +2427,17 @@ int main() {
 \end{frame}
 \fi
 
+
 \begin{frame}
   \frametitle{The call stack is now just another data structure}
+%  @todo more diagrams
 
   \begin{onlyenv}<1>
   \begin{center}
   \begin{tikzpicture}[node distance = 0mm and 5mm,
     memcell/.style={rectangle,minimum size=6mm,minimum width=60mm,thick,draw=black!80,font=\ttfamily},
    ]
-    \node (promise2)   [memcell,below=of self2,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
+    \node (promise2)   [memcell,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller2)   [memcell,below=of promise2]  { my\_caller };
     \node (callee2)   [memcell,below=of caller2]  { my\_child };
   \end{tikzpicture}
@@ -2274,7 +2448,7 @@ int main() {
   \begin{tikzpicture}[node distance = 0mm and 5mm,
     memcell/.style={rectangle,minimum size=6mm,minimum width=60mm,thick,draw=black!80,font=\ttfamily},
    ]
-    \node (promise2)   [memcell,below=of self2,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
+    \node (promise2)   [memcell,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller2)   [memcell,below=of promise2]  { my\_caller };
     \node (callee2)   [memcell,below=of caller2]  { std::vector<> my\_children };
   \end{tikzpicture}
@@ -2285,7 +2459,7 @@ int main() {
   \begin{tikzpicture}[node distance = 0mm and 5mm,
     memcell/.style={rectangle,minimum size=6mm,minimum width=60mm,thick,draw=black!80,font=\ttfamily},
    ]
-    \node (promise2)   [memcell,below=of self2,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
+    \node (promise2)   [memcell,shift={(0ex,-5ex)}, fill={rgb,255:red,255; green,180; blue,180}]  { promise\_type };
     \node (caller2)   [memcell,below=of promise2]  { std::vector<> my\_parents };
     \node (callee2)   [memcell,below=of caller2]  { std::vector<> my\_children };
   \end{tikzpicture}
@@ -2295,7 +2469,7 @@ int main() {
 
 \begin{frame}
   \frametitle{C++ Coroutines - Evaluation}
-  
+
   \begin{itemize}
   \item Even more efficient than green threads
   \item Extremely flexible (as we shall see).
@@ -2303,13 +2477,13 @@ int main() {
   \item Building intuition is harder than with green threads, but maybe easier than callback-based async APIs
   \item Debugging experience benefits greatly from special tool support
   \end{itemize}
-  
+
   \note{ \color{green}{TIME!} }
 \end{frame}
 
 \begin{frame}
   \frametitle{Conclusion}
-  
+
   \begin{itemize}
   \item Coroutines allow for extremely powerful manipulation of control flow between functions
   \item To achieve best results, there should be some amount of uniformity between coroutine types
@@ -2349,7 +2523,7 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
   void await_resume(); 
 };
 \end{lstlisting}
-  
+
   %\tikz[overlay]\filldraw[green, opacity=0.3] ([shift={(0,-0.5ex)}]ar101) rectangle ([shift={(0,2ex)}]br101);
   \tikz[overlay]\filldraw[green, opacity=0.3]
   ([shift={(0,2ex)}]br101.center)
@@ -2363,7 +2537,7 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
     -- ([shift={(0,2ex)}]br101.center)
     -- cycle
     ;
-    
+
   %\tikz[overlay]\filldraw[red, opacity=0.3] ([shift={(0,-0.5ex)}]cr101) rectangle ([shift={(0,2ex)}]dr101);
   \mixedbox(cr101:dr101)
 \end{frame}
@@ -2388,7 +2562,6 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
     -- cycle
     ;
 \end{frame}
-
 \fi
 
 \begin{frame}

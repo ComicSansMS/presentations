@@ -65,10 +65,10 @@
 
 \title{Amortized $\mathcal{O}(1)$ Complexity}
 \author{Andreas Weis}
-\institute{Woven by Toyota}
+\institute{}
 
-\date{Cpp North 2023}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/cppnorth_logo.png}}
+\date{CppCon 2024}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/cppcon.png}}
 
 \iffalse
 \fi
@@ -590,7 +590,7 @@
   \begin{itemize}
   \item Let's say I have a vector with a lot of zeroes and one element that I'm interested in
   \item and I want to use a filter view to get to that element.
-  \item Calling \texttt{begin()} on the filter obviously has linear complexity, as I need to iterate through all the zeroes that I want to filter out.
+  \item Calling \texttt{begin()} on the filter obviously has linear worst case complexity, as I need to iterate through all the zeroes that I want to filter out.
   \end{itemize}
   }
 \end{frame}
@@ -736,21 +736,11 @@
   
   \note{
   \begin{itemize}
-  \item "But wait!" - I hear you say. Complexity is only about the asymptotic case,
-  \item so we don't care about a single operation.
-  \item Well, no. You see, the asymptotic part here refers to the length of the input.
+  \item \alert<+>{"But wait!" - I hear you say. Complexity is only about the asymptotic case,}
+  \item \alert<+>{so we don't care about a single operation.}
+  \item \alert<+>{Well, no. You see, the asymptotic part here refers to the length of the input.}
   \item For the amortized analysis to be valid, the upper bound has to hold for all possible sequences of operations, even the ones that only consist of a single operation.
   \end{itemize}
-  }
-\end{frame}
-
-\begin{frame}
-  \begin{center}
-  \includegraphics[height=.9\textheight]{amortizedgfx/that_word.jpg}
-  \end{center}
-  
-  \note{
-  So, yeah...
   }
 \end{frame}
 
@@ -762,7 +752,7 @@
   \end{center}
   
   \note{
-  These two are not the same, despite what the standard claims.
+  So remember: These two are not the same, despite what the standard claims.
   }
 \end{frame}
 

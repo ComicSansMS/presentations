@@ -68,10 +68,10 @@
 
 \title{C++ Modules - Getting Started Today}
 \author{Andreas Weis}
-\institute{Woven by Toyota}
+\institute{}
 
-\date{ACCU 2024}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/accu2024_logo.png}}
+\date{Meeting C++ 2024}
+%\titlegraphic{\includegraphics[height=.15\textheight]{resources/accu2024_logo.png}}
 
 \iffalse
 Modules have been one of the most highly anticipated features of C++20. Unfortunately, it was also the language feature that took the longest to become widely available for developers to use. This year for the first time we see broad support for the feature in all major compilers and mainstream build system support through CMake. The goal of this talk is to provide you with all the basic knowledge to allow you getting started with C++20 modules today.
@@ -106,21 +106,6 @@ Wrapup                  2 (0:55)
 
 \begin{document}
 
-% cover slide
-{ % all template changes are local to this group.
-    \setbeamertemplate{navigation symbols}{}
-    \begin{frame}<article:0>[plain]
-        \begin{tikzpicture}[remember picture,overlay]
-            \node[at=(current page.center)] {
-                \includegraphics[keepaspectratio,
-                                 width=\paperwidth,
-                                 height=\paperheight]{modulesgfx/titlecard_accu.png}
-            };
-        \end{tikzpicture}
-     \end{frame}
-}
-\addtocounter{framenumber}{-1}
-
 \frame{\titlepage}
 
 \iftrue %crop
@@ -150,10 +135,9 @@ Wrapup                  2 (0:55)
 
     %\item \href{https://twitter.com/DerGhulbus/}{\includegraphics[height=.05\textheight]{resources/twitter-icon.png} @DerGhulbus}
 
-    \item \includegraphics[height=.05\textheight]{resources/meetup-icon.png} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
+    \item \href{mailto:cpp@andreas-weis.net}{\includegraphics[height=.06\textheight]{resources/email-icon.png} cpp@andreas-weis.net}
 
-    \item Currently working as a Vehicle Architect for Woven by Toyota \includegraphics[height=.1\textheight]{resources/woven_toyota_logo.png}
-
+    \item \href{https://www.meetup.com/MUCplusplus/}{\includegraphics[height=.05\textheight]{resources/meetup-icon.png}} Co-organizer of the \href{https://www.meetup.com/MUCplusplus/}{Munich C++ User Group}
   \end{itemize}
 \end{frame}
 
@@ -322,15 +306,6 @@ int main() {
   }
 \end{frame}
 
-\iffalse
-\begin{frame}
-  \frametitle{Before we dive into modules...}
-
-  \begin{center}
-  \huge{Disclaimer}
-  \end{center}
-\end{frame}
-\fi
 
 \begin{frame}[fragile]
   \frametitle{Hello Modules!}
@@ -365,11 +340,11 @@ int main() {
   \note{
     \textbf{TIMECHECK}: 0:05
     \begin{itemize}
-      \item Let's see how modules solve all these problems.
+      \item Modules will address all of these problems. More structured than textual inclusion.
       \item This is a simple module providing just one function.
-      \item Module starts with export declaration. Module name is given here. Name can be different from filename.
+      \item Module starts with module declaration. This signifies that TU is a module. Module name is given here. Name can be different from filename. Export declarations for exported things.
       \item The client side
-      \item import pulls in the module. Module name needs to be unique. Module does not introduce a namespace!
+      \item import pulls in the module. Module name needs to be unique. Module does not introduce a namespace! Client only sees exported things!
     \end{itemize}
   }
 \end{frame}
@@ -489,7 +464,7 @@ int main() {
   \note{
   We can export
   \begin{itemize}
-  \item Other modules. export import looks weird but makes sense.
+  \item Other modules. export import looks weird but makes sense. Must come before other exports.
   \item Client can access things as if part of the exporting module.
   \end{itemize}
   }
@@ -501,7 +476,7 @@ int main() {
   --- \textit{File:} \texttt{module.cpp}
   \begin{lstlisting}[style=cpp20]
 export module m;
-class NotExported { int i = 42; };
+struct NotExported { int i = 42; };
 export NotExported getNotExported()
 { return {}; }
   \end{lstlisting}
@@ -541,6 +516,7 @@ auto getS()
   \frametitle{Different shapes of modules}
   \note{
   \textbf{TIMECHECK}: 0:15
+  Presented in order of usefulness. This list is incomplete.
   }
 \end{frame}
 
@@ -647,7 +623,7 @@ export void take_over_the_world() {}
     \item Partitions can be interface or implementation
     \item Implementation would be without export
   \end{itemize}
-  \item Everyone in \texttt{mice} can see the SecretMasterplan
+  \item Everyone in \texttt{mice} can see the SecretMasterplan!
   \begin{itemize}
     \item But clients can not
     \item What happens if Pinky also has a SecretMasterplan?
@@ -721,7 +697,7 @@ target_include_directories(my_executable PUBLIC
   \frametitle{Building with CMake - File Sets (since v3.23)}
 
   \begin{lstlisting}[style=cmake]
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.23)
 project(my_project)
 
 add_executable(my_executable)
@@ -760,7 +736,6 @@ target_sources(my_executable PUBLIC
     ${PROJECT_SOURCE_DIR}/my_src.cpp
   PUBLIC
   (*@\tmrk{a010}{}@*)FILE_SET CXX_MODULES(*@\tmrk{b010}{}@*)
-  (*@\tmrk{a011}{}@*)BASE_DIRS(*@\tmrk{b011}{}@*) ${PROJECT_SOURCE_DIR}/mod
   (*@\tmrk{a012}{}@*)FILES(*@\tmrk{b012}{}@*)
     ${PROJECT_SOURCE_DIR}/mod/my_module.cpp
 )
@@ -777,6 +752,9 @@ target_sources(my_executable PUBLIC
   \end{itemize}
   }
 \end{frame}
+
+
+%todo Modularized std library
 
 \iffalse
 \begin{frame}[fragile]
@@ -812,11 +790,11 @@ set(CMAKE_EXPERIMENTAL_CXX_MODULE_CMAKE_API
   \frametitle{Use the latest tools!}
 
   \begin{itemize}
-  \item Absolute latest CMake (at least 3.28)
+  \item Absolute latest CMake (at least 3.28, at least 3.30 for \texttt{import std})
   \item Latest Visual Studio 2022 (at least toolset version 19.34)
   \item Ninja 1.11
-  \item Clang at least 17, prefer trunk
-  \item gcc trunk (will be part of gcc 14)
+  \item Clang at least 17, prefer 19
+  \item gcc at least 14, consider trunk
   \end{itemize}
 
   Even with the latest tools there are still plenty of bugs and inconsistent behavior between compilers!
@@ -864,7 +842,7 @@ $ g++ my_executable.o -o my_executable
   \end{lstlisting}
 
   \note{
-  \textbf{TIMECHECK}: 0:40
+  \textbf{TIMECHECK}: 0:30
   \begin{itemize}
   \item What's all this talk about build systems?
   \item We can just build from the command line!
@@ -896,7 +874,7 @@ $ g++ my_executable.o -o my_executable
 
 \begin{frame}[fragile]
   \frametitle{Old-school: Manual tracking}
-
+  
   Makefile
   \begin{lstlisting}
 my_src.o: my_src.cpp my_header1.hpp my_header2.hpp other.hpp
@@ -905,7 +883,7 @@ main.o: main.cpp main.hpp my_header1.hpp my_header2.hpp
 my_executable: main.o my_src.o
   $(CXX) -o my_executable main.o my_src.o
   \end{lstlisting}
-
+  
   \note{
   This is a full tree of dependencies. But I don't want to write the full tree, I want to give only a flat set and have the build system figure it out!
   }
@@ -1059,7 +1037,7 @@ target_sources(my_executable PUBLIC
 
   \note{
   \begin{itemize}
-  \item In CMake: Source Files are listed individually, instead of directory
+  \item In CMake: Source Files are listed individually, instead of include directory
   \begin{itemize}
     \item But still just a flat list, no structure
     \item We don't want to model dependencies manually!
@@ -1083,7 +1061,7 @@ target_sources(my_executable PUBLIC
   \includegraphics[height=.90\textheight]{modulesgfx/its_dangerous_to_go_alone.png}
   \end{center}
   \note{
-  \textbf{TIMECHECK}: 0:55
+  \textbf{TIMECHECK}: 0:45
   }
 \end{frame}
 
@@ -1214,7 +1192,7 @@ int the_answer() {
   return 42;
 }
   \end{lstlisting}
-
+  
   \begin{lstlisting}
 $ nm my_source.o
 0000000000000000 T _Z10the_answerv
@@ -1222,7 +1200,7 @@ $ c++filt _Z10the_answerv
 the_answer()
   \end{lstlisting}
   \end{onlyenv}
-
+  
   \begin{onlyenv}<2>
   \begin{lstlisting}[style=cpp20]
 namespace my_namespace {
@@ -1231,7 +1209,7 @@ namespace my_namespace {
   }
 }
   \end{lstlisting}
-
+  
   \begin{lstlisting}
 $ nm my_source.o
 0000000000000000 T _ZN12my_namespace10the_answerEv
@@ -1247,7 +1225,7 @@ int the_answer() {
   return 42;
 }
   \end{lstlisting}
-
+  
   \begin{lstlisting}[style=none]
 $ nm my_source.o
 0000000000000000 T _ZGIW9my_module
@@ -1466,39 +1444,6 @@ int main() {
   \end{center}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{External libraries}
-
-  How to deal with external libraries that are built on their own?
-  \cpause
-  \begin{itemize}
-  \item In addition to binaries, clients also need access to library BMIs
-  \cpause
-  \item BMIs are consumed by the compiler, not the linker - much less resilient to changes in build options
-  \cpause
-  \item Current best practice: Distribute BMI in source form. Move confidential parts to implementation files if they should not be redistributed
-  \cpause
-  \item BMI files only need to be compiled once! But need access to all headers.
-  \cpause
-  \item Build system needs to know the compatible build options for consuming the module. Tooling vendors are still working on this.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{External shared libraries}
-
-  \begin{itemize}
-  \item Shared libraries are not part of the ISO-148882 standard
-  \cpause
-  \item Module visibility is independent of shared library visibility
-  \cpause
-  \item Shared libraries are already linked on their own, dependent on the BMI that was used in the build process of the shared library
-  \cpause
-  \item The client application compiles its own BMI and links with that. The resulting binaries need to be compatible.
-  \cpause
-  \item Again, tools should ensure that all relevant constraints get propagated to the client automatically.\footnote{\href{https://crascit.com/2024/04/04/cxx-modules-cmake-shared-libraries/}{Craig Scott - C++20 Modules, CMake, And Shared Libraries}}
-  \end{itemize}
-\end{frame}
 
 \begin{frame}
   \frametitle{Conclusion}
@@ -1516,7 +1461,7 @@ int main() {
     \item Try it; Still bugs; Beware legacy
     \item Implementation opportunities!
   \end{itemize}
-  \textbf{TIMECHECK}: 0:70
+  \textbf{TIMECHECK}: 0:55
   }
 \end{frame}
 
@@ -1526,14 +1471,15 @@ int main() {
   \begin{itemize}
     \item \href{https://www.youtube.com/watch?v=Kqo-jIq4V3I}{Daniela Engert - Modules: The Beginner's Guide (Meeting C++ 2019)}
     \item \href{https://www.youtube.com/watch?v=nP8QcvPpGeM}{Daniela Engert - A Short Tour of C++ Modules (CppCon 2021)}
-    \item \href{https://www.youtube.com/watch?v=-p9lvvV8F-w}{Luis Caro Campos - C++20 Modules: The Packaging and Binary Redistribution Story (CppCon 2023)}
-    \item \href{https://www.youtube.com/watch?v=c563KgO-uf4}{Bill Hoffman - import CMake: 2023 State of C++20 modules in CMake (CppNow 2023)}
+    \item Bill Hoffman - import CMake: Mastering C++ Modules (CppCon 2024)
     \item \href{https://www.youtube.com/watch?v=IZXNsim9TWI}{Bret Brown - Modern CMake Modules (CppCon 2021)}
     \item \href{https://vector-of-bool.github.io/2019/03/10/modules-1.html}{vector-of-bool - Understanding C++ Modules (Blog post series)}
+    \item \href{https://en.cppreference.com/w/cpp/language/modules}{Modules on cppreference}
     \item \href{https://mathstuf.fedorapeople.org/fortran-modules/fortran-modules.html}{Boeckel, King, Maynard, Hoffman - How CMake supports Fortran modules and its applicability to C++ (WG21 D1483)}
   \end{itemize}
 \end{frame}
 
+% @todo: Bill's CppCon 2024 talk
 % @todo: Other modules talks
 
 \begin{frame}
@@ -1544,10 +1490,15 @@ int main() {
   \href{https://godbolt.org/z/Ea54d1Ta3}{https://godbolt.org/z/Ea54d1Ta3}
   \vspace{3em}
 
-  \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}}
+    \href{https://stackoverflow.com/users/577603/comicsansms}{\includegraphics[height=.05\textheight]{resources/so-icon.png}}
   \href{https://github.com/ComicSansMS}{\includegraphics[height=.05\textheight]{resources/github-icon.png}}
-  \includegraphics[height=.05\textheight]{resources/discord-icon.png} Andreas Weis
+  ComicSansMS /
+  \href{mailto:cpp@andreas-weis.net}{\includegraphics[height=.06\textheight]{resources/email-icon.png} cpp@andreas-weis.net}
+
+  \vspace{20em}
+
 \end{frame}
 
 
 \end{document}
+

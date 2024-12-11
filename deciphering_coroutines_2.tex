@@ -46,8 +46,8 @@
 \tikzstyle{every picture}+=[remember picture]
 
 \newif\ifnotes
-  \notesfalse
-%  \notestrue
+%  \notesfalse
+  \notestrue
 
 \ifnotes
 \usepackage{pgfpages}
@@ -121,8 +121,8 @@
 \author{Andreas Weis}
 %\institute{...}
 
-\date{CppCon 2024}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/cppcon.png}}
+\date{code::dive 2024}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/codedive_logo.png}}
 
 \iffalse
 Deciphering Coroutines - A Visual Approach
@@ -183,6 +183,7 @@ This talk is aimed at people who understand the basics of the coroutine language
 \fi
 
 \begin{document}
+\iffalse
 { % all template changes are local to this group.
     \setbeamertemplate{navigation symbols}{}
     \begin{frame}<article:0>[plain]
@@ -195,6 +196,7 @@ This talk is aimed at people who understand the basics of the coroutine language
         \end{tikzpicture}
      \end{frame}
 }
+\fi
 
 \frame{\titlepage}
 
@@ -222,13 +224,14 @@ This talk is aimed at people who understand the basics of the coroutine language
 \begin{frame}
   \frametitle{The story so far...}
 
+  Deciphering Coroutines Part 1 - code::dive 2022
   \begin{center}
-    \includegraphics[height=.95\textheight]{corogfx2/talk_deciphering_part1.jpg}
+    \href{https://www.youtube.com/watch?v=NV429-sI5Ew}{\includegraphics[height=.80\textheight]{corogfx2/talk_deciphering_part1_codedive.jpg}}
   \end{center}
 
   \note{
   \begin{itemize}
-  \item This is part 2 of a series of talks on coroutines. \\ This talk assumes that you are familiar with the contents of part 1, that is, you should now the basic mechanisms of the coroutine language mechanics. \\ If you are watching on YouTube and you have not seen part 1, go search for \textit{Deciphering Coroutines CppCon 2022} now and watch it before continuing here. \\ We will do a quick recap of part 1 now, but it will be very brief, so hang on tight.
+  \item This is part 2 of a series of talks on coroutines. \\ You can find part 1 from two years ago on Youtube. \\ This talk assumes that you are familiar with the contents of part 1, that is, you should know the basic mechanisms of the coroutine language mechanics. \\ We will do a quick recap of part 1 now, but it will be very brief, so hang on tight.
   \end{itemize}
   }
 \end{frame}
@@ -294,9 +297,9 @@ int main() {
 
   \note{
   \begin{itemize}
-    \item \alert<1>{The return type is just the return type of the coroutine function. When calling a coroutine for the first time, think of it as calling the factory function that produces the return object.}
+    \item \alert<1>{When calling a coroutine for the first time, think of it as calling the factory function that produces the return object.}
     \item \alert<1>{Notice how we cannot tell from the signature whether the function is a coroutine. This is different to most modern coroutine implementations in other languages, as we will see later. *** TRANSITION***}
-    \item \alert<2>{Since C++23 we have one return type in the standard library: std::generator}
+    \item \alert<2>{Since C++23 we have one coro ret type provided by the standard library: std::generator}
     \item \alert<2>{Generator allows us to yield values from the middle of a function  *** TRANSITION***}
     \item It implements the range concept, so anything that works with ranges can consume the values from the generator
     \item If you don't see how this is useful, try implementing an iterator that traverses a complex data structure like a tree or a graph. You will see it is surprisingly difficult and coroutines make it much easier.
@@ -348,7 +351,9 @@ struct (*@\danch(ar100)@*)ReturnType(*@\danch(br100)@*) / std::coroutine_traits<
 
   \note{
   \begin{itemize}
-    \item This was our cheat sheet for the \texttt{promise\_type} from part 1. For time's sake, I will not go through it again, but we will come back to parts of it during this talk.
+    \item Unlike with the return type, which we can implement however we want, the standard lays out which functions need to be provided by a promise.
+    \item We implement each of those functions ourselves and the compiler will call them at the appropriate point during a coroutine's execution.
+    \item Note that we won't be calling any of those functions directly from user code.
   \end{itemize}
   }
 \end{frame}
@@ -362,8 +367,7 @@ struct (*@\danch(ar100)@*)ReturnType(*@\danch(br100)@*) / std::coroutine_traits<
 
   \note{
   \begin{itemize}
-    \item The last piece of the puzzle is the awaitable. An awaitable is a type that we can call \texttt{co\_await} on, which is the operation that thriggers suspension.
-    \item It is also a compiler facing interfaces and customizes what happens when a coroutine is suspended or wakes up.
+    \item Finally, there's the awaitable. An awaitable is a type that we can use as an argument to operator \texttt{co\_await} on, which is the operation that thriggers suspension from within a running coroutine.
   \end{itemize}
   }
 \end{frame}
@@ -385,7 +389,8 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
 
   \note{
   \begin{itemize}
-    \item This was our cheat sheet from Part 1. Again, we will not revisit the details for time's sake.
+    \item Like the promise, this is a compiler-facing interface and will not be called from user code.
+    \item The functions of the Awaitable customize what happens when a coroutine is suspended or wakes up.
   \end{itemize}
   }
 \end{frame}
@@ -400,8 +405,8 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
 
   \note{
   \begin{itemize}
-    \item Finally, we looked at how these three parts are connected.
-    \item In particular, we saw how the promise type can be used to store data that is passed between the coroutine and its caller.
+    \item And here we can see how these three parts are connected. We established this cheat sheet in part 1 to help us visualize how the different parts interact.
+    \item In particular, note how the promise type sits at a central position between caller and coroutine context. It can be used to store data that is passed between the two.
   \end{itemize}
   }
 \end{frame}
@@ -420,7 +425,6 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
     \item You can find a copy of the entire cheat sheet here. I will leave this up for a second to give you time to scan the QR code if you want to use the cheat sheet to follow along later.
     \item Why am I back now with a part 2? At the end of part 1 I said we now understand all of the boring parts and can start focussing on the interesting stuff.
     \item This talk is about an interesting use case that is of particular prominence, namely asynchronous computation. Other languages have dedicated language features for this. C\#, Python, Javascript, Rust, and others all have async/await. We will see in this talk how we can implement async/await with C++20 coroutines and how it behaves different from those languages.
-    \item I will not have much time to motivate why async/await is useful in the first place. If you don't know it from other languages and are still skeptical, check out Boost.Asio's documentation and look at the examples for the different paradigms. Start with the blocking echo client/server, then look at the different variations of the async echo client/server through C++11,14,17,20
   \end{itemize}
   }
 \end{frame}
@@ -434,7 +438,8 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
 
   \note{
   \begin{itemize}
-  \item Andrzej gave a great talk focusing exclusively on motivating exactly this use case for coroutines at code::dive 2023. Definitely check it out, it did not get the attention it deserves.
+  \item I will not have the time here to motivate why async/await is useful in the first place. If you don't know it from other languages and are still skeptical...
+  \item Andrzej gave a great talk focusing exclusively on motivating exactly this use case for coroutines at code::dive 2023.
   \end{itemize}
   }
 \end{frame}
@@ -525,7 +530,7 @@ IoResult inner_function() {
 
   \note{
   \begin{itemize}
-  \item \alert<+>{inner\_function will take a long time. Blocking I/O will prevent program from doing useful work.}
+  \item \alert<+>{Blocking I/O will prevent program from doing useful work.}
   \item ***TRANSITION***
   \item \alert<+>{Main thread can not do any useful while we are waiting. But what if we could suspend them...}
   \item ***TRANSITION***
@@ -770,15 +775,15 @@ IoResult inner_function() {
 
   \begin{itemize}
   \item Stackless
-  \item We can only suspend one function at a time
-  \item If we want to suspend a computation spanning multiple functions, we need to suspend them all one by one
   \cpause
   \item \alert{Goal: Suspend execution context larger than a single function}
   \end{itemize}
   \note{
-  \color{green}{TIME!} \color{black}{0:15}
+  \color{green}{TIME!} \color{black}{0:10}
+  Can we implement something like this with C++ coroutines?
   \begin{itemize}
-  \item items
+  \item We can only suspend one function at a time
+  \item If we want to suspend a computation spanning multiple functions, we need to suspend them all one by one
   \item ***TRANSITION*** goal for the talk: suspend whole execution context
   \end{itemize}
   }
@@ -818,6 +823,7 @@ IoResult inner_function() {
   \only<4>{ \tikz\fill[fill=red!40!green!100](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle; }
 
   \note{
+  \textit{Introduce coroutine primitives}
   \begin{itemize}
   \item \alert<+>{starting from the inner function we had before...}
   \item \alert<+>{***TRANSITION*** add co\_await/co\_return}
@@ -865,9 +871,10 @@ PartialResult middle_function() {
   \end{onlyenv}
 
   \note{
+  \textit{Motivating Async dual role}
   \begin{itemize}
   \item \alert<+>{one level up the call stack}
-  \item \alert<+>{***TRANSITION*** again, co\_await + change return type}
+  \item \alert<+>{***TRANSITION*** again, co\_await + change return type; let's zoom in on the call to inner}
   \item \alert<+>{***TRANSITION*** co\_await actually awaits on the Async returned from inner}
   \item ***TRANSITION*** Async plays two roles now
   \end{itemize}
@@ -1023,21 +1030,21 @@ int main() {
   \note{
   \begin{onlyenv}<1-8>
   \begin{itemize}
-  \item \alert<+>{let's look at the interface for resuming such nested tasks}
-  \item \alert<+>{***TRANSITION*** some special function on return obj to resume outer from main}
-  \item \alert<+>{***TRANSITION*** let's step through what we have so far: inner suspends from i/o}
-  \item \alert<+>{***TRANSITION*** leaving middle; it co\_awaits Async}
-  \item \alert<+>{***TRANSITION*** entering await\_suspend}
-  \item \alert<+>{***TRANSITION*** and is popped from the call stack}
-  \item \alert<+>{***TRANSITION*** outer enters await\_suspend}
-  \item \alert<+>{***TRANSITION*** and disappears}
+  \item \alert<+>{let's look at what happens when suspending nested tasks}
+  \item \alert<+>{***TRANSITION*** main calls the outermost functions}
+  \item \alert<+>{***TRANSITION*** we build up the call stack until inner suspends on the blocking i/o}
+  \item \alert<+>{***TRANSITION*** and then the functions}
+  \item \alert<+>{***TRANSITION*** suspend one by one}
+  \item \alert<+>{***TRANSITION*** dropping off}
+  \item \alert<+>{***TRANSITION*** the call stack}
+  \item \alert<+>{***TRANSITION*** until we're back in main}
   \item   ...
   \end{itemize}
   \end{onlyenv}
   \begin{onlyenv}<8->
   \begin{itemize}
   \item ***TRANSITION*** we now left outer func; main can do other work
-  \item ***TRANSITION*** main resumes
+  \item ***TRANSITION*** main requests to resume the tasks
   \item ***TRANSITION*** await resume is called
   \item ***TRANSITION*** outer function resumed
   \item ***TRANSITION*** and so on until we have all the functions back; everyone happy?
@@ -1117,8 +1124,7 @@ int main() {
 
   \note{
   \begin{itemize}
-  \item \alert<+>{let's take a closer look}
-  \item \alert<+>{***TRANSITION*** in outer func, we call middle}
+  \item \alert<+>{let's take a closer look; in outer func, we call middle}
   \item \alert<+>{***TRANSITION*** this returns us an awaitable}
   \item \alert<+>{***TRANSITION*** when awaiting it we call await\_suspend}
   \item \alert<+>{***TRANSITION*** and then outer is paused}
@@ -1197,7 +1203,7 @@ int main() {
    \end{onlyenv}
 
   \note{
-    \color{green}{TIME!} \color{black}{0:25}
+    \color{green}{TIME!} \color{black}{0:20}
     \begin{itemize}
     \item what is a call stack anyway?
     \item ***TRANSITION*** function state between rsp and rbp
@@ -1236,14 +1242,13 @@ int main() {
     \draw[line width=0.5mm, black!80] (fp3.east) edge[->] (dotdot.west);
   \end{tikzpicture}
 
-  \cpause
   \vspace{3em}
   $\Rightarrow$ Singly-linked list of stack frames with links from callee-frame to caller-frame.
 
   \note{
   \begin{itemize}
   \item linked list
-  \item ***TRANSITION*** text saying linked list; how do we build something like this with coroutines?
+  \item how do we build something like this with coroutines?
   \end{itemize}
   }
 \end{frame}
@@ -1278,6 +1283,7 @@ Async<PartialResult> (*@\danch(ar246)@*)middle_function()(*@\danch(br246)@*) {
   }
 \end{frame}
 
+\iffalse
 \begin{frame}[fragile]
   \frametitle{A look at the cheat sheet...}
 
@@ -1294,6 +1300,7 @@ Async<PartialResult> (*@\danch(ar246)@*)middle_function()(*@\danch(br246)@*) {
   \end{itemize}
   }
 \end{frame}
+\fi
 
 \begin{frame}[fragile]
   \frametitle{Setting up the \texttt{Async} object}
@@ -1377,7 +1384,6 @@ template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 
 
 
-
 };
 
 .
@@ -1412,9 +1418,10 @@ template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
   \fi
 
   \note{
+  \textit{Two roles separated; first return}
   \begin{itemize}
   \item \alert<+>{first the return object perspective}
-  \item \alert<+>{***TRANSITION*** we add a handle to ourself}
+  \item \alert<+>{***TRANSITION*** we add a handle to the inner coro}
   \item \alert<+>{***TRANSITION*** populating from get\_return\_object; standard stuff; handle is inner}
   \item ***TRANSITION*** that's all we can do for return obj
   \end{itemize}
@@ -1515,7 +1522,7 @@ template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 
   \note{
   \begin{itemize}
-  \item \alert<+>{switch to awaitable}
+  \item \alert<+>{switch to awaitable; this is the role in the outer function}
   \item \alert<+>{***TRANSITION*** we need the three funcs; note the handle in suspend}
   \item \alert<+>{***TRANSITION*** it's handle to outer; make sure people understand why}
   \item ***TRANSITION*** save outer handle
@@ -1583,7 +1590,7 @@ template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
     \draw[line width=0.5mm, black!80] (caller3.east) edge[->] (dotdot.west);
   \end{tikzpicture}
 
-  \note{ \color{green}{TIME!} \color{black}{0:35} }
+  \note{ \color{green}{TIME!} \color{black}{0:25} }
 \end{frame}
 
 
@@ -1898,7 +1905,7 @@ template<typename T> struct (*@\danch(ar271)@*)Async(*@\danch(br271)@*) {
   };
 };
 struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
-  auto await_suspend(coroutine_handle<promise_type> h) {
+  auto await_suspend((*@\danch(ar277)@*)coroutine_handle<promise_type> h(*@\danch(br277)@*)) {
     return h.promise().(*@\danch(ar276)@*)my_caller(*@\danch(br276)@*);
   }
 };
@@ -1907,6 +1914,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \monobox[green](ar274:br274)
   \monobox[orange](ar272:br272)
   \monobox[orange](ar276:br276)
+  \monobox[indigo](ar277:br277)
   
   \note{
   Overview slide
@@ -2039,7 +2047,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \end{tikzpicture}
 
   \note{
-  \color{green}{TIME!} \color{black}{0:45}
+  \color{green}{TIME!} \color{black}{0:30}
   \begin{itemize}
   \item \alert<+>{we have the chain}
   \item ***TRANSITION*** but who resumes the innermost?
@@ -2083,6 +2091,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \end{onlyenv}
 
   \note{
+  \textit{Motivate scheduler}
   \begin{itemize}
   \item \alert<+>{inner awaits on async\_io}
   \item \alert<+>{***TRANSITION*** but that function does not return Async!}
@@ -2124,7 +2133,8 @@ int main() {
   \note{
   \begin{itemize}
   \item \alert<+>{main wants to determine scheduler}
-  \item ***TRANSITION*** we can pass it along as a function argument; but this is annoying
+  \item ***TRANSITION*** we can pass it along as a function argument;
+  \item not nice: explicit argument, cannot be changed later
   \end{itemize}
   }
   
@@ -2179,11 +2189,13 @@ struct (*@\danch(ar290)@*)Async(*@\danch(br290)@*) { /* ... */
 
   void await_suspend(std::coroutine_handle<(*@\color{red}{promise\_type}@*)> h) {
     self.promise().my_caller = h;
-    self.promise().my_scheduler = h.promise().my_scheduler;
+    (*@\danch(ar291)@*)self.promise()(*@\danch(br291)@*).my_scheduler = (*@\danch(ar292)@*)h.promise()(*@\danch(br292)@*).my_scheduler;
   }
 }
   \end{lstlisting}
   \monobox[green](ar290:br290)
+  \monobox[indigo](ar291:br291)
+  \monobox[orange](ar292:br292)
   \end{onlyenv}
 
   \note{
@@ -2221,9 +2233,21 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
   \begin{itemize}
   \item template
   \item ***TRANSITION*** this is a concept; all promises need to be alike
-  \item There is a design space here for where we put the type erasure; type-erased handles can't get back the promise; we won't be covering this here.
   \end{itemize}
   }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{When do we need the scheduler?}
+  
+  \begin{lstlisting}[style=cpp20]
+Async<IoResult> inner_function() {
+  auto data = co_await async_io(/* scheduler */);
+  // ...
+}
+  \end{lstlisting}
+  
+  \note{Scheduler is not available because we did not \texttt{co\_await} yet.}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -2273,7 +2297,7 @@ Async<Result> outer_function() {
 
   \note{
   \begin{itemize}
-  \item \alert<+>{how doe we ensure the scheduler is there when we reach the first async io call? spawning lazy tasks; we initial suspend always; this ensures that when the body starts executing we already have the caller handle}
+  \item \alert<+>{how do we ensure the scheduler is there when we reach the first async io call? spawning lazy tasks; we initial suspend always; this ensures that when the body starts executing we already have the caller handle}
   \item \alert<+>{***TRANSITION*** now let's look at the functions}
   \item \alert<+>{***TRANSITION*** we start in outer}
   \item \alert<+>{***TRANSITION*** we suspend right away}
@@ -2310,6 +2334,7 @@ template<MyPromiseConcept OtherPromise_T>
   \end{onlyenv}
 
   \note{
+  This is co await in the caller.
   \begin{itemize}
   \item \alert<+>{closer look at suspend; what are the handles again?}
   \item ***TRANSITION*** self is handle to inner; we symmetric transfer to caller
@@ -2382,7 +2407,7 @@ Async<Result> outer_function() {
   }
 \end{frame}
 
-
+\iffalse
 \begin{frame}[fragile]
   \frametitle{Passing a scheduler along}
   
@@ -2425,13 +2450,16 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
   \monobox[indigo](ar288:br288)
   \monobox[orange](ar289:br289)
   \end{onlyenv}
+  
+  \note{ \color{green}{TIME!} \color{black}{0:40} }
 \end{frame}
 
+\fi
 
 \begin{frame}[fragile]
   \frametitle{But why stop at the scheduler?}
   
-  \begin{onlyenv}<1>
+  \begin{onlyenv}<2>
   \begin{lstlisting}[style=cpp20]
 struct promise_base {
   promise_base* my_caller;
@@ -2444,7 +2472,7 @@ template<typename T> struct Async { /* ... */
   \end{lstlisting}
   \end{onlyenv}
   
-  \begin{onlyenv}<2>
+  \begin{onlyenv}<3>
   \begin{lstlisting}[style=cpp20]
 template<typename T>
 concept MyPromise = std::derived_from<T, promise_base>;
@@ -2461,7 +2489,7 @@ template<typename T> struct Async { /* ... */
   \end{lstlisting}
   \end{onlyenv}
   
-  \begin{onlyenv}<3>
+  \begin{onlyenv}<4>
   \begin{lstlisting}[style=cpp20]
 struct promise_base {
   promise_base* my_caller;
@@ -2471,6 +2499,8 @@ struct promise_base {
 };
   \end{lstlisting}
   \end{onlyenv}
+  
+  \note { \color{green}{TIME!} \color{black}{0:40} }
 \end{frame}
 
 
@@ -2653,6 +2683,7 @@ int main() {
 \end{frame}
 \fi
 
+\iffalse
 \begin{frame}
   \frametitle{Conclusion}
 
@@ -2664,6 +2695,7 @@ int main() {
   \item The community needs more people looking at this, trying interesting things, and joining the conversation
   \end{itemize}
 \end{frame}
+\fi
 
 \iffalse
 
@@ -2737,17 +2769,10 @@ struct (*@\danch(ar101)@*)Awaitable(*@\danch(br101)@*) {
 \fi
 
 \begin{frame}
-  \frametitle{References}
+  \frametitle{Acknowledgements}
   Thanks to Lewis Baker and Mateusz Pusz for valuable feedback and discussions on this talk. Any remaining mistakes are my own.
-
-  \vspace{15pt}
-  Other related talks at CppCon 2024:
-  \begin{itemize}
-    \item Dietmar Kühl - Creating a Sender/Receiver HTTP Server
-    \item Ian Petersen, Jessica Wong - How Meta Made Debugging Async Code Easier with Coroutines and Senders
-    \item Dmitry Prokoptsev - Coroutines and Structured Concurrency in Practice
-    \item Michael Caisse - Sender Patterns to Wrangle Concurrency in Embedded Devices
-  \end{itemize}
+  
+  \note{ \color{green}{TIME!} \color{black}{0:45} }
 \end{frame}
 
 

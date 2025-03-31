@@ -4,8 +4,11 @@
 
 \usepackage{amsfonts}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{color}
+\usepackage{enumitem}
 \usepackage{listings}
+\usepackage{pifont}
 \usepackage{tikz}
 \usepackage{hyperref}
 \usepackage{marvosym}
@@ -115,14 +118,22 @@
 \definecolor{co_awaitable}{RGB}{179,255,179}
 \definecolor{indigo}{RGB}{75,0,130}
 
+\newlist{todolist}{itemize}{2}
+\setlist[todolist]{label=$\square$}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
+\hspace{-2.5pt}}
+\newcommand{\wontfix}{\rlap{$\square$}{\large\hspace{1pt}\xmark}}
 
-\title{Deciphering Coroutines - Part 2}
+
+\title{Deciphering C++ Coroutines -}
 \subtitle{Mastering Asynchronous Control Flow}
 \author{Andreas Weis}
 %\institute{...}
 
-\date{code::dive 2024}
-\titlegraphic{\includegraphics[height=.15\textheight]{resources/codedive_logo.png}}
+\date{ACCU 2025}
+\titlegraphic{\includegraphics[height=.15\textheight]{resources/accu_logo.png}}
 
 \iffalse
 Deciphering Coroutines - A Visual Approach
@@ -183,7 +194,6 @@ This talk is aimed at people who understand the basics of the coroutine language
 \fi
 
 \begin{document}
-\iffalse
 { % all template changes are local to this group.
     \setbeamertemplate{navigation symbols}{}
     \begin{frame}<article:0>[plain]
@@ -191,12 +201,11 @@ This talk is aimed at people who understand the basics of the coroutine language
             \node[at=(current page.center)] {
                 \includegraphics[keepaspectratio,
                                  width=\paperwidth,
-                                 height=\paperheight]{corogfx2/cppcon_title_card.png}
+                                 height=\paperheight]{corogfx2/accu_title_card.png}
             };
         \end{tikzpicture}
      \end{frame}
 }
-\fi
 
 \frame{\titlepage}
 
@@ -224,9 +233,8 @@ This talk is aimed at people who understand the basics of the coroutine language
 \begin{frame}
   \frametitle{The story so far...}
 
-  Deciphering Coroutines Part 1 - code::dive 2022
   \begin{center}
-    \href{https://www.youtube.com/watch?v=NV429-sI5Ew}{\includegraphics[height=.80\textheight]{corogfx2/talk_deciphering_part1_codedive.jpg}}
+    \href{https://www.youtube.com/watch?v=J7fYddslH0Q}{\includegraphics[height=.80\textheight]{corogfx2/talk_deciphering_part1.jpg}}
   \end{center}
 
   \note{
@@ -789,6 +797,18 @@ IoResult inner_function() {
   }
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine \cpause
+  \item[\done] Call nested coroutines \cpause
+  \item \alert<6>{Suspend entire coroutine stack} \cpause
+  \item Resume entire coroutine stack \cpause
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
+
 \begin{frame}[fragile]
   \frametitle{Suspending nested coroutines}
 
@@ -900,6 +920,18 @@ PartialResult middle_function() {
     -- ([shift={(0,14ex)}]br2010.center)
     -- cycle
     ;
+\end{frame}
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine
+  \item[\done] Call nested coroutines
+  \only<1>{\item \alert{Suspend entire coroutine stack}}
+  \only<2->{\item[\done] Suspend entire coroutine stack}
+  \item \alert<3>{Resume entire coroutine stack}
+  \item Deliver final result
+  \end{todolist}
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1148,6 +1180,21 @@ int main() {
 
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine
+  \only<1> {\item[\done] \textcolor{darkred}{Call nested coroutines}}
+  \only<2> {\item[\wontfix] Call nested coroutines}
+  \only<1> {\item[\done] \textcolor{darkred}{Suspend entire coroutine stack}}
+  \only<2> {\item[\wontfix] Suspend entire coroutine stack}
+  \item Resume entire coroutine stack
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
+
+
 \begin{frame}
   \frametitle{What is a call stack anyway?}
 
@@ -1253,6 +1300,18 @@ int main() {
   }
 \end{frame}
 
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine \cpause
+  \only<1-8>{ \item \alert<8>{Call nested coroutines} } \cpause
+  \only<9>{ \item \textcolor{darkred}{Call nested coroutines and establish links from callee to caller}}
+  \item Suspend innermost coroutine \cpause
+  \item Resume innermost coroutine \cpause
+  \item Resume outer coroutine from inner coroutine \only<7>{\textcolor{darkred}{???}} \cpause
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Connecting a coroutine to its caller}
@@ -1594,6 +1653,20 @@ template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine
+  \only<1>{ \item \textcolor{darkred}{Call nested coroutines and establish links from callee to caller}}
+  \only<2->{ \item[\done] Call nested coroutines and establish links from callee to caller}
+  \item Suspend innermost coroutine
+  \item Resume innermost coroutine
+  \item \alert<3>{Resume outer coroutine from inner coroutine}
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
+
+
 \begin{frame}[fragile]
   \frametitle{Resuming the caller from a nested coroutine}
 
@@ -1921,7 +1994,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   }
 \end{frame}
 
-\iffalse
+
 \begin{frame}
   \frametitle{Resuming caller via symmetric transfer}
 
@@ -1981,7 +2054,19 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \end{itemize}
   }
 \end{frame}
-\fi
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine
+  \item[\done] Call nested coroutines and establish links from callee to caller
+  \item Suspend innermost coroutine
+  \item \alert<3>{Resume innermost coroutine}
+  \only<1>{ \item \textcolor{darkred}{Resume outer coroutine from inner coroutine}}
+  \only<2->{ \item[\done] Resume outer coroutine from inner coroutine}
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
 
 
 \begin{frame}[fragile]
@@ -2101,6 +2186,117 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
 \end{frame}
 
 \begin{frame}[fragile]
+
+  \frametitle{Inner Workings of a Scheduler}
+
+  \begin{onlyenv}<1>
+  \begin{lstlisting}[style=cpp20]
+struct Scheduler {
+  
+  
+  
+  std::optional<IoHandle> get_ready();
+  
+  
+  
+  
+  
+  
+  
+};
+  \end{lstlisting}
+  \end{onlyenv}
+
+  \begin{onlyenv}<2>
+  \begin{lstlisting}[style=cpp20]
+struct Scheduler {
+  
+  
+  
+  std::optional<IoHandle> get_ready();
+  
+  void run()
+  
+  
+  
+  
+  
+};
+  \end{lstlisting}
+  \end{onlyenv}
+
+  \begin{onlyenv}<3>
+  \begin{lstlisting}[style=cpp20]
+struct Scheduler {
+  std::unordered_map< IoHandle, std::coroutine_handle<> >
+    waiting_tasks;
+  
+  std::optional<IoHandle> get_ready();
+  
+  void run()
+  
+  
+  
+  
+  
+};
+  \end{lstlisting}
+  \end{onlyenv}
+  
+  \begin{onlyenv}<4>
+  \begin{lstlisting}[style=cpp20]
+struct Scheduler {
+  std::unordered_map< IoHandle, std::coroutine_handle<> >
+    waiting_tasks;
+  void register_task(IoHandle, std::coroutine_handle<>);
+  std::optional<IoHandle> get_ready();
+  
+  void run()
+  
+  
+  
+  
+  
+};
+  \end{lstlisting}
+  \end{onlyenv}
+
+  \begin{onlyenv}<5>
+  \begin{lstlisting}[style=cpp20]
+struct Scheduler {
+  std::unordered_map< IoHandle, std::coroutine_handle<> >
+    waiting_tasks;
+  void register_task(IoHandle, std::coroutine_handle<>);
+  std::optional<IoHandle> get_ready();
+
+  void run() {
+    while (auto opt_ready = get_ready()) {
+      auto t = waiting_tasks[*opt_ready];
+      t.resume();
+    }
+  }
+};
+  \end{lstlisting}
+  \end{onlyenv}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine
+  \item[\done] Call nested coroutines and establish links from callee to caller
+  \only<1>{ \item \textcolor{darkred}{Suspend innermost coroutine}}
+  \only<2->{ \item[\done] Suspend innermost coroutine}
+  \only<1>{ \item \textcolor{darkred}{Resume innermost coroutine}}
+  \only<2->{ \item[\done] Resume innermost coroutine}
+  \item[\done] Resume outer coroutine from inner coroutine
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Where does the scheduler come from?}
 
   \begin{onlyenv}<1>
@@ -2113,6 +2309,9 @@ Async<IoResult> inner_function() {
 int main() {
   (*@\color{red}{Scheduler scheduler@*);
   spawn_task((*@\color{red}{scheduler@*));
+  
+  // ...
+  scheduler.run();
 }
   \end{lstlisting}
   \end{onlyenv}
@@ -2126,6 +2325,9 @@ Async<IoResult> inner_function((*@\color{red}{Scheduler\& scheduler}@*)) {
 int main() {
   Scheduler scheduler;
   spawn_task(scheduler);
+
+  // ...
+  scheduler.run();
 }
   \end{lstlisting}
   \end{onlyenv}
@@ -2140,9 +2342,42 @@ int main() {
   
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Wouldn't it be nice...}
+  
+  \begin{lstlisting}[style=cpp20]
+Async<IoResult> inner_function() {
+  auto data = co_await async_io(...);
+  /* ... */
+}
+
+int main() {
+  Scheduler scheduler;
+  spawn_task(scheduler);
+
+  // ...
+  scheduler.run();
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \only<1>{ \item Spawn outermost coroutine }
+  \only<2>{ \item \textcolor{darkred}{Spawn outermost coroutine and register scheduler} }
+  \only<3>{ \item Spawn outermost coroutine and register scheduler }
+  \only<1-2>{ \item[\done] Call nested coroutines and establish links from callee to caller }
+  \only<3>{ \item \textcolor{darkred}{Call nested coroutines and propagate execution context} }
+  \item[\done] Suspend innermost coroutine
+  \item[\done] Resume innermost coroutine
+  \item[\done] Resume outer coroutine from inner coroutine
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Passing data from the outside in}
+  \frametitle{Propagating data from the outside in}
 
   \begin{onlyenv}<1>
   \begin{lstlisting}[style=cpp20]
@@ -2236,6 +2471,22 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
   \end{itemize}
   }
 \end{frame}
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item Spawn outermost coroutine and register scheduler
+  \only<1>{ \item \textcolor{darkred}{Call nested coroutines and propagate execution context} }
+  \only<2>{ \item[\done] Call nested coroutines and propagate execution context}
+  \only<3>{ \item[\done] Call nested coroutines and propagate execution context \textcolor{darkred}{???} }
+  \item[\done] Suspend innermost coroutine
+  \item[\done] Resume innermost coroutine
+  \item[\done] Resume outer coroutine from inner coroutine
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
+
+% @todo this needs more details
 
 \begin{frame}[fragile]
   \frametitle{When do we need the scheduler?}
@@ -2407,61 +2658,62 @@ Async<Result> outer_function() {
   }
 \end{frame}
 
-\iffalse
-\begin{frame}[fragile]
-  \frametitle{Passing a scheduler along}
-  
-  \begin{onlyenv}<1>
-  \begin{center}
-  \includegraphics[height=.9\textheight]{corogfx/path_in_010.png}
-  \end{center}
-  \end{onlyenv}
-
-  \begin{onlyenv}<2>
-  \begin{lstlisting}[style=cpp20]
-struct promise_type { /* ... */
-  Scheduler* scheduler;
-};
-
-
-
-
-
-
-
-.
-  \end{lstlisting}
-  \end{onlyenv}
-
-  \begin{onlyenv}<3>
-  \begin{lstlisting}[style=cpp20]
-struct promise_type { /* ... */
-  Scheduler* scheduler;
-};
-
-template<MyPromiseConcept OtherPromise_T>
-void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
-  self.promise().my_caller = h;
-  h.promise().my_child = self;
-
-  (*@\danch(ar288)@*)self.promise()(*@\danch(br288)@*).scheduler = (*@\danch(ar289)@*)h.promise()(*@\danch(br289)@*).scheduler;
-}
-  \end{lstlisting}
-  \monobox[indigo](ar288:br288)
-  \monobox[orange](ar289:br289)
-  \end{onlyenv}
-  
-  \note{ \color{green}{TIME!} \color{black}{0:40} }
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item \alert<3>{Spawn outermost coroutine and register scheduler}
+  \only<1>{ \item \textcolor{darkred}{Call nested coroutines and propagate execution context} }
+  \only<2>{ \item[\done] Call nested coroutines and propagate execution context}
+  \item[\done] Suspend innermost coroutine
+  \item[\done] Resume innermost coroutine
+  \item[\done] Resume outer coroutine from inner coroutine
+  \item Deliver final result
+  \end{todolist}
 \end{frame}
 
-\fi
+\begin{frame}
+  \frametitle{Spawning a coroutine}
+  % @todo
+\end{frame}
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \only<1>{ \item \textcolor{darkred}{Spawn outermost coroutine and register scheduler} }
+  \only<2>{ \item[\done] Spawn outermost coroutine and register scheduler}
+  \item[\done] Call nested coroutines and propagate execution context
+  \item[\done] Suspend innermost coroutine
+  \item[\done] Resume innermost coroutine
+  \item[\done] Resume outer coroutine from inner coroutine
+  \item \alert<3>{Deliver final result}
+  \end{todolist}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Joining a coroutine}
+  % @todo
+\end{frame}
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}
+  \item[\done] Spawn outermost coroutine and register scheduler
+  \item[\done] Call nested coroutines and propagate execution context
+  \item[\done] Suspend innermost coroutine
+  \item[\done] Resume innermost coroutine
+  \item[\done] Resume outer coroutine from inner coroutine
+  \only<1>{ \item \textcolor{darkred}{Deliver final result}}
+  \only<2>{ \item[\done] Deliver final result}
+  \end{todolist}
+\end{frame}
+
 
 \begin{frame}[fragile]
-  \frametitle{But why stop at the scheduler?}
+  \frametitle{Taking it one step further...}
   
   \begin{onlyenv}<2>
   \begin{lstlisting}[style=cpp20]
-struct promise_base {
+struct (*@\danch(ar353)@*)promise_base(*@\danch(br353)@*) {
   promise_base* my_caller;
   promise_base* my_child;
 };
@@ -2470,6 +2722,7 @@ template<typename T> struct Async { /* ... */
   struct promise_type : promise_base { /* ... */ };
 };
   \end{lstlisting}
+  \monobox[red](ar353:br353)
   \end{onlyenv}
   
   \begin{onlyenv}<3>
@@ -2477,8 +2730,8 @@ template<typename T> struct Async { /* ... */
 template<typename T>
 concept MyPromise = std::derived_from<T, promise_base>;
 
-template<typename T> struct Async { /* ... */
-  template<MyPromise OtherPromise_T>
+template<typename T> struct (*@\danch(ar355)@*)Async(*@\danch(br355)@*) { /* ... */
+  template<MyPromise (*@\danch(ar354)@*)OtherPromise_T(*@\danch(br354)@*)>
   auto await_suspend(std::coroutine_handle<OtherPromise_T> h) {
     // (*@\color{red}{\textit{establish a doubly-linked list}}@*)
     self.promise().my_caller = &(h.promise());
@@ -2487,20 +2740,49 @@ template<typename T> struct Async { /* ... */
   }
 };
   \end{lstlisting}
+  \monobox[red](ar354:br354)
+  \monobox[green](ar355:br355)
   \end{onlyenv}
   
   \begin{onlyenv}<4>
   \begin{lstlisting}[style=cpp20]
-struct promise_base {
+struct (*@\danch(ar352)@*)promise_base(*@\danch(br352)@*) {
   promise_base* my_caller;
   promise_base* my_child;
   
   AnythingYouWant data;
 };
   \end{lstlisting}
+  \monobox[red](ar352:br352)
   \end{onlyenv}
   
   \note { \color{green}{TIME!} \color{black}{0:40} }
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Arbitrarily propagating data in the async call stack}
+  
+  \begin{lstlisting}[style=cpp20]
+template<typename T>
+struct (*@\danch(ar390)@*)Async(*@\danch(br390)@*) {
+  void propagate(AnythingYouWant data);
+};
+  \end{lstlisting}
+  \monobox[blue](ar390:br390)  \cpause
+  
+  \begin{lstlisting}[style=cpp20]
+struct (*@\danch(ar391)@*)Propagate(*@\danch(br391)@*) {
+  Propagate(AnythingYouWant data);
+  // ...
+};
+
+Async<void> func() {
+  // ...
+  co_await Propagate(AnythingYouWant{ /* ... */ });
+}
+  \end{lstlisting}
+  \monobox[green](ar391:br391)
+  
 \end{frame}
 
 

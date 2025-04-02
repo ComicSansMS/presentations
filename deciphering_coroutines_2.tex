@@ -49,8 +49,8 @@
 \tikzstyle{every picture}+=[remember picture]
 
 \newif\ifnotes
-%  \notesfalse
-  \notestrue
+  \notesfalse
+%  \notestrue
 
 \ifnotes
 \usepackage{pgfpages}
@@ -83,8 +83,8 @@
 }
 
 \newif\iftransitions
- \transitionstrue
-% \transitionsfalse
+% \transitionstrue
+ \transitionsfalse
 
 \newcommand{\cpause}{\iftransitions \pause \fi}
 
@@ -118,8 +118,9 @@
 \definecolor{co_awaitable}{RGB}{179,255,179}
 \definecolor{indigo}{RGB}{75,0,130}
 
+\setlist{label=\textbullet}
+
 \newlist{todolist}{itemize}{2}
-\setlist[todolist]{label=$\square$}
 \newcommand{\cmark}{\ding{51}}%
 \newcommand{\xmark}{\ding{55}}%
 \newcommand{\done}{\rlap{$\square$}{\raisebox{2pt}{\large\hspace{1pt}\cmark}}%
@@ -495,7 +496,7 @@ IoResult inner_function() {
   \end{lstlisting}
   \end{onlyenv}
 
-  \note{ \color{green}{TIME!} \color{black}{0:05} }
+  \note{ \color{green}{TIME!} \color{black}{0:10} }
 \end{frame}
 
 \begin{frame}
@@ -787,7 +788,7 @@ IoResult inner_function() {
   \item \alert{Goal: Suspend execution context larger than a single function}
   \end{itemize}
   \note{
-  \color{green}{TIME!} \color{black}{0:10}
+  \color{green}{TIME!} \color{black}{0:20}
   Can we implement something like this with C++ coroutines?
   \begin{itemize}
   \item We can only suspend one function at a time
@@ -800,7 +801,7 @@ IoResult inner_function() {
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine \cpause
   \item[\done] Call nested coroutines \cpause
   \item \alert<6>{Suspend entire coroutine stack} \cpause
@@ -924,7 +925,7 @@ PartialResult middle_function() {
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine
   \item[\done] Call nested coroutines
   \only<1>{\item \alert{Suspend entire coroutine stack}}
@@ -1183,7 +1184,7 @@ int main() {
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine
   \only<1> {\item[\done] \textcolor{darkred}{Call nested coroutines}}
   \only<2> {\item[\wontfix] Call nested coroutines}
@@ -1250,7 +1251,7 @@ int main() {
    \end{onlyenv}
 
   \note{
-    \color{green}{TIME!} \color{black}{0:20}
+    \color{green}{TIME!} \color{black}{0:30}
     \begin{itemize}
     \item what is a call stack anyway?
     \item ***TRANSITION*** function state between rsp and rbp
@@ -1302,7 +1303,7 @@ int main() {
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine \cpause
   \only<1-8>{ \item \alert<8>{Call nested coroutines} } \cpause
   \only<9>{ \item \textcolor{darkred}{Call nested coroutines and establish links from callee to caller}}
@@ -1649,13 +1650,13 @@ template<typename T> struct (*@\danch(ar251)@*)Async(*@\danch(br251)@*) {
     \draw[line width=0.5mm, black!80] (caller3.east) edge[->] (dotdot.west);
   \end{tikzpicture}
 
-  \note{ \color{green}{TIME!} \color{black}{0:25} }
+  \note{ \color{green}{TIME!} \color{black}{0:45} }
 \end{frame}
 
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine
   \only<1>{ \item \textcolor{darkred}{Call nested coroutines and establish links from callee to caller}}
   \only<2->{ \item[\done] Call nested coroutines and establish links from callee to caller}
@@ -1815,7 +1816,6 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) {
   }
 \end{frame}
 
-% \fi % !!!!!!!!!!!!!!
 
 \begin{frame}[fragile]
 
@@ -2057,7 +2057,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine
   \item[\done] Call nested coroutines and establish links from callee to caller
   \item Suspend innermost coroutine
@@ -2132,7 +2132,7 @@ struct (*@\danch(ar274)@*)ResumeCaller(*@\danch(br274)@*) { /* ... */
   \end{tikzpicture}
 
   \note{
-  \color{green}{TIME!} \color{black}{0:30}
+  \color{green}{TIME!} \color{black}{0:55}
   \begin{itemize}
   \item \alert<+>{we have the chain}
   \item ***TRANSITION*** but who resumes the innermost?
@@ -2283,7 +2283,7 @@ struct Scheduler {
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine
   \item[\done] Call nested coroutines and establish links from callee to caller
   \only<1>{ \item \textcolor{darkred}{Suspend innermost coroutine}}
@@ -2363,7 +2363,7 @@ int main() {
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \only<1>{ \item Spawn outermost coroutine }
   \only<2>{ \item \textcolor{darkred}{Spawn outermost coroutine and register scheduler} }
   \only<3>{ \item Spawn outermost coroutine and register scheduler }
@@ -2472,9 +2472,10 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
   }
 \end{frame}
 
+
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item Spawn outermost coroutine and register scheduler
   \only<1>{ \item \textcolor{darkred}{Call nested coroutines and propagate execution context} }
   \only<2>{ \item[\done] Call nested coroutines and propagate execution context}
@@ -2485,8 +2486,6 @@ void await_suspend(std::coroutine_handle<OtherPromise_T> h) {
   \item Deliver final result
   \end{todolist}
 \end{frame}
-
-% @todo this needs more details
 
 \begin{frame}[fragile]
   \frametitle{When do we need the scheduler?}
@@ -2502,6 +2501,72 @@ Async<IoResult> inner_function() {
 \end{frame}
 
 \begin{frame}[fragile]
+  \frametitle{Order of events during startup}
+  
+  \begin{lstlisting}[style=cpp20]
+Async<PartialResult> middle_function() {
+(*@\danch(ar421)@*)  Async<IoResult> a = inner_function();
+(*@\danch(ar423)@*)  IoResult r = co_await a;
+  co_return PartialResult::from_io_result(r);
+}
+
+Async<IoResult> inner_function() {
+(*@\danch(ar422)@*)  auto data = co_await async_io( /* ... */ );
+  // ...
+}
+  \end{lstlisting}
+  
+  \only<1-2>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar421.north) -- ([shift={(1em,0.25em)}]ar421.north);}
+  \only<3>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar422.north) -- ([shift={(1em,0.25em)}]ar422.north);}
+  \only<4>{\tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar423.north) -- ([shift={(1em,0.25em)}]ar423.north);}
+  
+  \begin{onlyenv}<1>
+  \scalebox{0.75}{
+  \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
+    \node (middle) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=orange!30] {middle\_function()};
+    \node (inner)    [stackframe,above=of middle,fill=indigo!30]  {inner\_function()};
+    %\node (promcons) [stackframe,above=of inner,fill=co_promise]  {promise$::$promise()};
+    %\node (getret)   [stackframe,above=of promcons]  {my\_scheduler = 0;};
+    %\node (getret)   [stackframe,above=of middle,fill=co_promise]            {initial\_suspend()};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+  \begin{onlyenv}<2>
+  \scalebox{0.75}{
+  \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
+    \node (middle) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=orange!30] {middle\_function()};
+    \node (inner)    [stackframe,above=of middle,fill=indigo!30]  {inner\_function()};
+    \node (promcons) [stackframe,above=of inner,fill=co_promise]  {promise$::$promise()};
+    \node (getret)   [stackframe,above=of promcons]  {sched = nullptr;};
+    %\node (getret)   [stackframe,above=of middle,fill=co_promise]            {initial\_suspend()};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+  \begin{onlyenv}<3>
+  \scalebox{0.75}{
+  \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
+    \node (middle) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=orange!30] {middle\_function()};
+    \node (inner)    [stackframe,above=of middle,fill=indigo!30]  {inner\_function()};
+    \node (promcons) [stackframe,above=of inner,fill=co_awaitable]  {await\_suspend()};
+    \node (getret)   [stackframe,above=of promcons]  {sched->register()};
+    %\node (getret)   [stackframe,above=of middle,fill=co_promise]            {initial\_suspend()};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+  \begin{onlyenv}<4>
+  \scalebox{0.75}{
+  \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
+    \node (middle) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=orange!30] {middle\_function()};
+    \node (promcons) [stackframe,above=of middle,fill=co_awaitable]  {await\_suspend()};
+    \node (getret)   [stackframe,above=of promcons]  {sched = h.sched;};
+    %\node (getret)   [stackframe,above=of middle,fill=co_promise]            {initial\_suspend()};
+  \end{tikzpicture}
+  }
+  \end{onlyenv}
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Spawning up a stack of nested lazy tasks}
 
   \begin{onlyenv}<1>
@@ -2511,11 +2576,11 @@ template<typename T> struct (*@\danch(ar280)@*)Async(*@\danch(br280)@*) { /* ...
     (*@\color{red}{std::suspend\_always}@*) initial_suspend() { return {}; }
   };
 (*@\danch(ar281)@*)};
+Async<IoResult> inner_function();
+
+
+
 Async<PartialResult> middle_function();
-
-
-
-Async<Result> outer_function();
 
 
 
@@ -2530,13 +2595,13 @@ template<typename T> struct (*@\danch(ar280)@*)Async(*@\danch(br280)@*) { /* ...
     std::suspend_always initial_suspend() { return {}; }
   };
 (*@\danch(ar281)@*)};
-Async<PartialResult> middle_function() {
-  IoResult r = co_await inner_function();
-  co_return PartialResult::from_io_result(r);
+Async<IoResult> inner_function() {
+  auto data = co_await async_io();
+  co_return IoResult::from_io_data(data);
 }
-Async<Result> outer_function() {
-(*@\danch(ar282)@*)  PartialResult r = co_await middle_function();
-(*@\danch(ar283)@*)  co_return Result::from_partial_result(r);
+Async<PartialResult> middle_function() {
+(*@\danch(ar282)@*)  IoResult r = co_await inner_function();
+(*@\danch(ar283)@*)  co_return PartialResult::from_io_result(r);
 }
 .
   \end{lstlisting}
@@ -2557,28 +2622,95 @@ Async<Result> outer_function() {
   }
 \end{frame}
 
+
+\begin{frame}
+  \frametitle{Roadmap}
+  \begin{todolist}[label=$\square$]
+  \item Spawn outermost coroutine and register scheduler
+  \item \textcolor{darkred}{Call nested coroutines and propagate execution context}
+  \begin{onlyenv}<2-3>
+  \begin{todolist}[label=$\square$]
+    \item Set execution context before executing coroutine body
+    \only<3>{ \item Resume inner coroutine to allow execution}
+  \end{todolist}
+  \end{onlyenv}
+  \begin{onlyenv}<4>
+  \begin{todolist}[label=$\square$]
+    \item[\done] Set execution context before executing coroutine body
+    \item Resume inner coroutine to allow execution
+  \end{todolist}
+  \end{onlyenv}
+  \item[\done] Suspend innermost coroutine
+  \item[\done] Resume innermost coroutine
+  \item[\done] Resume outer coroutine from inner coroutine
+  \item Deliver final result
+  \end{todolist}
+\end{frame}
+
+
 \begin{frame}[fragile]
   \frametitle{Symmetric transfer to the rescue}
 
-  \begin{onlyenv}<1>
   \begin{lstlisting}[style=cpp20]
+Async<IoResult> inner_function() {
+(*@\danch(ar281)@*)  auto data = co_await async_io( /* ... */ );
+  co_return IoResult::from_io_data(data);
+}
+Async<PartialResult> middle_function() {
+(*@\danch(ar282)@*)  IoResult r = co_await inner_function();
+(*@\danch(ar283)@*)  co_return PartialResult::from_io_result(r);
+}
+  \end{lstlisting}
+
+  \tikz[transform shape,overlay] \draw[>=triangle 45,->, darkred] ([shift={(-1em,0.25em)}]ar282.north) -- ([shift={(1em,0.25em)}]ar282.north);
+
+  \scalebox{0.75}{
+  \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
+    \node (base) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=lightgray] {base()};
+    \node (outer) [stackframe,above=of base,fill=orange!30]  {middle\_function()};
+    \node (middle)   [stackframe,above=of outer,fill=co_awaitable]              {await\_suspend};
+  \end{tikzpicture}
+  }
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Symmetric transfer to the rescue}
+
+  \begin{onlyenv}<1-2>
+  \begin{lstlisting}[style=cpp20]
+struct (*@\danch(ar283)@*)Async(*@\danch(br283)@*) {
+std::coroutine_handle<promise_type> (*@\danch(ar284)@*)self(*@\danch(br284)@*);
+
 template<MyPromiseConcept OtherPromise_T>
 void await_suspend((*@\danch(ar285)@*)std::coroutine_handle<OtherPromise_T> h(*@\danch(br285)@*)) {
   self.promise().my_caller = h;
   self.promise().my_scheduler = h.promise().my_scheduler;
 
 }
+};
   \end{lstlisting}
+  
+  \monobox[green](ar283:br283)
+  \only<2>{ \monobox[indigo](ar284:br284) }
+  \only<2>{ \monobox[orange](ar285:br285) }
+  
   \end{onlyenv}
-  \begin{onlyenv}<2>
+  \begin{onlyenv}<3>
   \begin{lstlisting}[style=cpp20]
+struct (*@\danch(ar283)@*)Async(*@\danch(br283)@*) {
+std::coroutine_handle<promise_type> (*@\danch(ar284)@*)self(*@\danch(br284)@*);
+
 template<MyPromiseConcept OtherPromise_T>
 (*@\danch(ar288)@*)auto(*@\danch(br288)@*) await_suspend((*@\danch(ar285)@*)std::coroutine_handle<OtherPromise_T> h(*@\danch(br285)@*)) {
   self.promise().my_caller = h;
   self.promise().my_scheduler = h.promise().my_scheduler;
   return (*@\danch(ar287)@*)self(*@\danch(br287)@*);
 }
+}
   \end{lstlisting}
+  \monobox[green](ar283:br283)
   \monobox[orange](ar285:br285)
   \monobox[indigo](ar287:br287)
   \monobox[indigo](ar288:br288)
@@ -2593,17 +2725,18 @@ template<MyPromiseConcept OtherPromise_T>
   }
 \end{frame}
 
+
 \begin{frame}[fragile]
   \frametitle{Symmetric transfer to the rescue}
 
   \begin{lstlisting}[style=cpp20]
-Async<PartialResult> middle_function() {
-(*@\danch(ar281)@*)  IoResult r = co_await inner_function();
-  co_return PartialResult::from_io_result(r);
+Async<IoResult> inner_function() {
+(*@\danch(ar281)@*)  auto data = co_await async_io();
+  co_return IoResult::from_io_data(data);
 }
-Async<Result> outer_function() {
-(*@\danch(ar282)@*)  PartialResult r = co_await middle_function();
-(*@\danch(ar283)@*)  co_return Result::from_partial_result(r);
+Async<PartialResult> middle_function() {
+(*@\danch(ar282)@*)  IoResult r = co_await inner_function();
+(*@\danch(ar283)@*)  co_return PartialResult::from_io_result(r);
 }
   \end{lstlisting}
 
@@ -2616,8 +2749,8 @@ Async<Result> outer_function() {
   \scalebox{0.75}{
   \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
     \node (base) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=lightgray] {base()};
-    \node (outer) [stackframe,above=of base,fill=orange!30]  {outer\_function()};
-    \node (middle)   [stackframe,above=of outer,fill=indigo!30]              {middle\_function()};
+    \node (outer) [stackframe,above=of base,fill=orange!30]  {middle\_function()};
+    \node (middle)   [stackframe,above=of outer,fill=indigo!30]              {inner\_function()};
     \node (getret)   [stackframe,above=of middle,fill=co_promise]            {initial\_suspend()};
   \end{tikzpicture}
   }
@@ -2626,7 +2759,7 @@ Async<Result> outer_function() {
   \scalebox{0.75}{
   \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
     \node (base) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=lightgray] {base()};
-    \node (outer) [stackframe,above=of base,fill=orange!30]  {outer\_function()};
+    \node (outer) [stackframe,above=of base,fill=orange!30]  {middle\_function()};
   \end{tikzpicture}
   }
   \end{onlyenv}
@@ -2634,7 +2767,7 @@ Async<Result> outer_function() {
   \scalebox{0.75}{
   \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
     \node (base) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=lightgray] {base()};
-    \node (outer) [stackframe,above=of base,fill=orange!30]  {outer\_function()};
+    \node (outer) [stackframe,above=of base,fill=orange!30]  {middle\_function()};
     \node (middle)   [stackframe,above=of outer,fill=co_awaitable]              {await\_suspend};
   \end{tikzpicture}
   }
@@ -2643,27 +2776,29 @@ Async<Result> outer_function() {
   \scalebox{0.75}{
   \begin{tikzpicture}[node distance=0mm and 5mm,overlay]
     \node (base) at ([shift={(17cm,6cm)}]0,0) [stackframe,fill=lightgray] {base()};
-    \node (outer) [stackframe,above=of base,fill=indigo!30]  {middle\_function()};
+    \node (outer) [stackframe,above=of base,fill=indigo!30]  {inner\_function()};
   \end{tikzpicture}
   }
   \end{onlyenv}
 
   \note{
   \begin{itemize}
-  \item \alert<+>{execute again, middle is on the stack, but we don't enter body because of initial\_suspend}
-  \item \alert<+>{***TRANSITION*** back in outer we co\_await on the async returned by middle}
+  \item \alert<+>{execute again, inner is on the stack, but we don't enter body because of initial\_suspend}
+  \item \alert<+>{***TRANSITION*** back in middle we co\_await on the async returned by inner}
   \item \alert<+>{***TRANSITION*** await\_suspend initiates the symmetric transfer}
-  \item ***TRANSITION*** now we enter body of middle; outer is suspended and no longer on stack!
+  \item ***TRANSITION*** now we enter body of inner; middle is suspended and no longer on stack!
   \end{itemize}
   }
 \end{frame}
 
+% \fi % !!!!!!!!!!!!!!
+
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item \alert<3>{Spawn outermost coroutine and register scheduler}
   \only<1>{ \item \textcolor{darkred}{Call nested coroutines and propagate execution context} }
-  \only<2>{ \item[\done] Call nested coroutines and propagate execution context}
+  \only<2->{ \item[\done] Call nested coroutines and propagate execution context}
   \item[\done] Suspend innermost coroutine
   \item[\done] Resume innermost coroutine
   \item[\done] Resume outer coroutine from inner coroutine
@@ -2671,16 +2806,114 @@ Async<Result> outer_function() {
   \end{todolist}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Spawning a coroutine}
-  % @todo
+  
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar461)@*)Async<Result>(*@\danch(br461)@*) outer_function();
+
+int main() {
+  (*@\danch(ar462)@*)Async<Result>(*@\danch(br462)@*) r = outer_function();
+  Result result = /* ??? */;
+}
+  \end{lstlisting}
+  \mixedbox(ar461:br461)
+  \monobox[blue](ar462:br462)
+  
+  \note{ \color{green}{TIME!} \color{black}{0:75} }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interface of \texttt{Async}}
+  \begin{itemize}
+  \item Starts suspended (lazy)
+  \item Expects execution context before executing body
+  \item Expects handle to an outer coroutine to transfer to after completing
+  \item Initially resumed via symmetric transfer
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Spawning an \texttt{Async}}
+  
+  \begin{onlyenv}<1>
+  \begin{lstlisting}[style=cpp20]
+  
+  
+  
+  
+  
+int main() {
+  Async<Result> task = outer_function();
+  Scheduler sched;
+  auto       r = spawn_task(sched, std::move(task));
+
+
+}
+  \end{lstlisting}
+
+  \end{onlyenv}
+
+  \begin{onlyenv}<2>
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar561)@*)ReturnObj(*@\danch(br561)@*)  spawn_task(Scheduler& sched, Async<Result> task) {
+  
+  
+}
+
+int main() {
+  Async<Result> task = outer_function();
+  Scheduler sched;
+  auto       r = spawn_task(sched, std::move(task));
+
+
+}
+  \end{lstlisting}
+  \monobox[blue](ar561:br561)
+  \end{onlyenv}
+  
+  \begin{onlyenv}<3,5>
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar561)@*)ReturnObj(*@\danch(br561)@*)  spawn_task(Scheduler& sched, Async<Result> task) {
+  task.set_scheduler(sched);
+  co_await task;
+}
+
+int main() {
+  Async<Result> task = outer_function();
+  Scheduler sched;
+  auto       r = spawn_task(sched, std::move(task));
+
+
+}
+  \end{lstlisting}
+  \monobox[blue](ar561:br561)
+  \end{onlyenv}
+  
+  \begin{onlyenv}<4>
+  \begin{lstlisting}[style=cpp20]
+struct (*@\danch(ar561)@*)ReturnObj(*@\danch(br561)@*) {
+  struct (*@\danch(ar562)@*)promise_type(*@\danch(br562)@*) : public promise_base {
+    ReturnObj get_return_object() { return {}; }
+    std::suspend_never initial_suspend() { return {}; }
+    std::suspend_always final_suspend() noexcept
+    { return {}; }
+    void unhandled_exception() {}
+    void return_void() {}
+  };
+};
+  \end{lstlisting}
+  \monobox[blue](ar561:br561)
+  \monobox[red](ar562:br562)
+  \end{onlyenv}
+  
 \end{frame}
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \only<1>{ \item \textcolor{darkred}{Spawn outermost coroutine and register scheduler} }
-  \only<2>{ \item[\done] Spawn outermost coroutine and register scheduler}
+  \only<2->{ \item[\done] Spawn outermost coroutine and register scheduler}
   \item[\done] Call nested coroutines and propagate execution context
   \item[\done] Suspend innermost coroutine
   \item[\done] Resume innermost coroutine
@@ -2689,14 +2922,112 @@ Async<Result> outer_function() {
   \end{todolist}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Joining a coroutine}
-  % @todo
+\begin{frame}[fragile]
+  \frametitle{Retrieving the final result}
+  
+  \begin{onlyenv}<1>
+  Recap: Getting data out of a coroutine
+  \begin{center}
+  \includegraphics[height=.9\textheight]{corogfx/path_out_040.png}
+  \end{center}
+  \end{onlyenv}
+  
+  \begin{onlyenv}<2>
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar561)@*)ReturnObj(*@\danch(br561)@*)  spawn_task(Scheduler& sched, Async<Result> task) {
+  task.set_scheduler(sched);
+  Result r = co_await task;
+}
+
+int main() {
+  Async<Result> task = outer_function();
+  Scheduler sched;
+  auto       r = spawn_task(sched, std::move(task));
+
+
+}
+  \end{lstlisting}
+  \monobox[blue](ar561:br561)
+  \end{onlyenv}
+  
+  \begin{onlyenv}<3>
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar561)@*)ReturnObj(*@\danch(br561)@*)  spawn_task(Scheduler& sched, Async<Result> task) {
+  task.set_scheduler(sched);
+  co_return co_await task;
+}
+
+int main() {
+  Async<Result> task = outer_function();
+  Scheduler sched;
+  auto       r = spawn_task(sched, std::move(task));
+
+
+}
+  \end{lstlisting}
+  \monobox[blue](ar561:br561)
+  \end{onlyenv}
+  
+  \begin{onlyenv}<4,6>
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar561)@*)RO<Result>(*@\danch(br561)@*) spawn_task(Scheduler& sched, Async<Result> task) {
+  task.set_scheduler(sched);
+  co_return co_await task;
+}
+
+int main() {
+  Async<Result> task = outer_function();
+  Scheduler sched;
+  RO<Result> r = spawn_task(sched, std::move(task));
+
+
+}
+  \end{lstlisting}
+  \monobox[blue](ar561:br561)
+  \end{onlyenv}
+  
+  \begin{onlyenv}<5>
+  \begin{lstlisting}[style=cpp20]
+template<typename T>
+struct (*@\danch(ar561)@*)RO(*@\danch(br561)@*) {
+  struct (*@\danch(ar562)@*)promise_type(*@\danch(br562)@*) : public promise_base {
+    /* ... */
+    std::optional<T> v;
+    void return_value(T val) { v = val; }
+  };
+  
+  std::coroutine_handle<promise_type> self;
+  T result() {
+    return self.promise().result.value();
+  }
+};
+  \end{lstlisting}
+  \monobox[blue](ar561:br561)
+  \monobox[red](ar562:br562)
+  \end{onlyenv}
+
+  \begin{onlyenv}<7>
+  \begin{lstlisting}[style=cpp20]
+(*@\danch(ar511)@*)RO<Result>(*@\danch(br511)@*) spawn_task(Scheduler& sched, Async<Result> task) {
+  task.set_scheduler(sched);
+  co_return co_await task;
+}
+
+int main() {
+  Async<Result> task = outer_function();
+  Scheduler sched;
+  RO<Result> r = spawn_task(sched, std::move(task));
+  while (!sched.done()) { sched.run(); }
+  Result result = r.result();
+}
+  \end{lstlisting}
+  \monobox[blue](ar511:br511)
+  \end{onlyenv}
 \end{frame}
 
 \begin{frame}
   \frametitle{Roadmap}
-  \begin{todolist}
+  \begin{todolist}[label=$\square$]
   \item[\done] Spawn outermost coroutine and register scheduler
   \item[\done] Call nested coroutines and propagate execution context
   \item[\done] Suspend innermost coroutine
@@ -2756,7 +3087,7 @@ struct (*@\danch(ar352)@*)promise_base(*@\danch(br352)@*) {
   \monobox[red](ar352:br352)
   \end{onlyenv}
   
-  \note { \color{green}{TIME!} \color{black}{0:40} }
+  \note { \color{green}{TIME!} \color{black}{0:80} }
 \end{frame}
 
 \begin{frame}[fragile]
